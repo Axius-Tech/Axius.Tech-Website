@@ -275,6 +275,7 @@ window.AxiusDirectionE05 = function () {
       pricingCadence: 'cadence',
       pricingCapacityInfo: (pts) =>
         `1 point ≈ 1 operated workflow. ${pts} pts = up to ${pts} concurrent workflows.`,
+      pricingTypicalWorkloadsLabel: 'Typical workloads',
       pricingMo: '/ mo',
       pricingSetupNote: (n) => `+ $${n.toLocaleString()} one-time setup`,
       pricingTierLabel: 'TIER',
@@ -302,13 +303,13 @@ window.AxiusDirectionE05 = function () {
       statQ2_2026: 'Q2 · 2026',
       // Hero — How we work
       howWeWorkLabel: 'How we work',
-      howWeWorkBullets: ['Systems that scale', 'Freedom that lasts', 'Clarity in the chaos'],
+      howWeWorkBullets: ['Systems that scale', 'Clear operations', 'More time to focus'],
       // Sections (eyebrows + headlines + hover descriptions)
       sec01Eyebrow:     '01 · Commitments',
-      sec01TitlePrefix: 'Five things we ',
-      sec01TitleItalic: 'always',
-      sec01TitleSuffix: ' do.',
-      sec02Eyebrow:     '02 · The mess most founders inherit',
+      sec01TitlePrefix: 'Five standards we ',
+      sec01TitleItalic: 'operate',
+      sec01TitleSuffix: ' by.',
+      sec02Eyebrow:     '02 · The operational problems most businesses quietly live with',
       sec02TitleP1:     'You started this to ',
       sec02TitleBuild:  'build',
       sec02TitleP2:     ' a business, ',
@@ -316,9 +317,9 @@ window.AxiusDirectionE05 = function () {
       sec02TitleP3:     ' maintain a stack.',
       sec02ColLabels:   ['The symptom', 'The cost', 'The resolution'],
       sec02ColBodies:   [
-        'Five contractors. Three Slack threads. The site breaks on Friday. The CRM never got connected to the calendar. Nobody fully owns the operational side of tech.',
-        'Every new tool promised leverage. Instead, the systems became fragmented, undocumented, and dependent on whoever set them up. The work stops compounding.',
-        'We centralize the operational side of tech under one accountable layer. One line. One system. One team responsible for keeping things running.',
+        'Five contractors. Three Slack threads. The site breaks Friday. The CRM never got connected properly.',
+        'Every tool was bought with optimism. Most sit unused. Nothing compounds operationally.',
+        'One accountable team managing the systems behind the business. One line of communication. One monthly bill. Documented, maintained, and operated continuously.',
       ],
       sec03Eyebrow:     '03 · Method',
       sec03TitlePrefix: 'Four ',
@@ -330,6 +331,25 @@ window.AxiusDirectionE05 = function () {
       sec04TitlePrefix: 'An ',
       sec04TitleItalic: 'index',
       sec04TitleSuffix: ' of the work.',
+      // Workflow Capacity intro block (sits below the catalog title,
+      // primes visitors on how points work BEFORE they reach pricing).
+      sec04CapacityTitle:    'Workflow Capacity',
+      sec04CapacityBody:     'Each workflow carries a point value based on complexity, integrations, maintenance, and operational load. This keeps operational capacity predictable and scalable across every tier.',
+      sec04CapacityWeightLabel: 'typical weight',
+      sec04CapacityExamples: [
+        { name: 'AI chatbot',         pts: 1 },
+        { name: 'CRM automation',     pts: 2 },
+        { name: 'Internal dashboard', pts: 3 },
+        { name: 'Custom application', pts: 5 },
+      ],
+      sec04CapacityFooter:   'Most businesses start with 2–5 active operational workflows.',
+      // AI Recommendation Mode — describe your business, the catalog
+      // auto-pivots to the most relevant category and surfaces it.
+      sec04RecommendLabel:       'AI · recommend',
+      sec04RecommendPlaceholder: 'Describe your business…',
+      sec04RecommendButton:      'Recommend',
+      sec04RecommendBadge:       'Recommended for you',
+      sec04RecommendNote:        (cat) => `Based on what you described, we'd usually start with ${cat}. The samples below match.`,
       sec04WorkflowsLabel:   'workflows',
       sec04CategoriesLabel:  'categories',
       sec04SampleEntries:    'sample entries',
@@ -482,6 +502,7 @@ window.AxiusDirectionE05 = function () {
       pricingCadence: 'cadencia',
       pricingCapacityInfo: (pts) =>
         `1 punto ≈ 1 workflow operado. ${pts} pts = hasta ${pts} workflows simultáneos.`,
+      pricingTypicalWorkloadsLabel: 'Workloads típicos',
       pricingMo: '/ mes',
       pricingSetupNote: (n) => `+ $${n.toLocaleString()} setup único`,
       pricingTierLabel: 'TIER',
@@ -509,13 +530,13 @@ window.AxiusDirectionE05 = function () {
       statQ2_2026: 'T2 · 2026',
       // Hero — How we work
       howWeWorkLabel: 'Cómo trabajamos',
-      howWeWorkBullets: ['Sistemas que escalan', 'Libertad que dura', 'Claridad en el caos'],
+      howWeWorkBullets: ['Sistemas que escalan', 'Operaciones claras', 'Más tiempo para enfocarte'],
       // Sections
       sec01Eyebrow:     '01 · Compromisos',
-      sec01TitlePrefix: 'Cinco cosas que ',
-      sec01TitleItalic: 'siempre',
-      sec01TitleSuffix: ' hacemos.',
-      sec02Eyebrow:     '02 · El caos que la mayoría de fundadores heredan',
+      sec01TitlePrefix: 'Cinco estándares por los que ',
+      sec01TitleItalic: 'operamos',
+      sec01TitleSuffix: '.',
+      sec02Eyebrow:     '02 · Los problemas operativos con los que la mayoría de empresas vive en silencio',
       sec02TitleP1:     'Empezaste esto para ',
       sec02TitleBuild:  'construir',
       sec02TitleP2:     ' un negocio, ',
@@ -523,9 +544,9 @@ window.AxiusDirectionE05 = function () {
       sec02TitleP3:     ' mantener un stack.',
       sec02ColLabels:   ['El síntoma', 'El costo', 'La resolución'],
       sec02ColBodies:   [
-        'Cinco contratistas. Tres hilos de Slack. El sitio se cae el viernes. El CRM nunca se conectó al calendario. Nadie es realmente dueño del lado operativo del tech.',
-        'Cada herramienta nueva prometía leverage. En cambio, los sistemas se volvieron fragmentados, sin documentar, y dependientes de quien los configuró. El trabajo deja de acumularse.',
-        'Centralizamos el lado operativo del tech bajo una sola capa responsable. Una línea. Un sistema. Un equipo encargado de mantener todo en marcha.',
+        'Cinco contratistas. Tres hilos de Slack. El sitio se cae el viernes. El CRM nunca se conectó como debía.',
+        'Cada herramienta se compró con optimismo. La mayoría queda sin usar. Nada se acumula operativamente.',
+        'Un equipo responsable gestionando los sistemas detrás del negocio. Una sola línea de comunicación. Una sola factura mensual. Documentado, mantenido y operado de forma continua.',
       ],
       sec03Eyebrow:     '03 · Método',
       sec03TitlePrefix: 'Cuatro ',
@@ -537,6 +558,21 @@ window.AxiusDirectionE05 = function () {
       sec04TitlePrefix: 'Un ',
       sec04TitleItalic: 'índice',
       sec04TitleSuffix: ' del trabajo.',
+      sec04CapacityTitle:    'Capacidad de Workflows',
+      sec04CapacityBody:     'Cada workflow tiene un valor en puntos basado en complejidad, integraciones, mantenimiento y carga operativa. Esto mantiene la capacidad operativa predecible y escalable en cada tier.',
+      sec04CapacityWeightLabel: 'peso típico',
+      sec04CapacityExamples: [
+        { name: 'Chatbot de IA',          pts: 1 },
+        { name: 'Automatización de CRM',  pts: 2 },
+        { name: 'Dashboard interno',      pts: 3 },
+        { name: 'Aplicación a medida',    pts: 5 },
+      ],
+      sec04CapacityFooter:   'La mayoría de empresas empieza con 2–5 workflows operativos activos.',
+      sec04RecommendLabel:       'IA · recomienda',
+      sec04RecommendPlaceholder: 'Describe tu negocio…',
+      sec04RecommendButton:      'Recomendar',
+      sec04RecommendBadge:       'Recomendado para ti',
+      sec04RecommendNote:        (cat) => `Por lo que describiste, normalmente empezaríamos con ${cat}. Las muestras de abajo coinciden.`,
       sec04WorkflowsLabel:   'workflows',
       sec04CategoriesLabel:  'categorías',
       sec04SampleEntries:    'entradas de muestra',
@@ -3408,12 +3444,51 @@ window.AxiusDirectionE05 = function () {
   };
 
   // ─── 04 · CATALOG ──────────────────────────────────────────
+  // Light keyword → category recommender for the AI Recommendation
+  // Mode.  Maps free-text descriptions of a business to the most
+  // relevant catalog category id.  Deterministic; no LLM.
+  const recommendCategory = (text) => {
+    const s = (text || '').toLowerCase();
+    const score = {};
+    const hit = (cat, weight) => { score[cat] = (score[cat] || 0) + weight; };
+    if (/real\s*estate|broker|property|listing|tenant|landlord/.test(s)) { hit('sales', 4); hit('ops', 2); }
+    if (/restaurant|clinic|dentist|dental|salon|spa|appointment/.test(s))    { hit('cx', 4);    hit('sales', 2); }
+    if (/agency|consult|client work|deliverable|contract|sow/.test(s))       { hit('ops', 4);   hit('soft', 2); }
+    if (/ecom|shopify|store|inventory|fulfil|sku|d2c/.test(s))               { hit('web', 4);   hit('data', 2); }
+    if (/saas|product|startup|engineer|platform|micro\s*service/.test(s))    { hit('soft', 4);  hit('ai', 2); }
+    if (/marketing|growth|ads|paid|seo|funnel|acquisition/.test(s))          { hit('grow', 4);  hit('data', 1); }
+    if (/creator|content|podcast|video|youtube|tiktok|short|edit/.test(s))   { hit('creative', 4); hit('grow', 1); }
+    if (/data|analytic|dashboard|warehouse|report|metric|attribution/.test(s)) { hit('data', 4); hit('ai', 1); }
+    if (/ai|llm|gpt|chatbot|automation|workflow|integrat/.test(s))           { hit('ai', 4);    hit('ops', 1); }
+    if (/support|ticket|inbox|wa|whatsapp|customer service/.test(s))         { hit('cx', 4);    hit('ai', 1); }
+    if (/lead|outreach|cold|prospect|crm/.test(s))                           { hit('sales', 4); hit('ops', 1); }
+    if (/website|landing|next\.?js|webflow|framer|wordpress/.test(s))        { hit('web', 4); }
+    // Pick the highest-scoring category; tie-break by catalog order.
+    const ranked = Object.entries(score).sort((a, b) => b[1] - a[1]);
+    if (!ranked.length) return null;
+    return ranked[0][0];
+  };
+
   const Catalog = () => {
     const accents = [C.tangerine, C.mint, C.amber, C.lavender, C.sky, C.pink, C.mint, C.tangerine, C.lavender];
     const [active, setActive] = React.useState(0);
+    const [recoText, setRecoText] = React.useState('');
+    const [recoFor, setRecoFor]   = React.useState(null);
     const cat = window.AxiusCatalog[active];
     const activeAccent = accents[active % accents.length];
     const total = window.AxiusCatalog.reduce((s, c) => s + c.count, 0);
+    const examples = t('sec04CapacityExamples');
+
+    const runRecommend = () => {
+      const id = recommendCategory(recoText);
+      if (!id) return;
+      const idx = window.AxiusCatalog.findIndex(c => c.id === id);
+      if (idx >= 0) {
+        setActive(idx);
+        setRecoFor(id);
+      }
+    };
+
     return (
       <section id="catalog" data-screen-label="04 Catalog" style={{
         padding: `108px ${pad}px`,
@@ -3421,7 +3496,7 @@ window.AxiusDirectionE05 = function () {
       }}>
         <div style={{
           display: 'grid', gridTemplateColumns: '1fr auto', gap: 80,
-          alignItems: 'flex-end', marginBottom: 80,
+          alignItems: 'flex-end', marginBottom: 48,
         }}>
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec04Eyebrow')}</Eyebrow>
@@ -3444,6 +3519,112 @@ window.AxiusDirectionE05 = function () {
           </div>
         </div>
 
+        {/* Workflow Capacity intro — primes visitors on how points work
+            BEFORE they hit pricing.  Quiet horizontal panel: body left,
+            4-row weight table right, footer line below.  Same surface +
+            hairline border grammar as the catalog samples panel. */}
+        <div style={{
+          marginBottom: 36,
+          background: C.surface, border: `1px solid ${C.line}`,
+        }}>
+          <div style={{
+            padding: '24px 28px',
+            display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 40,
+            alignItems: 'flex-start',
+          }}>
+            <div>
+              <Eyebrow color={C.mute} style={{marginBottom: 12}}>{t('sec04CapacityTitle')}</Eyebrow>
+              <p style={{
+                margin: 0, maxWidth: 520,
+                fontFamily: DISPLAY, fontSize: 15, color: C.dim, lineHeight: 1.6,
+                letterSpacing: '-0.003em',
+              }}>{t('sec04CapacityBody')}</p>
+            </div>
+            <div>
+              <div style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                marginBottom: 10, paddingBottom: 8, borderBottom: `1px solid ${C.line}`,
+              }}>
+                <Eyebrow color={C.mute}>{t('sec04WorkflowsLabel')}</Eyebrow>
+                <Eyebrow color={C.mute}>{t('sec04CapacityWeightLabel')}</Eyebrow>
+              </div>
+              {examples.map((ex, i) => (
+                <div key={i} style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                  padding: '6px 0',
+                  borderBottom: i === examples.length - 1 ? 'none' : `1px solid ${C.line}`,
+                }}>
+                  <span style={{
+                    fontFamily: DISPLAY, fontSize: 13, color: C.ink, letterSpacing: '-0.003em',
+                  }}>{ex.name}</span>
+                  <span style={{
+                    fontFamily: MONO, fontSize: 11, color: C.tangerine,
+                    letterSpacing: '0.06em', fontVariantNumeric: 'tabular-nums',
+                  }}>{ex.pts} {ex.pts === 1 ? 'pt' : 'pts'}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{
+            padding: '10px 28px',
+            borderTop: `1px solid ${C.line}`,
+            background: C.panel,
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            gap: 16, flexWrap: 'wrap',
+          }}>
+            <Eyebrow color={C.mute}>{t('sec04CapacityFooter')}</Eyebrow>
+          </div>
+        </div>
+
+        {/* AI Recommendation Mode — describe your business, the catalog
+            auto-pivots to the most relevant category.  Lavender accent
+            so it reads as the AI surface and stays distinct from the
+            catalog's tangerine. */}
+        <div style={{
+          marginBottom: 28, padding: '18px 22px',
+          background: C.surface, border: `1px solid ${C.line}`,
+          borderLeft: `2px solid ${C.lavender}`,
+          display: 'grid', gridTemplateColumns: '1fr auto', gap: 18,
+          alignItems: 'center',
+        }}>
+          <div style={{display: 'flex', alignItems: 'center', gap: 14, minWidth: 0}}>
+            <span style={{
+              display: 'inline-block',
+              padding: '2px 6px',
+              background: C.lavender, color: '#FFFFFF',
+              fontFamily: MONO, fontSize: 8, fontWeight: 600,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              flexShrink: 0,
+            }}>{t('sec04RecommendLabel')}</span>
+            <input
+              type="text"
+              value={recoText}
+              onChange={(e) => setRecoText(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') runRecommend(); }}
+              placeholder={t('sec04RecommendPlaceholder')}
+              style={{
+                flex: 1, minWidth: 0,
+                appearance: 'none', border: 'none', outline: 'none', background: 'transparent',
+                fontFamily: DISPLAY, fontSize: 14, color: C.ink, letterSpacing: '-0.003em',
+                padding: 4,
+              }}/>
+          </div>
+          <button
+            type="button"
+            onClick={runRecommend}
+            disabled={!recoText.trim()}
+            style={{
+              appearance: 'none', cursor: recoText.trim() ? 'pointer' : 'not-allowed',
+              background: recoText.trim() ? C.lavender : 'transparent',
+              color: recoText.trim() ? '#FFFFFF' : C.mute,
+              border: `1px solid ${recoText.trim() ? C.lavender : C.lineHi}`,
+              padding: '8px 14px',
+              fontFamily: MONO, fontSize: 10, fontWeight: 600,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              transition: 'all .25s ease',
+            }}>{t('sec04RecommendButton')} →</button>
+        </div>
+
         {/* Categories left, samples right — same card style, stacked vertically.
             Categories column scrolls inside the same height as the samples panel
             so the section stays as compact as Commitments / Method / Mess. */}
@@ -3458,7 +3639,7 @@ window.AxiusDirectionE05 = function () {
           }}>
             {window.AxiusCatalog.map((c, i) => (
               <CatalogCard key={c.id} c={c} accent={accents[i]} isActive={active === i}
-                onClick={() => setActive(i)} index={i}/>
+                onClick={() => { setActive(i); setRecoFor(null); }} index={i}/>
             ))}
           </div>
 
@@ -3481,6 +3662,14 @@ window.AxiusDirectionE05 = function () {
                       background: activeAccent,
                     }}/>
                     <Eyebrow color={C.ink}>{tr(cat, 'name')} — {t('sec04SampleEntries')}</Eyebrow>
+                    {recoFor === cat.id && (
+                      <span style={{
+                        marginLeft: 4, padding: '2px 6px',
+                        background: C.lavender, color: '#FFFFFF',
+                        fontFamily: MONO, fontSize: 8, fontWeight: 600,
+                        letterSpacing: '0.18em', textTransform: 'uppercase',
+                      }}>{t('sec04RecommendBadge')}</span>
+                    )}
                   </div>
                   <Eyebrow color={C.mute}>{rows.length} / {cat.count} · {t('sec04ScrollMore')}</Eyebrow>
                 </div>
@@ -3847,7 +4036,7 @@ window.AxiusDirectionE05 = function () {
   // hovering or focusing it pops a small tooltip with the supplied
   // content (used on the Capacity bar to explain what 1 point means
   // and to show the tier's comms channels in one place).
-  const PricingBar = ({ label, value, pct, accent, on, info }) => {
+  const PricingBar = ({ label, value, pct, accent, on, info, infoWorkloads, infoWorkloadsLabel }) => {
     const [infoH, setInfoH] = React.useState(false);
     return (
       <div>
@@ -3884,7 +4073,7 @@ window.AxiusDirectionE05 = function () {
                 {infoH && (
                   <span style={{
                     position: 'absolute', top: 'calc(100% + 8px)', right: -6,
-                    width: 240, padding: '10px 12px',
+                    width: 260, padding: '10px 12px',
                     background: C.surface,
                     border: `1px solid ${C.lineHi}`,
                     boxShadow: '0 8px 18px rgba(10,9,7,0.10), 0 1px 3px rgba(10,9,7,0.06)',
@@ -3893,7 +4082,25 @@ window.AxiusDirectionE05 = function () {
                     textAlign: 'left', cursor: 'default',
                     whiteSpace: 'pre-line',
                     zIndex: 40,
-                  }}>{info}</span>
+                    display: 'block',
+                  }}>
+                    {info}
+                    {Array.isArray(infoWorkloads) && infoWorkloads.length > 0 && (
+                      <span style={{display: 'block', marginTop: 10, paddingTop: 8, borderTop: `1px solid ${C.line}`}}>
+                        <span style={{
+                          display: 'block', marginBottom: 4,
+                          fontFamily: MONO, fontSize: 8, fontWeight: 600,
+                          letterSpacing: '0.18em', textTransform: 'uppercase', color: C.mute,
+                        }}>{infoWorkloadsLabel}</span>
+                        {infoWorkloads.map((w, i) => (
+                          <span key={i} style={{
+                            display: 'block',
+                            fontFamily: DISPLAY, fontSize: 11, color: C.ink, lineHeight: 1.55,
+                          }}>· {w}</span>
+                        ))}
+                      </span>
+                    )}
+                  </span>
                 )}
               </span>
             )}
@@ -3989,7 +4196,9 @@ window.AxiusDirectionE05 = function () {
             pct={capacityPct}
             accent={accent}
             on={on}
-            info={t('pricingCapacityInfo')(p.points)}/>
+            info={t('pricingCapacityInfo')(p.points)}
+            infoWorkloads={tr(p, 'workloads')}
+            infoWorkloadsLabel={t('pricingTypicalWorkloadsLabel')}/>
           <PricingBar
             label={t('pricingResponse')}
             value={p.response}
