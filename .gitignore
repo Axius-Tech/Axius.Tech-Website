@@ -1,0 +1,29 @@
+# ─── Secrets ──────────────────────────────────────────────
+# Any *.local.* file is treated as local-only and never committed.
+# axius-secrets.local.jsx carries the live Telegram bot token,
+# WhatsApp + phone numbers, and Stripe payment links.
+*.local.*
+
+# Explicit safety net in case the *.local.* glob is ever loosened.
+reference/axius-secrets.local.jsx
+.env
+.env.*
+
+# ─── macOS noise ──────────────────────────────────────────
+.DS_Store
+
+# ─── Editor / OS scratch ──────────────────────────────────
+*.swp
+*~
+.idea/
+.vscode/
+
+# ─── Node (in case anyone adds a build pipeline later) ────
+node_modules/
+dist/
+build/
+.next/
+out/
+
+# ─── Logs ─────────────────────────────────────────────────
+*.log
