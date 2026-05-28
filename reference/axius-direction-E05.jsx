@@ -1,24 +1,27 @@
 // ============================================================
-// AXIUS · DIRECTION E05 — QUIET 0.5 (REFINED EDITION)
-// Quiet, with adjustments per spec:
-//   • Wordmark: 'axius.tech' (tech after the period)
-//   • Hero: gray 'Not your tech.', vertically-centered orange
-//     hover-line, 'Run your business' enlarges subtly on hover
-//   • 'ONLY ACCEPTING · 3 NEW CLIENTS / MONTH' with attention pulse
-//   • Italic title accents are orange and gradually glow on hover
-//   • Commitments: latent dot removed; 03 locked-highlighted in
-//     orange; 02 numeral yellow; 03 numeral + text orange
-//   • Section descriptions right-aligned
-//   • Mess: 'move' column locked-highlighted in orange; roman
-//     numerals replaced with 01/02/03; 'build' italic orange
-//   • Method: Audit (stage 01) locked-highlighted in orange
-//   • Catalog: Sales & Prospecting pre-selected; build·time
-//     caption removed from sample rows
-//   • Tier names in English; EN/ES toggle in the nav rolls them
-//     back to Operador/Equipo/Departamento for Spanish
-//   • MVP timing in Founder Track copy: 1–3 mo Equipo · 4–6 Dept.
-//   • Field Notes: one philosophical entry active, rest 'Soon'
-//   • Founder contact sheet integrated inside section 07
+// AXIUS · DIRECTION E05 — QUIET 0.5 (LIVE DIRECTION)
+//
+// Single-page editorial landing for axius.tech.  Hero ships with
+// the OperatorCard variant (`heroStyle === 'B'`) — directory-style
+// founder card that flips into the chat surface on demand.
+//
+// Sections in render order:
+//   Nav · Hero (00) · Commitments (01) · The Mess (02) ·
+//   Method (03) · Catalog (04) · Comparison (05) · Pricing (06) ·
+//   The Model (07) · The Operator [Founder] (08) · Appendix [FAQ]
+//   (09) · CTA (10) · Footer · FloatingDispatch (live ops log).
+//
+// Chat surface (opens from OperatorCard "Message directly"):
+//   AI-first.  Visitor sees an operational-diagnosis prompt and
+//   chips pointed at pain.  "Bring Andrés in" escalates to the
+//   human via Telegram (forum-topic per visitor); replies relay
+//   back into the chat with a 60s-per-message AI fallback.  After
+//   3+ distinct pain signals, an Operational Snapshot appears with
+//   a soft Walk-me-through CTA → discovery call.
+//
+// Tokens, data, and AxiusConfig live in axius-shared.jsx.  Live
+// Telegram bot token + WhatsApp number live in axius-secrets.local
+// .jsx (gitignored) and override AxiusConfig at runtime.
 // ============================================================
 
 window.AxiusDirectionE05 = function () {
@@ -80,6 +83,56 @@ window.AxiusDirectionE05 = function () {
         /* Anchored sections sit below the sticky nav (~58px) when scrolled to */
         #stage-quiet05 section[id], #stage-quiet05 header[id] { scroll-margin-top: 72px; }
         html { scroll-behavior: smooth; }
+        /* Site-wide zoom-out — gives the page a "one-step-zoomed-out"
+           feel so layout breathes more.  Uses the non-standard \`zoom\`
+           property (supported in Chrome / Safari / Edge, and Firefox
+           v126+) because unlike CSS transforms it also shrinks the
+           layout box, so no empty space appears around the stage. */
+        #stage-quiet05 { zoom: 0.9; }
+        @-moz-document url-prefix() {
+          /* Firefox < 126 fallback: scale via transform on the inner
+             content, with origin top-center so the stage stays aligned
+             under the nav while everything inside shrinks. */
+          #stage-quiet05 { transform: scale(0.9); transform-origin: 50% 0; }
+        }
+        /* ─── Responsive overrides ────────────────────────────
+           First responsive pass.  The prototype is built around a
+           1800-px design width with a 128-px gutter; the rules below
+           progressively collapse padding, headline sizes, and the
+           worst multi-column grids so the layout survives narrow
+           viewports.  Not a full mobile design — just enough that the
+           site is readable down to ~360 px instead of overflowing. */
+        @media (max-width: 1440px) {
+          #stage-quiet05 { zoom: 0.86; }
+          #stage-quiet05 section, #stage-quiet05 header {
+            padding-left: 80px !important; padding-right: 80px !important;
+          }
+        }
+        @media (max-width: 1024px) {
+          #stage-quiet05 { zoom: 0.82; }
+          #stage-quiet05 section, #stage-quiet05 header {
+            padding-left: 48px !important; padding-right: 48px !important;
+          }
+          #stage-quiet05 h1 { font-size: 64px !important; line-height: 1.02 !important; white-space: normal !important; }
+          #stage-quiet05 h2 { font-size: 44px !important; white-space: normal !important; }
+        }
+        @media (max-width: 768px) {
+          #stage-quiet05 { zoom: 0.95; }
+          #stage-quiet05 section, #stage-quiet05 header {
+            padding-left: 24px !important; padding-right: 24px !important;
+            padding-top: 64px !important; padding-bottom: 64px !important;
+          }
+          #stage-quiet05 h1 { font-size: 44px !important; }
+          #stage-quiet05 h2 { font-size: 30px !important; }
+          /* Collapse the worst multi-column grids to a single column.
+             Inline styles win specificity wars only with !important +
+             [style*=] attribute matching.  Crude but effective. */
+          #stage-quiet05 [style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
+          }
+          /* Hide the nav links + EN/ES toggle on phones; keep the CTA */
+          #stage-quiet05 nav a { display: none !important; }
+        }
       `;
       document.head.appendChild(style);
     }
@@ -134,17 +187,6 @@ window.AxiusDirectionE05 = function () {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  // Trim descriptions to ~one to two sentences for the more compact layout.
-  // Cuts at the first sentence boundary after the soft cap so we never strand
-  // a long trailing clause.
-  const trim = (text, cap = 130) => {
-    if (!text || text.length <= cap) return text;
-    const after = text.slice(cap);
-    const m = after.match(/[\.!?]\s/);
-    if (!m) return text.slice(0, cap).trim() + '…';
-    return text.slice(0, cap + m.index + 1).trim();
-  };
-
   // ─── Language (EN default, ES toggle) ──────────────────────
   const [lang, setLang] = React.useState('en');
   // Hero layout toggle: 'A' = current chat-card + 4-piece collage,
@@ -168,16 +210,13 @@ window.AxiusDirectionE05 = function () {
     en: {
       navLinks: ['Work', 'Method', 'Catalog', 'Pricing', 'Founder'],
       navBookCall: 'Book a call',
-      navOnDuty: 'On duty',
       eyebrowPractice: 'Axius — An independent technology operations practice',
-      eyebrowAccepting: 'Only Accepting · 3 New Clients / Month',
       eyebrowAcceptingPre: 'Only Accepting',
       eyebrowAcceptingAccent: '3 New Clients / Month',
       heroLine1: 'Run',
       heroLine2: 'your business.',
       heroLine3: 'Not your tech.',
       heroSubL1: 'We run the tech side of your business —',
-      heroSubL2: '',
       heroSubL3a: 'all of it — for ',
       heroSubL3b: 'one monthly fee.',
       heroCta1: 'Book a discovery call',
@@ -185,17 +224,13 @@ window.AxiusDirectionE05 = function () {
       directLineTitle: 'Direct line.',
       directLineAvailable: 'available',
       directLineRole: 'Operator · Altamonte Springs, FL · in Medellín now',
-      directLineBody1: 'Direct line to the operator doing the work.',
-      directLineBody2: ' No account managers. No ticket queues.',
+      directLineBody1: 'Direct line to the operator doing the work. ',
+      directLineBody2: 'No account managers. No ticket queues.',
       directLineCta: 'Talk now',
       askAndresOpen: 'Open desk · Andrés is online',
       askAndresGreeting: "Most companies don't actually need more software. They need someone operating the systems they already have.\n\nTell me what's currently slowing the business down, breaking repeatedly, or depending too much on you. I'll show you how we'd structure it operationally.",
       askAndresPlaceholder: 'Describe what\'s operationally frustrating…',
       askAndresReplying: 'Andrés is replying…',
-      askAndresWaiting: 'Andrés is checking the line',
-      askAndresAiIn: 'AI twin takes over in',
-      askAndresAiNow: 'Switch to AI now →',
-      askAndresAiTakeover: "I'm Andrés's AI twin — trained on our workflows, operating standards, active systems, and the way he runs client operations. He'll get the transcript when he's back. Here's the answer:",
       askAndresAiBadge: 'AI twin',
       // Bring-Andrés-in flow (escalation from the default AI conversation)
       chatRingAction: 'Bring Andrés in',
@@ -229,19 +264,15 @@ window.AxiusDirectionE05 = function () {
         'What would you automate first?',
       ],
       askAndresSend: 'Send ↵',
-      askAndresBack: '← back',
       dispatchLabel: 'Dispatch',
       dispatchIdleHelp: 'need help? · direct line available',
-      operatingLabel: 'Operating now',
       ctaSchedule: 'Schedule the conversation',
       bookingSubject: 'Axius — discovery call',
       bookingTierSubject: (t) => `Axius — ${t} tier inquiry`,
       pricingRecommended: 'Recommended',
-      pricingMostChosen: 'Most chosen',
       pricingCapacity: 'capacity',
       pricingResponse: 'response',
       pricingCadence: 'cadence',
-      pricingComms: 'comms',
       pricingCapacityInfo: (pts) =>
         `1 point ≈ 1 operated workflow. ${pts} pts = up to ${pts} concurrent workflows.`,
       pricingMo: '/ mo',
@@ -253,7 +284,6 @@ window.AxiusDirectionE05 = function () {
       pricingFounderTrackItems:   ['MVPs', 'internal platforms', 'AI products', 'customer tools'],
       pricingFounderTrackBuilder: 'Builder → MVP in 1–3 months',
       pricingFounderTrackPartner: 'Partner → substantial product in 4–6 months',
-      pricingFounderTrackQuote: 'Building, not running.',
       pricingFounderTrackCta: 'Talk about the Founder Track',
       pricingFounderTrackSubject: 'Axius — Founder Track inquiry',
       pricingGetStarted: 'Get started',
@@ -266,7 +296,7 @@ window.AxiusDirectionE05 = function () {
       statTier3: 'Tier 3',
       statStartsAt: 'Starts at',
       statStartsValue: '1k / mo',
-      statSetupWaived: 'Setup fees apply',
+      statSetupApplies: 'Setup fees apply',
       statIntakeStatus: 'Intake status',
       statLimited: 'Limited',
       statQ2_2026: 'Q2 · 2026',
@@ -278,7 +308,6 @@ window.AxiusDirectionE05 = function () {
       sec01TitlePrefix: 'Five things we ',
       sec01TitleItalic: 'always',
       sec01TitleSuffix: ' do.',
-      sec01Desc:        'Defaults on every retainer, every tier. Not the kickoff slide.',
       sec02Eyebrow:     '02 · The mess most founders inherit',
       sec02TitleP1:     'You started this to ',
       sec02TitleBuild:  'build',
@@ -295,7 +324,6 @@ window.AxiusDirectionE05 = function () {
       sec03TitlePrefix: 'Four ',
       sec03TitleItalic: 'stages',
       sec03TitleSuffix: <>.<br/>Each one named.<br/>Each one delivered.</>,
-      sec03Desc:        'One pipeline. Four checkpoints. A written artifact you own at every stage.',
       sec03StageLabel:  'Stage',
       sec03ArtifactLabel: 'artifact',
       sec04Eyebrow:     '04 · Catalog',
@@ -317,22 +345,15 @@ window.AxiusDirectionE05 = function () {
       sec05ColF:        'Freelancer',
       sec05ColH:        'In-House',
       sec05ColA:        'Axius',
-      sec05Cards: [
-        { name: 'Freelancer',     body: 'Specialist coverage, engaged per project. Hand-offs between providers. Knowledge resets each engagement.', price: '$3.5k – $8k',   sub: 'per month, variable' },
-        { name: 'In-house hire',  body: 'Single hire, single skillset. Months to fill. Bandwidth bound to one person. Long-term commitment plus benefits.', price: '$10k – $14k', sub: 'per month + benefits' },
-        { name: 'Axius',          body: 'Full stack, retained. One bill, month-to-month. Documented by default. Same hand on it month after month.',        price: 'From $1,000',  sub: 'per month · three tiers' },
-      ],
       sec06Eyebrow:     '06 · Pricing',
       sec06TitlePrefix: 'Three sizes of ',
       sec06TitleItalic: 'operating',
       sec06TitleSuffix: ' layer.',
-      sec06Desc:        'One team, one bill. Month-to-month after 90 days. One-time setup per tier.',
       // — Section 07: The Model —
       sec07Eyebrow:     '07 · The model',
       sec07TitlePrefix: 'Three roles, ',
       sec07TitleItalic: 'one',
       sec07TitleSuffix: ' accountable layer.',
-      sec07Desc:        '',
       modelPillars: [
         { eyebrow: 'Operator',         title: 'Owns direction and accountability.', bullets: [
           'Single point of contact',
@@ -368,8 +389,6 @@ window.AxiusDirectionE05 = function () {
       sec08TitlePrefix: 'The hand on ',
       sec08TitleItalic: 'your stack',
       sec08TitleSuffix: '.',
-      sec08Desc:        'One operator on your stack. A vetted bench of specialists I hire and supervise. A swarm of AI agents we run internally for speed, accuracy, and cost. You hire one accountable hand — never a roster to vet.',
-      sec08Quote:       '"I won\'t make you the bottleneck in your own company."',
       sec08VerifyLinkedin: 'LinkedIn',
       sec08TalkToMe:       'Talk to me',
       sec08FigCaptions: ['Operator', 'In studio', 'On the go'],
@@ -379,7 +398,7 @@ window.AxiusDirectionE05 = function () {
       sec09TitleItalic: 'asked simply',
       sec09TitleSuffix: '.',
       ctaEyebrow:       '— Begin —',
-      ctaTitlePrefix:   'Begin a',
+      ctaTitlePrefix:   <>Begin a<br/></>,
       ctaTitleItalic:   'conversation',
       ctaTitleSuffix:   '.',
       ctaBody:          'Thirty minutes. You leave with a one-page audit either way. No pitch, no pressure — just a clear picture of your stack.',
@@ -398,16 +417,13 @@ window.AxiusDirectionE05 = function () {
     es: {
       navLinks: ['Trabajo', 'Método', 'Catálogo', 'Precios', 'Fundador'],
       navBookCall: 'Agendar llamada',
-      navOnDuty: 'En oficina',
       eyebrowPractice: 'Axius — Una práctica independiente de operaciones tecnológicas',
-      eyebrowAccepting: 'Solo Aceptando · 3 Clientes Nuevos / Mes',
       eyebrowAcceptingPre: 'Solo Aceptando',
       eyebrowAcceptingAccent: '3 Clientes Nuevos / Mes',
       heroLine1: 'Tú llevas',
       heroLine2: 'tu negocio.',
       heroLine3: 'No tu tech.',
       heroSubL1: 'Operamos el lado tech de tu negocio —',
-      heroSubL2: '',
       heroSubL3a: 'todo — por ',
       heroSubL3b: 'una sola cuota mensual.',
       heroCta1: 'Agendar llamada de descubrimiento',
@@ -415,17 +431,13 @@ window.AxiusDirectionE05 = function () {
       directLineTitle: 'Línea directa.',
       directLineAvailable: 'disponible',
       directLineRole: 'Operador · Altamonte Springs, FL · en Medellín ahora',
-      directLineBody1: 'Una línea directa con quien hace el trabajo — sin gerentes de cuenta, sin filas de tickets.',
-      directLineBody2: ' Pregunta lo que sea; respondo en esta ventana.',
+      directLineBody1: 'Línea directa con quien hace el trabajo. ',
+      directLineBody2: 'Sin gerentes de cuenta. Sin filas de tickets.',
       directLineCta: 'Hablar ahora',
       askAndresOpen: 'Escritorio abierto · Andrés está en línea',
       askAndresGreeting: 'La mayoría de empresas no necesitan más software. Necesitan a alguien operando los sistemas que ya tienen.\n\nCuéntame qué está frenando al negocio, qué se rompe seguido, o qué depende demasiado de ti. Te muestro cómo lo estructuraríamos operativamente.',
       askAndresPlaceholder: 'Describe qué te frustra operativamente…',
       askAndresReplying: 'Andrés está respondiendo…',
-      askAndresWaiting: 'Andrés está revisando la línea',
-      askAndresAiIn: 'La IA toma el control en',
-      askAndresAiNow: 'Cambiar a IA ahora →',
-      askAndresAiTakeover: 'Soy el gemelo de IA de Andrés — entrenado con nuestros workflows, estándares operativos, sistemas activos y la forma en que él opera a los clientes. Le pasaré la transcripción cuando vuelva. Esta es la respuesta:',
       askAndresAiBadge: 'gemelo IA',
       // Flujo "Traer a Andrés" (escalación desde la conversación por defecto)
       chatRingAction: 'Traer a Andrés',
@@ -459,19 +471,15 @@ window.AxiusDirectionE05 = function () {
         '¿Qué automatizarías primero?',
       ],
       askAndresSend: 'Enviar ↵',
-      askAndresBack: '← volver',
       dispatchLabel: 'Despacho',
       dispatchIdleHelp: '¿necesitas ayuda? · línea directa disponible',
-      operatingLabel: 'Operando ahora',
       ctaSchedule: 'Agendar la conversación',
       bookingSubject: 'Axius — llamada de descubrimiento',
       bookingTierSubject: (t) => `Axius — consulta tier ${t}`,
       pricingRecommended: 'Recomendado',
-      pricingMostChosen: 'el más elegido',
       pricingCapacity: 'capacidad',
       pricingResponse: 'respuesta',
       pricingCadence: 'cadencia',
-      pricingComms: 'comunicación',
       pricingCapacityInfo: (pts) =>
         `1 punto ≈ 1 workflow operado. ${pts} pts = hasta ${pts} workflows simultáneos.`,
       pricingMo: '/ mes',
@@ -483,7 +491,6 @@ window.AxiusDirectionE05 = function () {
       pricingFounderTrackItems:   ['MVPs', 'plataformas internas', 'productos de IA', 'herramientas de cliente'],
       pricingFounderTrackBuilder: 'Builder → MVP en 1–3 meses',
       pricingFounderTrackPartner: 'Partner → producto sustancial en 4–6 meses',
-      pricingFounderTrackQuote: 'Construyendo, no operando.',
       pricingFounderTrackCta: 'Hablar sobre el Founder Track',
       pricingFounderTrackSubject: 'Axius — consulta Founder Track',
       pricingGetStarted: 'Empezar ahora',
@@ -496,7 +503,7 @@ window.AxiusDirectionE05 = function () {
       statTier3: 'Tier 3',
       statStartsAt: 'Desde',
       statStartsValue: '1k / mes',
-      statSetupWaived: 'Aplica setup',
+      statSetupApplies: 'Aplica setup',
       statIntakeStatus: 'Estado de admisión',
       statLimited: 'Limitado',
       statQ2_2026: 'T2 · 2026',
@@ -508,7 +515,6 @@ window.AxiusDirectionE05 = function () {
       sec01TitlePrefix: 'Cinco cosas que ',
       sec01TitleItalic: 'siempre',
       sec01TitleSuffix: ' hacemos.',
-      sec01Desc:        'Por defecto en cada retainer, cada tier. No la slide de arranque.',
       sec02Eyebrow:     '02 · El caos que la mayoría de fundadores heredan',
       sec02TitleP1:     'Empezaste esto para ',
       sec02TitleBuild:  'construir',
@@ -525,7 +531,6 @@ window.AxiusDirectionE05 = function () {
       sec03TitlePrefix: 'Cuatro ',
       sec03TitleItalic: 'etapas',
       sec03TitleSuffix: <>.<br/>Cada una nombrada.<br/>Cada una entregada.</>,
-      sec03Desc:        'Una pipeline. Cuatro checkpoints. Un artefacto escrito tuyo en cada etapa.',
       sec03StageLabel:  'Etapa',
       sec03ArtifactLabel: 'artefacto',
       sec04Eyebrow:     '04 · Catálogo',
@@ -547,22 +552,15 @@ window.AxiusDirectionE05 = function () {
       sec05ColF:        'Freelancer',
       sec05ColH:        'Interno',
       sec05ColA:        'Axius',
-      sec05Cards: [
-        { name: 'Freelancer',            body: 'Cobertura especializada, contratada por proyecto. Traspasos entre proveedores. El conocimiento se reinicia cada vez.', price: '$3.5k – $8k',   sub: 'al mes, variable' },
-        { name: 'Contratación interna',  body: 'Una contratación, un set de habilidades. Meses para llenarla. Capacidad limitada a una persona. Compromiso largo plazo más beneficios.', price: '$10k – $14k', sub: 'al mes + beneficios' },
-        { name: 'Axius',                 body: 'Stack completo, retenido. Una factura, mes a mes. Documentado por defecto. La misma mano, mes tras mes.',                price: 'Desde $1,000', sub: 'al mes · tres tiers' },
-      ],
       sec06Eyebrow:     '06 · Precios',
       sec06TitlePrefix: 'Tres tamaños de capa ',
       sec06TitleItalic: 'operativa',
       sec06TitleSuffix: '.',
-      sec06Desc:        'Un equipo, una factura. Mes a mes después de 90 días. Setup único por tier.',
       // — Sección 07: El Modelo —
       sec07Eyebrow:     '07 · El modelo',
       sec07TitlePrefix: 'Tres roles, ',
       sec07TitleItalic: 'una',
       sec07TitleSuffix: ' sola capa responsable.',
-      sec07Desc:        '',
       modelPillars: [
         { eyebrow: 'Operador',     title: 'Es dueño de la dirección y la responsabilidad.', bullets: [
           'Un solo punto de contacto',
@@ -598,8 +596,6 @@ window.AxiusDirectionE05 = function () {
       sec08TitlePrefix: 'La mano sobre ',
       sec08TitleItalic: 'tu stack',
       sec08TitleSuffix: '.',
-      sec08Desc:        'Un operador sobre tu stack. Un banco de especialistas verificados que contrato y superviso. Un enjambre de agentes de IA que corremos internamente para velocidad, precisión y costo. Contratas una sola mano — nunca una lista que verificar.',
-      sec08Quote:       '"No te haré el cuello de botella de tu propia empresa."',
       sec08VerifyLinkedin: 'LinkedIn',
       sec08TalkToMe:       'Hablemos',
       sec08FigCaptions: ['Operador', 'En estudio', 'En movimiento'],
@@ -609,7 +605,7 @@ window.AxiusDirectionE05 = function () {
       sec09TitleItalic: 'simplemente',
       sec09TitleSuffix: '.',
       ctaEyebrow:       '— Empezar —',
-      ctaTitlePrefix:   'Comencemos una',
+      ctaTitlePrefix:   <>Comencemos una<br/></>,
       ctaTitleItalic:   'conversación',
       ctaTitleSuffix:   '.',
       ctaBody:          'Treinta minutos. Te llevas un audit de una página, en cualquier caso. Sin pitch, sin presión — solo una imagen clara de tu stack.',
@@ -755,67 +751,6 @@ window.AxiusDirectionE05 = function () {
     );
   };
 
-  // ─── Operating Now — fades through real workflow names ─────
-  const OperatingNow = ({ style = {}, compact }) => {
-    const all = React.useMemo(() => (
-      window.AxiusCatalog.flatMap(c => c.samples.map(s => ({ name: s.name, cat: c.name })))
-    ), []);
-    const [i, setI] = React.useState(0);
-    const [fade, setFade] = React.useState(true);
-    React.useEffect(() => {
-      const id = setInterval(() => {
-        setFade(false);
-        setTimeout(() => {
-          setI(prev => (prev + 1) % all.length);
-          setFade(true);
-        }, 280);
-      }, 3200);
-      return () => clearInterval(id);
-    }, [all.length]);
-    const item = all[i];
-    return (
-      <div style={{
-        display: 'inline-flex', alignItems: 'center', gap: compact ? 8 : 14,
-        padding: compact ? 0 : '10px 16px',
-        background: compact ? 'transparent' : C.surface,
-        border: compact ? 'none' : `1px solid ${C.line}`,
-        fontFamily: MONO, fontSize: 11, letterSpacing: '0.04em',
-        color: C.dim, ...style,
-      }}>
-        {!compact && (
-          <span style={{
-            display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
-            background: C.mint,
-            animation: 'axQ05Pulse 2.4s ease-out infinite',
-          }}/>
-        )}
-        {!compact && (
-          <span style={{
-            fontFamily: MONO, fontSize: 10, letterSpacing: '0.18em',
-            textTransform: 'uppercase', color: C.mute,
-          }}>{t('operatingLabel')}</span>
-        )}
-        <span style={{
-          opacity: fade ? 1 : 0,
-          transition: 'opacity .28s ease',
-          color: C.ink, fontWeight: 500,
-          textTransform: 'none', letterSpacing: '-0.005em',
-          fontFamily: DISPLAY, fontSize: compact ? 12 : 11,
-          maxWidth: compact ? 220 : 'none',
-          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-        }}>{item.name}</span>
-        <span style={{color: C.faint, fontFamily: MONO}}>·</span>
-        <span style={{
-          opacity: fade ? 1 : 0,
-          transition: 'opacity .28s ease',
-          color: C.mute, textTransform: 'uppercase',
-          letterSpacing: '0.16em', fontSize: compact ? 9 : 10,
-          maxWidth: compact ? 130 : 'none',
-          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-        }}>{item.cat}</span>
-      </div>
-    );
-  };
 
   // ─── Eyebrow ───────────────────────────────────────────────
   const Eyebrow = ({ children, color, style = {} }) => (
@@ -851,14 +786,14 @@ window.AxiusDirectionE05 = function () {
           ...style,
         }}>
         {italicSweep ? (
-          /* Sweep mode mirrors the hero title's grammar:
-             · prefix sits inside a BLOCK scaling span — gently zooms
-               on hover, forces the italic to fall on the next line
-             · italic word is OUTSIDE the scaling span (no zoom),
-               instead it gets the orange-sweep + white-text treatment
-             · suffix follows the italic on that same lower line */
+          /* Sweep mode — italic word lives OUTSIDE the scaling span so
+             it stays still (no zoom) while prefix + suffix gently scale
+             into place.  The italic gets the orange-sweep + white-text
+             reveal.  Whether the italic falls on its own line or stays
+             inline with the prefix is determined entirely by the prefix
+             content (e.g. the CTA's prefix ends with <br/> to break). */
           <>
-            <span style={{...scaleStyle, display: 'block'}}>{prefix}</span>
+            <span style={scaleStyle}>{prefix}</span>
             <span style={{
               position: 'relative', display: 'inline-block',
               fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
@@ -879,7 +814,7 @@ window.AxiusDirectionE05 = function () {
               }}/>
               <span style={{position: 'relative', zIndex: 1}}>{italic}</span>
             </span>
-            {suffix}
+            <span style={scaleStyle}>{suffix}</span>
           </>
         ) : (
           <span style={scaleStyle}>
@@ -2154,24 +2089,6 @@ window.AxiusDirectionE05 = function () {
         </div>
       );
     }
-    if (m.role === 'sys-ai') return (
-      <div style={{
-        padding: '8px 10px',
-        background: C.panel,
-        borderLeft: `2px solid ${C.lavender}`,
-        fontFamily: DISPLAY, fontSize: 12, color: C.dim, lineHeight: 1.55,
-      }}>
-        <span style={{
-          display: 'inline-block', marginRight: 8,
-          padding: '2px 6px',
-          background: C.lavender, color: '#FFFFFF',
-          fontFamily: MONO, fontSize: 8, fontWeight: 600,
-          letterSpacing: '0.18em', textTransform: 'uppercase',
-          verticalAlign: 'middle',
-        }}>{t('askAndresAiBadge')}</span>
-        {m.text}
-      </div>
-    );
     if (m.role === 'user') return (
       <div style={{display: 'flex', justifyContent: 'flex-end'}}>
         <div style={{
@@ -3029,7 +2946,7 @@ window.AxiusDirectionE05 = function () {
           {[
             { v: <CountUp to={129}/>,  k: t('statActiveSystems'),  sub: t('statLast90'),     accent: C.tangerine },
             { v: '< 24h',              k: t('statResponseWindow'), sub: t('statTier3'),      accent: C.mint      },
-            { v: t('statStartsValue'), k: t('statStartsAt'),       sub: t('statSetupWaived'),accent: C.amber     },
+            { v: t('statStartsValue'), k: t('statStartsAt'),       sub: t('statSetupApplies'),accent: C.amber     },
             { v: t('statLimited'),     k: t('statIntakeStatus'),   sub: t('statQ2_2026'),    accent: C.lavender  },
           ].map((s, i, arr) => (
             <HoverCell key={i} accent={s.accent}
@@ -3102,6 +3019,7 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec01Eyebrow')}</Eyebrow>
             <HoverHead
+              italicSweep
               style={{whiteSpace: 'nowrap'}}
               prefix={t('sec01TitlePrefix')}
               italic={t('sec01TitleItalic')}
@@ -3276,6 +3194,7 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec03Eyebrow')}</Eyebrow>
             <HoverHead
+              italicSweep
               style={{maxWidth: 760}}
               prefix={t('sec03TitlePrefix')}
               italic={t('sec03TitleItalic')}
@@ -3509,6 +3428,7 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec04Eyebrow')}</Eyebrow>
             <HoverHead
+              italicSweep
               accent={C.tangerine}
               prefix={t('sec04TitlePrefix')}
               italic={t('sec04TitleItalic')}
@@ -3720,6 +3640,7 @@ window.AxiusDirectionE05 = function () {
       }}>
         <Eyebrow style={{marginBottom: 28}}>{t('sec05Eyebrow')}</Eyebrow>
         <HoverHead
+              italicSweep
           accent={C.mint}
           style={{fontSize: 84, letterSpacing: '-0.045em', maxWidth: 1080, marginBottom: 72}}
           prefix={t('sec05TitlePrefix')}
@@ -3864,6 +3785,7 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec06Eyebrow')}</Eyebrow>
             <HoverHead
+              italicSweep
               accent={C.mint}
               style={{whiteSpace: 'nowrap'}}
               prefix={t('sec06TitlePrefix')}
@@ -3887,17 +3809,20 @@ window.AxiusDirectionE05 = function () {
         </div>
 
         {/* Founder Track — quiet footer panel under the tier row.
-            Same horizontal layout (label/body left, CTA right) but
-            the body is now a stack: serif italic question → capacity
-            line → 4-item chip row (MVPs / internal platforms / AI
-            products / customer tools) → two tier paths. */}
+            Horizontal layout: label / question / capacity / chip row
+            on the left, CTA on the right.  Uses flex (not grid) so the
+            CTA stays anchored to the right at all widths, and the chip
+            row wraps inside its own column instead of overflowing. */}
         <div style={{
           marginTop: 24, padding: '28px 32px',
           background: C.surface, border: `1px solid ${C.line}`,
-          display: 'grid', gridTemplateColumns: '1fr auto', gap: 40,
-          alignItems: 'center',
+          display: 'flex', alignItems: 'center', gap: 32,
+          flexWrap: 'wrap',
         }}>
-          <div style={{maxWidth: 740, display: 'flex', flexDirection: 'column', gap: 12}}>
+          <div style={{
+            flex: '1 1 480px', minWidth: 0, maxWidth: 760,
+            display: 'flex', flexDirection: 'column', gap: 12,
+          }}>
             <Eyebrow color={C.mute}>{t('pricingFounderTrackLabel')}</Eyebrow>
             <div style={{
               fontFamily: DISPLAY, fontWeight: 500, fontSize: 22,
@@ -4152,6 +4077,7 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec07Eyebrow')}</Eyebrow>
             <HoverHead
+              italicSweep
               style={{maxWidth: 760}}
               prefix={t('sec07TitlePrefix')}
               italic={t('sec07TitleItalic')}
@@ -4236,6 +4162,7 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec08Eyebrow')}</Eyebrow>
             <HoverHead
+              italicSweep
               style={{maxWidth: 720}}
               prefix={t('sec08TitlePrefix')}
               italic={t('sec08TitleItalic')}
@@ -4387,6 +4314,7 @@ window.AxiusDirectionE05 = function () {
       }}>
         <Eyebrow style={{marginBottom: 24}}>{t('sec09Eyebrow')}</Eyebrow>
         <HoverHead
+              italicSweep
           style={{maxWidth: 1000, marginBottom: 44, fontSize: 60, letterSpacing: '-0.038em', lineHeight: 1.05}}
           prefix={t('sec09TitlePrefix')}
           italic={t('sec09TitleItalic')}

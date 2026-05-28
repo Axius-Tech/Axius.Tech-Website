@@ -16,10 +16,12 @@
   .stage-studio { width: 1440px; margin: 0 auto; background: #0F0E0C; }
   .stage-vivid { width: 1440px; margin: 0 auto; background: #F4EFE6; }
   .stage-quiet { width: 1440px; margin: 0 auto; background: #F7F6F2; }
-  .stage-quiet05 { width: 1800px; margin: 0 auto; background: #F7F6F2; }
-  .stage-quiet06 { width: 1800px; margin: 0 auto; background: #F7F6F2; }
-  .stage-quiet075 { width: 1600px; margin: 0 auto; background: #F5F1EA; }
-  .stage-quiet090 { width: 1600px; margin: 0 auto; background: #EFEAE0; }
+  /* Quiet stages now max-out at their design width but shrink with
+     the viewport so the page never overflows horizontally below it. */
+  .stage-quiet05 { width: 100%; max-width: 1800px; margin: 0 auto; background: #F7F6F2; }
+  .stage-quiet06 { width: 100%; max-width: 1800px; margin: 0 auto; background: #F7F6F2; }
+  .stage-quiet075 { width: 100%; max-width: 1600px; margin: 0 auto; background: #F5F1EA; }
+  .stage-quiet090 { width: 100%; max-width: 1600px; margin: 0 auto; background: #EFEAE0; }
   .stage-quiet2 { width: 1440px; margin: 0 auto; background: #0E0C0A; }
   .stage-quiet3 { width: 1440px; margin: 0 auto; background: #050805; }
   .stage-matrix { width: 1440px; margin: 0 auto; background: #020503; }
