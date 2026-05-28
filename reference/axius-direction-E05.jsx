@@ -398,7 +398,7 @@ window.AxiusDirectionE05 = function () {
       sec09TitleItalic: 'asked simply',
       sec09TitleSuffix: '.',
       ctaEyebrow:       '— Begin —',
-      ctaTitlePrefix:   <>Begin a<br/></>,
+      ctaTitlePrefix:   'Begin a',
       ctaTitleItalic:   'conversation',
       ctaTitleSuffix:   '.',
       ctaBody:          'Thirty minutes. You leave with a one-page audit either way. No pitch, no pressure — just a clear picture of your stack.',
@@ -605,7 +605,7 @@ window.AxiusDirectionE05 = function () {
       sec09TitleItalic: 'simplemente',
       sec09TitleSuffix: '.',
       ctaEyebrow:       '— Empezar —',
-      ctaTitlePrefix:   <>Comencemos una<br/></>,
+      ctaTitlePrefix:   'Comencemos una',
       ctaTitleItalic:   'conversación',
       ctaTitleSuffix:   '.',
       ctaBody:          'Treinta minutos. Te llevas un audit de una página, en cualquier caso. Sin pitch, sin presión — solo una imagen clara de tu stack.',
@@ -786,14 +786,14 @@ window.AxiusDirectionE05 = function () {
           ...style,
         }}>
         {italicSweep ? (
-          /* Sweep mode — italic word lives OUTSIDE the scaling span so
-             it stays still (no zoom) while prefix + suffix gently scale
-             into place.  The italic gets the orange-sweep + white-text
-             reveal.  Whether the italic falls on its own line or stays
-             inline with the prefix is determined entirely by the prefix
-             content (e.g. the CTA's prefix ends with <br/> to break). */
+          /* CTA-only sweep mode:
+             · prefix sits in a BLOCK scaling span — gently zooms on
+               hover, forces the italic to fall on the next line
+             · italic word is OUTSIDE the scaling span (no zoom),
+               instead gets the orange-sweep + white-text treatment
+             · suffix flows after the italic on that lower line */
           <>
-            <span style={scaleStyle}>{prefix}</span>
+            <span style={{...scaleStyle, display: 'block'}}>{prefix}</span>
             <span style={{
               position: 'relative', display: 'inline-block',
               fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
@@ -814,7 +814,7 @@ window.AxiusDirectionE05 = function () {
               }}/>
               <span style={{position: 'relative', zIndex: 1}}>{italic}</span>
             </span>
-            <span style={scaleStyle}>{suffix}</span>
+            {suffix}
           </>
         ) : (
           <span style={scaleStyle}>
@@ -3019,7 +3019,6 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec01Eyebrow')}</Eyebrow>
             <HoverHead
-              italicSweep
               style={{whiteSpace: 'nowrap'}}
               prefix={t('sec01TitlePrefix')}
               italic={t('sec01TitleItalic')}
@@ -3194,7 +3193,6 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec03Eyebrow')}</Eyebrow>
             <HoverHead
-              italicSweep
               style={{maxWidth: 760}}
               prefix={t('sec03TitlePrefix')}
               italic={t('sec03TitleItalic')}
@@ -3428,7 +3426,6 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec04Eyebrow')}</Eyebrow>
             <HoverHead
-              italicSweep
               accent={C.tangerine}
               prefix={t('sec04TitlePrefix')}
               italic={t('sec04TitleItalic')}
@@ -3640,7 +3637,6 @@ window.AxiusDirectionE05 = function () {
       }}>
         <Eyebrow style={{marginBottom: 28}}>{t('sec05Eyebrow')}</Eyebrow>
         <HoverHead
-              italicSweep
           accent={C.mint}
           style={{fontSize: 84, letterSpacing: '-0.045em', maxWidth: 1080, marginBottom: 72}}
           prefix={t('sec05TitlePrefix')}
@@ -3785,7 +3781,6 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec06Eyebrow')}</Eyebrow>
             <HoverHead
-              italicSweep
               accent={C.mint}
               style={{whiteSpace: 'nowrap'}}
               prefix={t('sec06TitlePrefix')}
@@ -3810,19 +3805,14 @@ window.AxiusDirectionE05 = function () {
 
         {/* Founder Track — quiet footer panel under the tier row.
             Horizontal layout: label / question / capacity / chip row
-            on the left, CTA on the right.  Uses flex (not grid) so the
-            CTA stays anchored to the right at all widths, and the chip
-            row wraps inside its own column instead of overflowing. */}
+            on the left, CTA on the right. */}
         <div style={{
           marginTop: 24, padding: '28px 32px',
           background: C.surface, border: `1px solid ${C.line}`,
-          display: 'flex', alignItems: 'center', gap: 32,
-          flexWrap: 'wrap',
+          display: 'grid', gridTemplateColumns: '1fr auto', gap: 40,
+          alignItems: 'center',
         }}>
-          <div style={{
-            flex: '1 1 480px', minWidth: 0, maxWidth: 760,
-            display: 'flex', flexDirection: 'column', gap: 12,
-          }}>
+          <div style={{maxWidth: 740, display: 'flex', flexDirection: 'column', gap: 12}}>
             <Eyebrow color={C.mute}>{t('pricingFounderTrackLabel')}</Eyebrow>
             <div style={{
               fontFamily: DISPLAY, fontWeight: 500, fontSize: 22,
@@ -4077,7 +4067,6 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec07Eyebrow')}</Eyebrow>
             <HoverHead
-              italicSweep
               style={{maxWidth: 760}}
               prefix={t('sec07TitlePrefix')}
               italic={t('sec07TitleItalic')}
@@ -4162,7 +4151,6 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec08Eyebrow')}</Eyebrow>
             <HoverHead
-              italicSweep
               style={{maxWidth: 720}}
               prefix={t('sec08TitlePrefix')}
               italic={t('sec08TitleItalic')}
@@ -4314,7 +4302,6 @@ window.AxiusDirectionE05 = function () {
       }}>
         <Eyebrow style={{marginBottom: 24}}>{t('sec09Eyebrow')}</Eyebrow>
         <HoverHead
-              italicSweep
           style={{maxWidth: 1000, marginBottom: 44, fontSize: 60, letterSpacing: '-0.038em', lineHeight: 1.05}}
           prefix={t('sec09TitlePrefix')}
           italic={t('sec09TitleItalic')}
