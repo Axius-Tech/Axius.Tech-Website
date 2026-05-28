@@ -204,6 +204,7 @@ window.AxiusDirectionE05 = function () {
       chatRingSeconds: (n) => `${n}s`,
       chatRingNoAnswer: "Caught on a call — I'll reply here personally as soon as I'm free, usually within the day. The standby has full context and can keep moving in the meantime.",
       chatRingMessageSent: 'Andrés notified · transcript on its way',
+      chatRingNoWebhook:   'standby · response window applies',
       // Operator-card variant (Hero B)
       opCardOperator:    'Operator',
       opCardOnline:      'Online',
@@ -433,6 +434,7 @@ window.AxiusDirectionE05 = function () {
       chatRingSeconds: (n) => `${n}s`,
       chatRingNoAnswer: 'Estoy en una llamada — te respondo aquí personalmente apenas me libere, normalmente dentro del día. El standby tiene contexto completo y puede seguir avanzando.',
       chatRingMessageSent: 'Andrés notificado · transcripción en camino',
+      chatRingNoWebhook:   'standby · aplica ventana de respuesta',
       // Variante Operator Card (Hero B)
       opCardOperator:    'Operador',
       opCardOnline:      'En línea',
@@ -828,9 +830,13 @@ window.AxiusDirectionE05 = function () {
   // scale-on-hover matching the hero title's enlarge gesture
   const HoverHead = ({ style = {}, prefix, italic, suffix, italicStyle = {}, italicSweep }) => {
     const [h, setH] = React.useState(false);
+    // The CTA's headline is centered inside the section, so the scale
+    // grows from its centre (origin 50% 50%) instead of left-anchored
+    // — otherwise "Begin a" would drift right on hover.  Section
+    // titles still use the left-anchored grammar.
     const scaleStyle = {
       display: 'inline-block',
-      transformOrigin: '0% 50%',
+      transformOrigin: italicSweep ? '50% 50%' : '0% 50%',
       transform: h ? 'scale(1.035)' : 'scale(1)',
       transition: 'transform .55s cubic-bezier(.2,.8,.2,1)',
     };
@@ -1025,19 +1031,6 @@ window.AxiusDirectionE05 = function () {
         </div>
 
         <div style={{display: 'inline-flex', alignItems: 'center', gap: 18}}>
-          <LiveClock/>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            fontFamily: MONO, fontSize: 10, color: C.dim,
-            letterSpacing: '0.18em', textTransform: 'uppercase',
-          }}>
-            <span style={{
-              display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
-              background: C.mint,
-              animation: 'axQ05Pulse 2.4s ease-out infinite',
-            }}/>
-            {t('navOnDuty')}
-          </span>
           {/* EN / ES — minimalist text toggle.  Slash separator, tight
               spacing.  Active code = ink + bold; inactive = mute,
               brightening to ink on hover.  No underlines, no fills. */}
@@ -1348,9 +1341,14 @@ window.AxiusDirectionE05 = function () {
         return;
       }
 
-      // In-chat default: stay in the conversation, fire webhook silently.
+      // In-chat default: stay in the conversation.  Only claim the
+      // notification was sent when there's actually a webhook to
+      // receive it; otherwise we'd lie to the visitor.
       setHasRung(true);
-      setMessages(m => [...m, { role: 'sys-ring', text: t('chatRingMessageSent') }]);
+      setMessages(m => [...m, {
+        role: 'sys-ring',
+        text: webhook ? t('chatRingMessageSent') : t('chatRingNoWebhook'),
+      }]);
       setRingSeconds(60);
       if (webhook) {
         try {
@@ -1713,9 +1711,12 @@ window.AxiusDirectionE05 = function () {
       // drop in shortly after the AI reply lands (a beat of breathing
       // room — feels diagnostic rather than reflexive).
       if (shouldSurfaceSnapshot) {
+        // 'depends' (founder-as-bottleneck) or ≥ 5 distinct pain
+        // signals → Department.  Otherwise default to Team.  Operator
+        // tier is too small for visitors who've named 3+ pain points.
         const tier = nextSignals.includes('depends') || nextSignals.length >= 5
           ? 'department'
-          : (nextSignals.includes('manual') || nextSignals.length >= 4 ? 'team' : 'team');
+          : 'team';
         const snapshotMsg = {
           role: 'sys-snapshot',
           id: `snap-${Date.now()}`,
@@ -2412,6 +2413,14 @@ window.AxiusDirectionE05 = function () {
   const OperatorCard = () => {
     const [mode, setMode] = React.useState('card');
     const photo = (window.AxiusFounder && window.AxiusFounder.photo) || 'andres-toro.jpg';
+    // External "open the hero chat" trigger — any component on the
+    // page (e.g. the Founder "Talk to me" button) can dispatch this
+    // event and the OperatorCard flips into chat mode.
+    React.useEffect(() => {
+      const handler = () => setMode('chat');
+      window.addEventListener('axius:openHeroChat', handler);
+      return () => window.removeEventListener('axius:openHeroChat', handler);
+    }, []);
     const onMessage = () => {
       const cfg = window.AxiusConfig || {};
       const behavior = cfg.ringBehavior || 'inChat';
@@ -2468,7 +2477,7 @@ window.AxiusDirectionE05 = function () {
                   border: `1px solid ${C.line}`,
                   background: C.panel,
                   overflow: 'hidden',
-                  cursor: 'crosshair',
+                  cursor: 'default',
                 }}>
                 <img src={photo} alt="Andrés Toro" style={{
                   width: '100%', height: '100%', objectFit: 'cover',
@@ -3076,7 +3085,7 @@ window.AxiusDirectionE05 = function () {
   const Commitments = () => {
     // Per-tile accent for the latent stroke + numeral color.
     // 03 is locked-highlighted in orange, 02 numeral is yellow.
-    const accents = [C.mint, C.amber, C.tangerine, C.lavender, C.mint];
+    const accents = [C.mint, C.amber, C.tangerine, C.lavender, C.sky];
     const [headH, setHeadH] = React.useState(false);
     const items = window.AxiusCommitments;
     return (
@@ -3746,11 +3755,7 @@ window.AxiusDirectionE05 = function () {
                     background: col.accent,
                   }}/>
                 )}
-                <Eyebrow color={col.featured ? col.accent : C.mute}>
-                  {t('sec05OptionLabel')} 0{i + 1}
-                </Eyebrow>
                 <div style={{
-                  marginTop: 6,
                   fontFamily: DISPLAY, fontWeight: 600, fontSize: 20,
                   letterSpacing: '-0.025em', color: C.ink,
                 }}>{col.label}</div>
@@ -4057,8 +4062,7 @@ window.AxiusDirectionE05 = function () {
 
         {/* Capacity + response progress bars — fill animates on pulse/hover.
             The Capacity bar carries an (i) info icon next to its value
-            that explains what a point represents and lists the tier's
-            communication channels (Comms removed as a standalone field). */}
+            that explains what a point represents. */}
         <div style={{
           padding: '18px 0',
           borderTop: `1px solid ${C.line}`, borderBottom: `1px solid ${C.line}`,
@@ -4217,7 +4221,7 @@ window.AxiusDirectionE05 = function () {
     ];
 
     return (
-      <section id="founder" data-screen-label="08 Founder" style={{
+      <section id="founder" data-screen-label="08 The Operator" style={{
         padding: `108px ${pad}px`,
         borderTop: `1px solid ${C.line}`,
       }}>
@@ -4349,7 +4353,7 @@ window.AxiusDirectionE05 = function () {
           aspectRatio: '4 / 5',
           border: `1px solid ${C.line}`,
           background: C.panel,
-          cursor: 'crosshair',
+          cursor: 'default',
         }}>
         <img src={window.AxiusFounder.photo} alt={`Andrés Toro · ${f.caption}`} style={{
           position: 'absolute', inset: 0,
@@ -4377,7 +4381,7 @@ window.AxiusDirectionE05 = function () {
   const FAQ = () => {
     const [open, setOpen] = React.useState(-1);
     return (
-      <section data-screen-label="09 FAQ" style={{
+      <section id="faq" data-screen-label="09 Appendix" style={{
         padding: `96px ${pad}px`,
         borderTop: `1px solid ${C.line}`,
       }}>
@@ -4571,8 +4575,8 @@ window.AxiusDirectionE05 = function () {
         '05 Comparison':   { tag: 'INFO',  msg: 'comparison.review · agency vs axius' },
         '06 Pricing':      { tag: 'INFO',  msg: 'capacity calculator active' },
         '07 The Model':    { tag: 'OK',    msg: 'operating layer · 4 roles loaded' },
-        '08 Founder':      { tag: 'OK',    msg: 'operator context loaded' },
-        '09 FAQ':          { tag: 'OK',    msg: 'faq.opened · onboarding process' },
+        '08 The Operator': { tag: 'OK',    msg: 'operator context loaded' },
+        '09 Appendix':     { tag: 'OK',    msg: 'faq.opened · onboarding process' },
         '10 CTA':          { tag: 'READY', msg: 'discovery.call intake available' },
       };
       const targets = document.querySelectorAll('#stage-quiet05 [data-screen-label]');
