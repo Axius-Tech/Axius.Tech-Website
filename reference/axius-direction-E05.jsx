@@ -88,12 +88,12 @@ window.AxiusDirectionE05 = function () {
            property (supported in Chrome / Safari / Edge, and Firefox
            v126+) because unlike CSS transforms it also shrinks the
            layout box, so no empty space appears around the stage. */
-        #stage-quiet05 { zoom: 0.9; }
+        #stage-quiet05 { zoom: 0.8; }
         @-moz-document url-prefix() {
           /* Firefox < 126 fallback: scale via transform on the inner
              content, with origin top-center so the stage stays aligned
              under the nav while everything inside shrinks. */
-          #stage-quiet05 { transform: scale(0.9); transform-origin: 50% 0; }
+          #stage-quiet05 { transform: scale(0.8); transform-origin: 50% 0; }
         }
         /* ─── Responsive overrides ────────────────────────────
            First responsive pass.  The prototype is built around a
@@ -103,13 +103,13 @@ window.AxiusDirectionE05 = function () {
            viewports.  Not a full mobile design — just enough that the
            site is readable down to ~360 px instead of overflowing. */
         @media (max-width: 1440px) {
-          #stage-quiet05 { zoom: 0.86; }
+          #stage-quiet05 { zoom: 0.78; }
           #stage-quiet05 section, #stage-quiet05 header {
             padding-left: 80px !important; padding-right: 80px !important;
           }
         }
         @media (max-width: 1024px) {
-          #stage-quiet05 { zoom: 0.82; }
+          #stage-quiet05 { zoom: 0.75; }
           #stage-quiet05 section, #stage-quiet05 header {
             padding-left: 48px !important; padding-right: 48px !important;
           }
@@ -281,7 +281,6 @@ window.AxiusDirectionE05 = function () {
       pricingTierLabel: 'TIER',
       pricingFounderTrackLabel: 'Founder Track',
       pricingFounderTrackQuestion: 'Building instead of operating?',
-      pricingFounderTrackCapacity: 'The same workflow capacity can be directed toward:',
       pricingFounderTrackItems:   ['MVPs', 'internal platforms', 'AI products', 'customer tools'],
       pricingFounderTrackBuilder: 'Builder → MVP in 1–3 months',
       pricingFounderTrackPartner: 'Partner → substantial product in 4–6 months',
@@ -289,7 +288,6 @@ window.AxiusDirectionE05 = function () {
       pricingFounderTrackSubject: 'Axius — Founder Track inquiry',
       pricingGetStarted: 'Get started',
       pricingBookCallSecondary: 'Or book a call first →',
-      pricingPromoLine: (code) => `Committing 3+ months? Use code ${code} to waive the setup fee.`,
       pricingCheckoutSubject: (tier) => `Axius — start ${tier} subscription`,
       // Hero — stat row
       statActiveSystems: 'Active systems',
@@ -346,7 +344,7 @@ window.AxiusDirectionE05 = function () {
       sec04CapacityFooter:   'Most businesses start with 2–5 active operational workflows.',
       // AI Recommendation Mode — describe your business, the catalog
       // auto-pivots to the most relevant category and surfaces it.
-      sec04RecommendLabel:       'AI · recommend',
+      sec04RecommendLabel:       'AI Powered',
       sec04RecommendPlaceholder: 'Describe your business…',
       sec04RecommendButton:      'Recommend',
       sec04RecommendBadge:       'Recommended for you',
@@ -509,7 +507,6 @@ window.AxiusDirectionE05 = function () {
       pricingTierLabel: 'TIER',
       pricingFounderTrackLabel: 'Founder Track',
       pricingFounderTrackQuestion: '¿Construyendo en lugar de operar?',
-      pricingFounderTrackCapacity: 'La misma capacidad de workflows puede dirigirse hacia:',
       pricingFounderTrackItems:   ['MVPs', 'plataformas internas', 'productos de IA', 'herramientas de cliente'],
       pricingFounderTrackBuilder: 'Builder → MVP en 1–3 meses',
       pricingFounderTrackPartner: 'Partner → producto sustancial en 4–6 meses',
@@ -517,7 +514,6 @@ window.AxiusDirectionE05 = function () {
       pricingFounderTrackSubject: 'Axius — consulta Founder Track',
       pricingGetStarted: 'Empezar ahora',
       pricingBookCallSecondary: 'O agenda una llamada primero →',
-      pricingPromoLine: (code) => `¿Vas por 3+ meses? Usa el código ${code} y te ahorras el setup.`,
       pricingCheckoutSubject: (tier) => `Axius — iniciar suscripción ${tier}`,
       // Hero — stat row
       statActiveSystems: 'Sistemas activos',
@@ -570,7 +566,7 @@ window.AxiusDirectionE05 = function () {
         { name: 'Aplicación a medida',    pts: 5 },
       ],
       sec04CapacityFooter:   'La mayoría de empresas empieza con 2–5 workflows operativos activos.',
-      sec04RecommendLabel:       'IA · recomienda',
+      sec04RecommendLabel:       'Con IA',
       sec04RecommendPlaceholder: 'Cuéntame sobre tu negocio…',
       sec04RecommendButton:      'Recomendar',
       sec04RecommendBadge:       'Recomendado para ti',
@@ -3466,8 +3462,11 @@ window.AxiusDirectionE05 = function () {
     if (/lead|outreach|cold|prospect|crm/.test(s))                           { hit('sales', 4); hit('ops', 1); }
     if (/website|landing|next\.?js|webflow|framer|wordpress/.test(s))        { hit('web', 4); }
     // Pick the highest-scoring category; tie-break by catalog order.
+    // No keyword match? Fall back to Internal Operations — it's the
+    // broadest catalog and the most generally useful starting point,
+    // so every visitor walks away with a relevant pivot.
     const ranked = Object.entries(score).sort((a, b) => b[1] - a[1]);
-    if (!ranked.length) return null;
+    if (!ranked.length) return 'ops';
     return ranked[0][0];
   };
 
@@ -3476,6 +3475,7 @@ window.AxiusDirectionE05 = function () {
     const [active, setActive] = React.useState(0);
     const [recoText, setRecoText] = React.useState('');
     const [recoFor, setRecoFor]   = React.useState(null);
+    const [capacityHover, setCapacityHover] = React.useState(false);
     const cat = window.AxiusCatalog[active];
     const activeAccent = accents[active % accents.length];
     const total = window.AxiusCatalog.reduce((s, c) => s + c.count, 0);
@@ -3521,83 +3521,105 @@ window.AxiusDirectionE05 = function () {
           </div>
         </div>
 
-        {/* Workflow Capacity intro — primes visitors on how points work
-            BEFORE they hit pricing.  Quiet horizontal panel: body left,
-            4-row weight table right, footer line below.  Same surface +
-            hairline border grammar as the catalog samples panel. */}
-        <div style={{
-          marginBottom: 36,
-          background: C.surface, border: `1px solid ${C.line}`,
-        }}>
-          <div style={{
-            padding: '24px 28px',
-            display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 40,
-            alignItems: 'flex-start',
+        {/* Workflow Capacity intro — hover to expand.  Same compact
+            hover-reveal pattern as the hero "How we work" eyebrow:
+            title is always visible; body + 4-row weight table + footer
+            line fade in on hover so the section reads as a single
+            quiet line until the visitor signals interest. */}
+        <div
+          onMouseEnter={() => setCapacityHover(true)}
+          onMouseLeave={() => setCapacityHover(false)}
+          style={{
+            marginBottom: 36,
+            background: C.surface, border: `1px solid ${C.line}`,
+            cursor: 'default',
+            transition: 'border-color .3s ease',
+            borderColor: capacityHover ? C.lineHi : C.line,
           }}>
-            <div>
-              <Eyebrow color={C.mute} style={{marginBottom: 12}}>{t('sec04CapacityTitle')}</Eyebrow>
-              <p style={{
-                margin: 0, maxWidth: 520,
-                fontFamily: DISPLAY, fontSize: 15, color: C.dim, lineHeight: 1.6,
-                letterSpacing: '-0.003em',
-              }}>{t('sec04CapacityBody')}</p>
-            </div>
-            <div>
+          <div style={{
+            padding: capacityHover ? '20px 28px' : '14px 28px',
+            transition: 'padding .35s ease',
+          }}>
+            <Eyebrow color={capacityHover ? C.tangerine : C.mute} style={{
+              transition: 'color .3s ease',
+              display: 'inline-block',
+            }}>{t('sec04CapacityTitle')}</Eyebrow>
+            <div style={{
+              overflow: 'hidden',
+              maxHeight: capacityHover ? 360 : 0,
+              opacity: capacityHover ? 1 : 0,
+              marginTop: capacityHover ? 16 : 0,
+              transition: 'max-height .5s cubic-bezier(.2,.8,.2,1), opacity .35s ease, margin-top .35s ease',
+            }}>
               <div style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-                marginBottom: 10, paddingBottom: 8, borderBottom: `1px solid ${C.line}`,
+                display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 40,
+                alignItems: 'flex-start',
               }}>
-                <Eyebrow color={C.mute}>{t('sec04WorkflowsLabel')}</Eyebrow>
-                <Eyebrow color={C.mute}>{t('sec04CapacityWeightLabel')}</Eyebrow>
-              </div>
-              {examples.map((ex, i) => (
-                <div key={i} style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-                  padding: '6px 0',
-                  borderBottom: i === examples.length - 1 ? 'none' : `1px solid ${C.line}`,
-                }}>
-                  <span style={{
-                    fontFamily: DISPLAY, fontSize: 13, color: C.ink, letterSpacing: '-0.003em',
-                  }}>{ex.name}</span>
-                  <span style={{
-                    fontFamily: MONO, fontSize: 11, color: C.tangerine,
-                    letterSpacing: '0.06em', fontVariantNumeric: 'tabular-nums',
-                  }}>{ex.pts} {ex.pts === 1 ? 'pt' : 'pts'}</span>
+                <p style={{
+                  margin: 0, maxWidth: 520,
+                  fontFamily: DISPLAY, fontSize: 15, color: C.dim, lineHeight: 1.6,
+                  letterSpacing: '-0.003em',
+                }}>{t('sec04CapacityBody')}</p>
+                <div>
+                  <div style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                    marginBottom: 10, paddingBottom: 8, borderBottom: `1px solid ${C.line}`,
+                  }}>
+                    <Eyebrow color={C.mute}>{t('sec04WorkflowsLabel')}</Eyebrow>
+                    <Eyebrow color={C.mute}>{t('sec04CapacityWeightLabel')}</Eyebrow>
+                  </div>
+                  {examples.map((ex, i) => (
+                    <div key={i} style={{
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                      padding: '6px 0',
+                      borderBottom: i === examples.length - 1 ? 'none' : `1px solid ${C.line}`,
+                    }}>
+                      <span style={{
+                        fontFamily: DISPLAY, fontSize: 13, color: C.ink, letterSpacing: '-0.003em',
+                      }}>{ex.name}</span>
+                      <span style={{
+                        fontFamily: MONO, fontSize: 11, color: C.tangerine,
+                        letterSpacing: '0.06em', fontVariantNumeric: 'tabular-nums',
+                      }}>{ex.pts} {ex.pts === 1 ? 'pt' : 'pts'}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              <div style={{
+                marginTop: 16, paddingTop: 12,
+                borderTop: `1px solid ${C.line}`,
+              }}>
+                <Eyebrow color={C.mute}>{t('sec04CapacityFooter')}</Eyebrow>
+              </div>
             </div>
-          </div>
-          <div style={{
-            padding: '10px 28px',
-            borderTop: `1px solid ${C.line}`,
-            background: C.panel,
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            gap: 16, flexWrap: 'wrap',
-          }}>
-            <Eyebrow color={C.mute}>{t('sec04CapacityFooter')}</Eyebrow>
           </div>
         </div>
 
         {/* AI Recommendation Mode — describe your business, the catalog
-            auto-pivots to the most relevant category.  Lavender accent
-            so it reads as the AI surface and stays distinct from the
-            catalog's tangerine. */}
+            auto-pivots to the most relevant category.  Quiet inline bar:
+            transparent background with a single bottom rule so it reads
+            like a search field, not a competing card.  Lavender accent
+            on the label + CTA keeps the "AI surface" cue without the
+            heavy filled panel. */}
         <div style={{
-          marginBottom: 28, padding: '18px 22px',
-          background: C.surface, border: `1px solid ${C.line}`,
-          borderLeft: `2px solid ${C.lavender}`,
+          marginBottom: 28, padding: '10px 0',
+          borderBottom: `1px solid ${C.line}`,
           display: 'grid', gridTemplateColumns: '1fr auto', gap: 18,
           alignItems: 'center',
         }}>
           <div style={{display: 'flex', alignItems: 'center', gap: 14, minWidth: 0}}>
             <span style={{
-              display: 'inline-block',
-              padding: '2px 6px',
-              background: C.lavender, color: '#FFFFFF',
-              fontFamily: MONO, fontSize: 8, fontWeight: 600,
-              letterSpacing: '0.18em', textTransform: 'uppercase',
-              flexShrink: 0,
-            }}>{t('sec04RecommendLabel')}</span>
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontFamily: MONO, fontSize: 9, fontWeight: 600,
+              letterSpacing: '0.22em', textTransform: 'uppercase',
+              color: C.lavender, flexShrink: 0,
+            }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: C.lavender, display: 'inline-block',
+              }}/>
+              {t('sec04RecommendLabel')}
+            </span>
             <input
               type="text"
               value={recoText}
@@ -3608,7 +3630,7 @@ window.AxiusDirectionE05 = function () {
                 flex: 1, minWidth: 0,
                 appearance: 'none', border: 'none', outline: 'none', background: 'transparent',
                 fontFamily: DISPLAY, fontSize: 14, color: C.ink, letterSpacing: '-0.003em',
-                padding: 4,
+                padding: '6px 4px',
               }}/>
           </div>
           <button
@@ -3617,13 +3639,13 @@ window.AxiusDirectionE05 = function () {
             disabled={!recoText.trim()}
             style={{
               appearance: 'none', cursor: recoText.trim() ? 'pointer' : 'not-allowed',
-              background: recoText.trim() ? C.lavender : 'transparent',
-              color: recoText.trim() ? '#FFFFFF' : C.mute,
-              border: `1px solid ${recoText.trim() ? C.lavender : C.lineHi}`,
-              padding: '8px 14px',
+              background: 'transparent',
+              color: recoText.trim() ? C.lavender : C.mute,
+              border: 'none',
+              padding: '6px 4px',
               fontFamily: MONO, fontSize: 10, fontWeight: 600,
               letterSpacing: '0.18em', textTransform: 'uppercase',
-              transition: 'all .25s ease',
+              transition: 'color .25s ease',
             }}>{t('sec04RecommendButton')} →</button>
         </div>
 
@@ -4009,10 +4031,6 @@ window.AxiusDirectionE05 = function () {
               fontFamily: DISPLAY, fontWeight: 500, fontSize: 22,
               color: C.ink, letterSpacing: '-0.022em', lineHeight: 1.2,
             }}>{t('pricingFounderTrackQuestion')}</div>
-            <div style={{
-              fontFamily: DISPLAY, fontSize: 14, color: C.dim, lineHeight: 1.55,
-              letterSpacing: '-0.003em',
-            }}>{t('pricingFounderTrackCapacity')}</div>
             <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
               {t('pricingFounderTrackItems').map((item, i) => (
                 <span key={i} style={{
@@ -4246,34 +4264,6 @@ window.AxiusDirectionE05 = function () {
                 onMouseLeave={(e) => { e.currentTarget.style.color = C.mute; }}>
                 {t('pricingBookCallSecondary')}
               </button>
-              {p.promoCode && (
-                /* Setup-waiver promo line — sits below the secondary
-                   CTA in a quiet typography so it reads as helpful
-                   context, not as a competing pitch.  Accent recolours
-                   on hover to mirror the tier's tangerine/mint/lavender. */
-                <p style={{
-                  margin: '4px 0 0',
-                  fontFamily: DISPLAY, fontSize: 11, color: C.mute,
-                  letterSpacing: '-0.003em', lineHeight: 1.45,
-                  textAlign: 'center',
-                }}>
-                  {(() => {
-                    const txt = t('pricingPromoLine')(p.promoCode);
-                    const parts = txt.split(p.promoCode);
-                    return (
-                      <>
-                        {parts[0]}
-                        <strong style={{
-                          fontFamily: MONO, fontSize: 10.5,
-                          color: accent, letterSpacing: '0.06em',
-                          fontWeight: 600,
-                        }}>{p.promoCode}</strong>
-                        {parts[1] || ''}
-                      </>
-                    );
-                  })()}
-                </p>
-              )}
             </div>
           );
         })()}
