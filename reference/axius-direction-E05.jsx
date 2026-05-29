@@ -117,21 +117,158 @@ window.AxiusDirectionE05 = function () {
           #stage-quiet05 h2 { font-size: 44px !important; white-space: normal !important; }
         }
         @media (max-width: 768px) {
-          #stage-quiet05 { zoom: 0.95; }
+          /* Drop the zoom-out at phone widths — the layout is already
+             small.  Removing zoom also stops the calc()-based dispatch
+             anchoring from going negative. */
+          #stage-quiet05 { zoom: 1; }
+          /* Stop the whole stage from bleeding horizontal scroll if any
+             absolutely-positioned ornament still escapes the viewport. */
+          #stage-quiet05 { overflow-x: clip; }
           #stage-quiet05 section, #stage-quiet05 header {
-            padding-left: 24px !important; padding-right: 24px !important;
-            padding-top: 64px !important; padding-bottom: 64px !important;
+            padding-left: 20px !important; padding-right: 20px !important;
+            padding-top: 56px !important; padding-bottom: 56px !important;
           }
-          #stage-quiet05 h1 { font-size: 44px !important; }
-          #stage-quiet05 h2 { font-size: 30px !important; }
+          #stage-quiet05 h1 { font-size: 40px !important; line-height: 1.04 !important; letter-spacing: -0.035em !important; white-space: normal !important; }
+          #stage-quiet05 h2 { font-size: 28px !important; line-height: 1.08 !important; letter-spacing: -0.03em !important; white-space: normal !important; }
           /* Collapse the worst multi-column grids to a single column.
              Inline styles win specificity wars only with !important +
              [style*=] attribute matching.  Crude but effective. */
           #stage-quiet05 [style*="grid-template-columns"] {
             grid-template-columns: 1fr !important;
           }
-          /* Hide the nav links + EN/ES toggle on phones; keep the CTA */
+          /* Reset explicit grid placements so collapsed grids don't
+             create implicit columns to the right of the viewport.
+             Without this, the hero's right column (grid-area 1/2)
+             still lands in an off-screen "column 2". */
+          #stage-quiet05 [style*="grid-area"],
+          #stage-quiet05 [style*="grid-column: 2"],
+          #stage-quiet05 [style*="grid-row: 2"] {
+            grid-area: auto !important;
+            grid-column: auto !important;
+            grid-row: auto !important;
+          }
+          /* Decorative aria-hidden absolute elements (the two orange
+             radial glows behind the hero) bleed past the viewport on
+             phones; their soft color is gone but the layout's clean. */
+          #stage-quiet05 [aria-hidden="true"][style*="position: absolute"][style*="border-radius: 50%"] {
+            display: none !important;
+          }
+          /* WorkflowSheet — the hero's graph-paper sketch is positioned
+             at left:-180 and is purely a background ornament for Hero B.
+             Hide it on phones so the operator card flows cleanly. */
+          #stage-quiet05 header div[style*="left: -180"] {
+            display: none !important;
+          }
+          /* Floating dispatch panel — way too much surface for a phone.
+             The visitor can still reach the same dispatch info via the
+             chat icon in the founder card. */
+          #stage-quiet05 div[style*="z-index: 60"][style*="position: fixed"] {
+            display: none !important;
+          }
+          /* OperatorCard sits inside an absolutely-positioned column on
+             the hero grid; reset positioning so it stacks naturally
+             below the H1 / sub-copy / CTAs at phone widths. */
+          #stage-quiet05 header > div > div[style*="grid-column: 2"] {
+            position: static !important;
+          }
+          /* Catalog samples panel — drop the sticky behavior so the
+             panel doesn't pin awkwardly on a tall scrolling phone. */
+          #stage-quiet05 div[style*="position: sticky"][style*="top: 80"] {
+            position: static !important;
+          }
+          /* Hide the nav links on phones; keep wordmark + CTA visible */
           #stage-quiet05 nav a { display: none !important; }
+          /* Override the desktop nav padding (18px 128px) — on a 390px
+             viewport that leaves only 134px for content.  Also keep the
+             nav's 3-col grid (auto 1fr auto) intact so the wordmark
+             pins left, EN/ES + CTA pin right; otherwise the general
+             grid-collapse rule stacks them on top of each other. */
+          #stage-quiet05 nav {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+            padding-top: 14px !important;
+            padding-bottom: 14px !important;
+            gap: 12px !important;
+          }
+          #stage-quiet05 nav[style*="grid-template-columns"] {
+            grid-template-columns: auto 1fr auto !important;
+          }
+          /* The middle nav column (Work/Method/...) is hidden by
+             nav a { display: none }, but its container <div> still
+             takes up the 1fr track.  That's intentional — it pushes
+             EN/ES + CTA to the right edge. */
+          #stage-quiet05 nav > div:last-child { gap: 12px !important; }
+          /* Prevent the "Book a call" button from wrapping vertically */
+          #stage-quiet05 nav button {
+            white-space: nowrap !important;
+            font-size: 11px !important;
+            padding: 8px 12px !important;
+          }
+          /* Hero stat row — 4 cols never fit at phone widths and even
+             2 cols overflow because each cell has fixed padding + a
+             56px display number.  Stack into 1 col and drop the
+             vertical borders, replacing with a horizontal hairline. */
+          #stage-quiet05 header [style*="grid-template-columns: repeat(4"] {
+            grid-template-columns: 1fr !important;
+          }
+          #stage-quiet05 header [style*="grid-template-columns: repeat(4"] > * {
+            border-right: none !important;
+            border-bottom: 1px solid rgba(10,9,7,0.08) !important;
+          }
+          #stage-quiet05 header [style*="grid-template-columns: repeat(4"] > *:last-child {
+            border-bottom: none !important;
+          }
+          /* Ensure inline-flex CTAs wrap instead of overflowing */
+          #stage-quiet05 [style*="display: flex"][style*="gap: 12"] {
+            flex-wrap: wrap !important;
+          }
+          /* Comparison table (sec05) — keep the 4-col grid so it
+             reads as a proper comparison, but let the outer card
+             scroll horizontally so visitors can swipe to see all
+             three tier columns. */
+          #stage-quiet05 section[data-screen-label*="Comparison"] > div[style*="overflow: hidden"] {
+            overflow-x: auto !important;
+          }
+          #stage-quiet05 section[data-screen-label*="Comparison"] [style*="grid-template-columns: 1.2fr repeat(3"] {
+            grid-template-columns: 1.2fr repeat(3, minmax(120px, 1fr)) !important;
+            min-width: 540px !important;
+            font-size: 11px !important;
+          }
+          /* FAQ rows — the desktop grid (70px / 1fr / 40px) gets
+             collapsed by the general rule, which makes the "+" icon
+             wrap to its own line.  Drop the Q.NN prefix at phone
+             widths and keep question + plus on one row. */
+          #stage-quiet05 [style*="grid-template-columns: 70px 1fr 40px"] {
+            grid-template-columns: 1fr 32px !important;
+            gap: 12px !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+          #stage-quiet05 [style*="grid-template-columns: 70px 1fr 40px"] > span:first-child {
+            display: none !important;
+          }
+          /* CTA section — the two big QuietBtns sit in a row with
+             gap:14 and overflow at phone widths.  Stack them
+             vertically, full-width, and let the headline + body
+             retain their center alignment. */
+          #stage-quiet05 section[data-screen-label="10 CTA"] [style*="display: flex"][style*="gap: 14"] {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px !important;
+          }
+          #stage-quiet05 section[data-screen-label="10 CTA"] [style*="display: flex"][style*="gap: 14"] > * {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            text-align: center !important;
+            justify-content: center !important;
+          }
+          /* Footer row at bottom of CTA — already wraps via flex-wrap,
+             just tighten its gap so it doesn't sprawl. */
+          #stage-quiet05 section[data-screen-label="10 CTA"] [style*="margin-top: 132"] {
+            margin-top: 80px !important;
+            justify-content: center !important;
+            text-align: center !important;
+          }
         }
       `;
       document.head.appendChild(style);
