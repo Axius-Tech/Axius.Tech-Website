@@ -364,7 +364,7 @@ window.AxiusDirectionE05 = function () {
       directLineBody1: 'Direct line to the operator doing the work. ',
       directLineBody2: 'No account managers. No ticket queues.',
       directLineCta: 'Talk now',
-      askAndresOpen: 'Open desk · Andrés is online',
+      askAndresOpen: 'Standby chat · transcripts route to Andrés',
       askAndresGreeting: "Most companies don't actually need more software. They need someone operating the systems they already have.\n\nTell me what's currently slowing the business down, breaking repeatedly, or depending too much on you. I'll show you how we'd structure it operationally.",
       askAndresPlaceholder: 'Describe what\'s operationally frustrating…',
       askAndresReplying: 'Andrés is replying…',
@@ -379,17 +379,19 @@ window.AxiusDirectionE05 = function () {
       chatRingNoWebhook:   'standby · response window applies',
       // Operator-card variant (Hero B)
       opCardOperator:    'Operator',
-      opCardOnline:      'Online',
       opCardRole:        'Operator · Medellín',
-      opCardDirectLine:  'Direct line',
+      opCardEmail:       'Email',
       opCardHours:       'Hours (MDE)',
       opCardHoursValue:  '09:00 — 18:00',
       opCardBased:       'Based',
       opCardNow:         'Currently',
-      chatAndresLive:    'Live',
-      chatAndresHere:    'Andrés is here — typing a reply',
-      opCardMessage:     'Message directly',
+      opCardMessage:     'Ask a question',
       opCardLeaveNote:   'Leave a note',
+      // Chat reply markers — appear only on messages Andrés actually
+      // typed (via the Telegram transcript route).  "Live" used to
+      // imply real-time presence; "Reply" reads as an async response.
+      chatAndresHere:    'Andrés replied',
+      chatAndresLive:    'Reply',
       askAndresSuggestions: [
         'What\'s currently breaking operationally?',
         'We\'re drowning in tools',
@@ -546,7 +548,7 @@ window.AxiusDirectionE05 = function () {
       sec08TitleItalic: 'your operations',
       sec08TitleSuffix: '.',
       sec08VerifyLinkedin: 'LinkedIn',
-      sec08TalkToMe:       'Talk to me',
+      sec08TalkToMe:       'Get in touch',
       sec08FigCaptions: ['Operator', 'In studio', 'On the go'],
       // — Section 09: FAQ (was 08) —
       sec09Eyebrow:     '09 · Appendix',
@@ -562,8 +564,7 @@ window.AxiusDirectionE05 = function () {
       footerCopy:       '© 2026',
       // Chat header
       chatBack:         'Back',
-      chatOpen:         'open',
-      chatDirectLine:   'direct line',
+      chatDirectLine:   'standby chat',
       chatAskAndres:    'Ask Andrés.',
       // Venn diagram
       vennPeople:       'PEOPLE',
@@ -590,7 +591,7 @@ window.AxiusDirectionE05 = function () {
       directLineBody1: 'Habla directo con quien hace el trabajo. ',
       directLineBody2: 'Sin gerentes de cuenta. Sin filas de tickets.',
       directLineCta: 'Conversemos',
-      askAndresOpen: 'Escritorio abierto · Andrés está en línea',
+      askAndresOpen: 'Chat de soporte · las transcripciones llegan a Andrés',
       askAndresGreeting: 'La mayoría de empresas no necesitan más software. Necesitan a alguien operando los sistemas que ya tienen.\n\nCuéntame qué está frenando el negocio, qué se rompe constantemente, o qué depende demasiado de ti. Te muestro cómo lo estructuraríamos operativamente.',
       askAndresPlaceholder: 'Cuéntame qué te frustra operativamente…',
       askAndresReplying: 'Andrés está respondiendo…',
@@ -605,17 +606,21 @@ window.AxiusDirectionE05 = function () {
       chatRingNoWebhook:   'aplica ventana de respuesta',
       // Variante Operator Card (Hero B)
       opCardOperator:    'Operador',
-      opCardOnline:      'En línea',
       opCardRole:        'Operador · Medellín',
-      opCardDirectLine:  'Línea directa',
+      opCardEmail:       'Email',
       opCardHours:       'Horario (MDE)',
       opCardHoursValue:  '09:00 — 18:00',
       opCardBased:       'Desde',
       opCardNow:         'Actualmente',
-      chatAndresLive:    'En vivo',
-      chatAndresHere:    'Andrés está aquí — escribiendo respuesta',
-      opCardMessage:     'Enviar mensaje',
+      opCardMessage:     'Hacer una pregunta',
       opCardLeaveNote:   'Dejar una nota',
+      // Marcadores de respuesta en chat — aparecen solo en mensajes
+      // que Andrés escribió de verdad (vía la ruta de transcripción
+      // por Telegram).  Antes decía "En vivo"; ahora "Respuesta" para
+      // que se lea como respuesta asíncrona, no presencia en tiempo
+      // real.
+      chatAndresHere:    'Andrés respondió',
+      chatAndresLive:    'Respuesta',
       askAndresSuggestions: [
         '¿Qué se está rompiendo operativamente?',
         'Estamos ahogados en herramientas',
@@ -768,7 +773,7 @@ window.AxiusDirectionE05 = function () {
       sec08TitleItalic: 'tus operaciones',
       sec08TitleSuffix: '.',
       sec08VerifyLinkedin: 'LinkedIn',
-      sec08TalkToMe:       'Hablemos',
+      sec08TalkToMe:       'Escríbeme',
       sec08FigCaptions: ['Operador', 'En estudio', 'En movimiento'],
       // — Sección 09: FAQ (era 08) —
       sec09Eyebrow:     '09 · Apéndice',
@@ -783,8 +788,7 @@ window.AxiusDirectionE05 = function () {
       footerCity:       'altamonte springs, fl · remoto · en medellín ahora',
       footerCopy:       '© 2026',
       chatBack:         'Volver',
-      chatOpen:         'abierto',
-      chatDirectLine:   'línea directa',
+      chatDirectLine:   'chat de soporte',
       chatAskAndres:    'Pregúntale a Andrés.',
       vennPeople:       'PERSONAS',
       vennProcess:      'PROCESO',
@@ -1892,29 +1896,12 @@ window.AxiusDirectionE05 = function () {
               </>
             )}
           </div>
-          {operatorChrome ? (
-            <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
-              <span aria-hidden style={{
-                display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
-                background: C.mint,
-                animation: 'axQ05Pulse 2.4s ease-out infinite',
-              }}/>
-              <Eyebrow color={C.dim}>{t('opCardOnline')}</Eyebrow>
-            </div>
-          ) : (
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontFamily: MONO, fontSize: 9, color: C.dim,
-              letterSpacing: '0.18em', textTransform: 'uppercase',
-            }}>
-              <span style={{
-                display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
-                background: C.tangerine,
-                animation: 'axQ05Pulse 2.4s ease-out infinite',
-              }}/>
-              {t('chatOpen')}
-            </span>
-          )}
+          {/* Top-right availability dots (green "ONLINE" in operator
+              chrome, tangerine "OPEN" in the default chat) used to live
+              here.  Removed: the pulse implied real-time presence the
+              operator can't honour.  The chat is still a useful surface
+              for context-gathering; transcripts route to Andrés for an
+              async reply within his stated response window. */}
         </div>
 
         <div ref={scrollRef} className="ax-quiet05-scroll" style={{
@@ -1926,36 +1913,10 @@ window.AxiusDirectionE05 = function () {
           {streaming !== null && (
             <AndresLine m={{ role: streamingRole, text: streaming + '▍' }}/>
           )}
-          {ringSeconds !== null && (
-            <div style={{
-              padding: '10px 12px',
-              background: C.panel,
-              borderLeft: `2px solid ${C.tangerine}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              gap: 12, flexWrap: 'wrap',
-            }}>
-              <div style={{display: 'inline-flex', alignItems: 'center', gap: 10}}>
-                <span aria-hidden style={{
-                  display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
-                  background: C.tangerine,
-                  animation: 'axQ05Pulse 2.4s ease-out infinite',
-                }}/>
-                <span style={{
-                  fontFamily: DISPLAY, fontSize: 12, color: C.ink,
-                }}>{t('chatRinging')}</span>
-              </div>
-              <div style={{display: 'inline-flex', alignItems: 'center', gap: 10}}>
-                <span style={{
-                  fontFamily: MONO, fontSize: 10, color: C.mute,
-                  letterSpacing: '0.18em', textTransform: 'uppercase',
-                }}>
-                  {t('chatRingMeanwhile')} · <span style={{
-                    color: C.tangerine, fontWeight: 500, fontVariantNumeric: 'tabular-nums',
-                  }}>{t('chatRingSeconds')(ringSeconds)}</span>
-                </span>
-              </div>
-            </div>
-          )}
+          {/* In-chat "ringing Andrés" countdown banner removed alongside
+              the ring chip — without an escalation trigger there's
+              nothing to count down to.  ringSeconds state is left
+              wired up but never set, so this branch can't fire. */}
         </div>
 
         {/* Suggestions row — chip grammar shifts in operator chrome:
@@ -1969,51 +1930,12 @@ window.AxiusDirectionE05 = function () {
           flexShrink: 0,
           minWidth: 0, width: '100%', boxSizing: 'border-box',
         }}>
-          {/* Ring Andrés — first chip, ink-filled escalation in operator
-              chrome (matches OperatorCard's MESSAGE DIRECTLY button), or
-              tangerine-filled in the default chat surface. */}
-          <button type="button" onClick={startRing}
-            disabled={ringSeconds !== null || hasRung}
-            style={{
-              appearance: 'none',
-              border: `1px solid ${
-                (ringSeconds !== null || hasRung)
-                  ? C.lineHi
-                  : (operatorChrome ? C.ink : C.tangerine)
-              }`,
-              background: (ringSeconds !== null || hasRung)
-                ? 'transparent'
-                : (operatorChrome ? C.ink : C.tangerine),
-              padding: operatorChrome ? '6px 12px' : '4px 10px',
-              cursor: (ringSeconds !== null || hasRung) ? 'not-allowed' : 'pointer',
-              fontFamily: MONO, fontSize: 10, fontWeight: 500,
-              color: (ringSeconds !== null || hasRung)
-                ? C.mute
-                : (operatorChrome ? C.bg : '#FFFFFF'),
-              letterSpacing: '0.18em', textTransform: 'uppercase',
-              transition: 'all .2s ease',
-              whiteSpace: 'nowrap', flexShrink: 0,
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-            }}
-            onMouseEnter={operatorChrome ? (e) => {
-              if (ringSeconds !== null || hasRung) return;
-              e.currentTarget.style.background = C.tangerine;
-              e.currentTarget.style.borderColor = C.tangerine;
-            } : undefined}
-            onMouseLeave={operatorChrome ? (e) => {
-              if (ringSeconds !== null || hasRung) return;
-              e.currentTarget.style.background = C.ink;
-              e.currentTarget.style.borderColor = C.ink;
-            } : undefined}>
-            <span aria-hidden style={{
-              display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
-              background: (ringSeconds !== null || hasRung)
-                ? C.mute
-                : (operatorChrome ? C.bg : '#FFFFFF'),
-              animation: ringSeconds !== null ? 'axQ05Pulse 1.2s ease-out infinite' : 'none',
-            }}/>
-            {t('chatRingAction')}
-          </button>
+          {/* "Ring Andrés / Bring Andrés in" escalation chip used to
+              sit here as the first item.  Removed: the chip implied
+              real-time availability that the operator can't honour,
+              so visitors were getting a wrong-shaped expectation.
+              The chat is still a useful surface for context-gathering
+              and the transcript route via Telegram remains intact. */}
           {suggestions.map(s => (
             <button key={s} type="button" onClick={() => ask(s, { fromChip: true })} style={{
               appearance: 'none',
@@ -2057,11 +1979,14 @@ window.AxiusDirectionE05 = function () {
           background: C.bg,
           flexShrink: 0,
         }}>
-          {operatorChrome ? (
-            <Eyebrow color={C.mute}>{t('opCardDirectLine')}</Eyebrow>
-          ) : (
-            <span style={{fontFamily: SERIF, fontWeight: 500, fontSize: 16, color: C.tangerine}}>›</span>
-          )}
+          {/* Compose chevron — quiet hairline in operator chrome, serif
+              tangerine in the default chat surface.  Used to read
+              "DIRECT LINE" in operator chrome; dropped that label so
+              the surface doesn't promise real-time contact. */}
+          <span style={{
+            fontFamily: SERIF, fontWeight: 500, fontSize: 16,
+            color: operatorChrome ? C.mute : C.tangerine,
+          }}>›</span>
           <input ref={inputRef} value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
@@ -2534,21 +2459,17 @@ window.AxiusDirectionE05 = function () {
           <AskAndres onBack={() => setMode('card')} autofocus operatorChrome/>
         ) : (
           <>
-            {/* Header: OPERATOR (tangerine) · ONLINE (mint pulse) */}
+            {/* Header: OPERATOR (tangerine) — no live availability pulse.
+                A green "ONLINE" dot used to sit on the right, but it
+                implied real-time availability the operator can't honour.
+                Quiet single-line eyebrow keeps the directory grammar
+                without making a promise. */}
             <div style={{
               padding: '14px 22px',
               borderBottom: `1px solid ${C.line}`,
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              display: 'flex', alignItems: 'center',
             }}>
               <Eyebrow color={C.tangerine}>{t('opCardOperator')}</Eyebrow>
-              <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
-                <span aria-hidden style={{
-                  display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
-                  background: C.mint,
-                  animation: 'axQ05Pulse 2.4s ease-out infinite',
-                }}/>
-                <Eyebrow color={C.dim}>{t('opCardOnline')}</Eyebrow>
-              </div>
             </div>
 
             {/* Identity row */}
@@ -2590,9 +2511,10 @@ window.AxiusDirectionE05 = function () {
 
             <div style={{height: 1, background: C.line}}/>
 
-            {/* Direct line */}
+            {/* Email — relabelled from "Direct line" so the surface
+                doesn't read as a real-time hotline. */}
             <div style={{padding: '20px 22px 8px'}}>
-              <Eyebrow color={C.mute}>{t('opCardDirectLine')}</Eyebrow>
+              <Eyebrow color={C.mute}>{t('opCardEmail')}</Eyebrow>
               <a href="mailto:andres@axius.tech" style={{
                 display: 'inline-block', marginTop: 8,
                 fontFamily: MONO, fontSize: 18, color: C.ink,
