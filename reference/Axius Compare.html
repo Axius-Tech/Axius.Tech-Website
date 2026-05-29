@@ -345,6 +345,29 @@ function App() {
       if (!el) return;
       el.classList.toggle('hidden', key !== v);
     });
+
+    // Match <html> + <body> background to the active stage so the
+    // page never reveals the default dark fill at the edges — happens
+    // when the viewport is wider than the stage's max-width, when the
+    // user zooms out, or on ultra-wide monitors.  Keeping these in sync
+    // means the page reads as one continuous canvas at any zoom level.
+    const STAGE_BG = {
+      original: '#0F0E0C',
+      final:    '#0F0E0C',
+      studio:   '#0F0E0C',
+      vivid:    '#F4EFE6',
+      quiet:    '#F7F6F2',
+      quiet05:  '#F7F6F2',
+      quiet06:  '#F7F6F2',
+      quiet075: '#F5F1EA',
+      quiet090: '#EFEAE0',
+      quiet2:   '#0E0C0A',
+      quiet3:   '#050805',
+      matrix:   '#020503',
+    };
+    const bg = STAGE_BG[v] || '#0F0E0C';
+    document.documentElement.style.background = bg;
+    document.body.style.background = bg;
   }, [v]);
 
   // Keyboard: 1–9 → the nine views in order

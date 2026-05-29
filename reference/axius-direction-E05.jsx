@@ -4806,7 +4806,15 @@ window.AxiusDirectionE05 = function () {
 
     return (
       <div style={{
-        position: 'fixed', right: 20, bottom: 20, zIndex: 60,
+        position: 'fixed',
+        // Anchor to the stage's visual right edge — not the viewport
+        // edge — so the floating dispatch panel doesn't drift hundreds
+        // of pixels into the cream margin on ultrawide displays.  The
+        // stage has zoom: 0.8 (max-width 1800px), so its visual width
+        // caps at 1440px; the calc compensates for the centered margin
+        // and divides by zoom so the visual offset stays at 20px.
+        right: 'max(20px, calc(((100vw - 1440px) / 2 + 20px) / 0.8))',
+        bottom: 20, zIndex: 60,
         width: collapsed ? 'auto' : 360,
         background: C.surface,
         border: `1px solid ${C.lineHi}`,
