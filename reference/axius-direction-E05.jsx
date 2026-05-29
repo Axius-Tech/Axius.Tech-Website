@@ -289,6 +289,7 @@ window.AxiusDirectionE05 = function () {
       pricingFounderTrackSubject: 'Axius — Founder Track inquiry',
       pricingGetStarted: 'Get started',
       pricingBookCallSecondary: 'Or book a call first →',
+      pricingPromoLine: (code) => `Committing 3+ months? Use code ${code} to waive the setup fee.`,
       pricingCheckoutSubject: (tier) => `Axius — start ${tier} subscription`,
       // Hero — stat row
       statActiveSystems: 'Active systems',
@@ -440,33 +441,33 @@ window.AxiusDirectionE05 = function () {
       eyebrowPractice: 'Axius — Una práctica independiente de operaciones tecnológicas',
       eyebrowAcceptingPre: 'Solo Aceptando',
       eyebrowAcceptingAccent: '3 Clientes Nuevos / Mes',
-      heroLine1: 'Tú llevas',
+      heroLine1: 'Dirige',
       heroLine2: 'tu negocio.',
       heroLine3: 'No tu tech.',
-      heroSubL1: 'Operamos el lado tech de tu negocio —',
-      heroSubL3a: 'todo — por ',
+      heroSubL1: 'Nosotros operamos el lado tecnológico de tu negocio —',
+      heroSubL3a: 'todo, por ',
       heroSubL3b: 'una sola cuota mensual.',
-      heroCta1: 'Agendar llamada de descubrimiento',
+      heroCta1: 'Agendar una llamada inicial',
       heroCta2: 'Ver el catálogo',
       directLineTitle: 'Línea directa.',
       directLineAvailable: 'disponible',
       directLineRole: 'Operador · Altamonte Springs, FL · en Medellín ahora',
-      directLineBody1: 'Línea directa con quien hace el trabajo. ',
+      directLineBody1: 'Habla directo con quien hace el trabajo. ',
       directLineBody2: 'Sin gerentes de cuenta. Sin filas de tickets.',
-      directLineCta: 'Hablar ahora',
+      directLineCta: 'Conversemos',
       askAndresOpen: 'Escritorio abierto · Andrés está en línea',
-      askAndresGreeting: 'La mayoría de empresas no necesitan más software. Necesitan a alguien operando los sistemas que ya tienen.\n\nCuéntame qué está frenando al negocio, qué se rompe seguido, o qué depende demasiado de ti. Te muestro cómo lo estructuraríamos operativamente.',
-      askAndresPlaceholder: 'Describe qué te frustra operativamente…',
+      askAndresGreeting: 'La mayoría de empresas no necesitan más software. Necesitan a alguien operando los sistemas que ya tienen.\n\nCuéntame qué está frenando el negocio, qué se rompe constantemente, o qué depende demasiado de ti. Te muestro cómo lo estructuraríamos operativamente.',
+      askAndresPlaceholder: 'Cuéntame qué te frustra operativamente…',
       askAndresReplying: 'Andrés está respondiendo…',
       askAndresAiBadge: 'gemelo IA',
-      // Flujo "Traer a Andrés" (escalación desde la conversación por defecto)
-      chatRingAction: 'Traer a Andrés',
-      chatRinging: 'Trayendo a Andrés a la conversación',
-      chatRingMeanwhile: 'El standby sigue mientras tanto',
+      // Flujo "Hablar con Andrés" (escalación desde la conversación por defecto)
+      chatRingAction: 'Hablar con Andrés',
+      chatRinging: 'Conectando con Andrés',
+      chatRingMeanwhile: 'La IA continúa mientras tanto',
       chatRingSeconds: (n) => `${n}s`,
-      chatRingNoAnswer: 'Estoy en una llamada — te respondo aquí personalmente apenas me libere, normalmente dentro del día. El standby tiene contexto completo y puede seguir avanzando.',
-      chatRingMessageSent: 'Andrés notificado · transcripción en camino',
-      chatRingNoWebhook:   'standby · aplica ventana de respuesta',
+      chatRingNoAnswer: 'Estoy en una llamada — te respondo aquí personalmente apenas me libere, normalmente dentro del día. La IA tiene contexto completo y puede seguir avanzando mientras tanto.',
+      chatRingMessageSent: 'Andrés notificado · ya le llega la transcripción',
+      chatRingNoWebhook:   'aplica ventana de respuesta',
       // Variante Operator Card (Hero B)
       opCardOperator:    'Operador',
       opCardOnline:      'En línea',
@@ -486,7 +487,7 @@ window.AxiusDirectionE05 = function () {
         'Se nos escapan leads',
         'Todo depende de mí',
         'Necesitamos mejores sistemas',
-        'Muéstrame qué mejorarías',
+        '¿Qué mejorarías tú primero?',
         '¿Cómo funciona el onboarding?',
         '¿Qué automatizarías primero?',
       ],
@@ -495,14 +496,14 @@ window.AxiusDirectionE05 = function () {
       dispatchIdleHelp: '¿necesitas ayuda? · línea directa disponible',
       ctaSchedule: 'Agendar la conversación',
       bookingSubject: 'Axius — llamada de descubrimiento',
-      bookingTierSubject: (t) => `Axius — consulta tier ${t}`,
+      bookingTierSubject: (t) => `Axius — consulta del tier ${t}`,
       pricingRecommended: 'Recomendado',
       pricingCapacity: 'capacidad',
       pricingResponse: 'respuesta',
       pricingCadence: 'cadencia',
       pricingCapacityInfo: (pts) =>
         `1 punto ≈ 1 workflow operado. ${pts} pts = hasta ${pts} workflows simultáneos.`,
-      pricingTypicalWorkloadsLabel: 'Workloads típicos',
+      pricingTypicalWorkloadsLabel: 'Cargas de trabajo típicas',
       pricingMo: '/ mes',
       pricingSetupNote: (n) => `+ $${n.toLocaleString()} setup único`,
       pricingTierLabel: 'TIER',
@@ -516,6 +517,7 @@ window.AxiusDirectionE05 = function () {
       pricingFounderTrackSubject: 'Axius — consulta Founder Track',
       pricingGetStarted: 'Empezar ahora',
       pricingBookCallSecondary: 'O agenda una llamada primero →',
+      pricingPromoLine: (code) => `¿Vas por 3+ meses? Usa el código ${code} y te ahorras el setup.`,
       pricingCheckoutSubject: (tier) => `Axius — iniciar suscripción ${tier}`,
       // Hero — stat row
       statActiveSystems: 'Sistemas activos',
@@ -559,7 +561,7 @@ window.AxiusDirectionE05 = function () {
       sec04TitleItalic: 'índice',
       sec04TitleSuffix: ' del trabajo.',
       sec04CapacityTitle:    'Capacidad de Workflows',
-      sec04CapacityBody:     'Cada workflow tiene un valor en puntos basado en complejidad, integraciones, mantenimiento y carga operativa. Esto mantiene la capacidad operativa predecible y escalable en cada tier.',
+      sec04CapacityBody:     'Cada workflow tiene un valor en puntos según su complejidad, integraciones, mantenimiento y carga operativa. Así, la capacidad operativa queda predecible y escalable en cada tier.',
       sec04CapacityWeightLabel: 'peso típico',
       sec04CapacityExamples: [
         { name: 'Chatbot de IA',          pts: 1 },
@@ -569,15 +571,15 @@ window.AxiusDirectionE05 = function () {
       ],
       sec04CapacityFooter:   'La mayoría de empresas empieza con 2–5 workflows operativos activos.',
       sec04RecommendLabel:       'IA · recomienda',
-      sec04RecommendPlaceholder: 'Describe tu negocio…',
+      sec04RecommendPlaceholder: 'Cuéntame sobre tu negocio…',
       sec04RecommendButton:      'Recomendar',
       sec04RecommendBadge:       'Recomendado para ti',
-      sec04RecommendNote:        (cat) => `Por lo que describiste, normalmente empezaríamos con ${cat}. Las muestras de abajo coinciden.`,
+      sec04RecommendNote:        (cat) => `Por lo que cuentas, normalmente empezaríamos con ${cat}. Las muestras de abajo aplican.`,
       sec04WorkflowsLabel:   'workflows',
       sec04CategoriesLabel:  'categorías',
       sec04SampleEntries:    'entradas de muestra',
       sec04ScrollMore:       'desplaza para ver más',
-      sec04MoreOnRequest:    (n) => `${n} más a petición`,
+      sec04MoreOnRequest:    (n) => `${n} más bajo solicitud`,
       sec04RequestFullIndex: 'Solicitar el índice completo →',
       sec04CatLabel:         'CAT',
       sec05Eyebrow:     '05 · Comparativa',
@@ -644,13 +646,13 @@ window.AxiusDirectionE05 = function () {
       ctaTitlePrefix:   'Comencemos una',
       ctaTitleItalic:   'conversación',
       ctaTitleSuffix:   '.',
-      ctaBody:          'Treinta minutos. Te llevas un audit de una página, en cualquier caso. Sin pitch, sin presión — solo una imagen clara de tu stack.',
+      ctaBody:          'Treinta minutos. Te llevas una auditoría de una página, pase lo que pase. Sin pitch, sin presión — solo una imagen clara de tu stack.',
       footerCity:       'altamonte springs, fl · remoto · en medellín ahora',
       footerCopy:       '© 2026',
       chatBack:         'Volver',
       chatOpen:         'abierto',
       chatDirectLine:   'línea directa',
-      chatAskAndres:    'Pregunta a Andrés.',
+      chatAskAndres:    'Pregúntale a Andrés.',
       vennPeople:       'PERSONAS',
       vennProcess:      'PROCESO',
       vennTechnology:   'TECNOLOGÍA',
@@ -4244,6 +4246,34 @@ window.AxiusDirectionE05 = function () {
                 onMouseLeave={(e) => { e.currentTarget.style.color = C.mute; }}>
                 {t('pricingBookCallSecondary')}
               </button>
+              {p.promoCode && (
+                /* Setup-waiver promo line — sits below the secondary
+                   CTA in a quiet typography so it reads as helpful
+                   context, not as a competing pitch.  Accent recolours
+                   on hover to mirror the tier's tangerine/mint/lavender. */
+                <p style={{
+                  margin: '4px 0 0',
+                  fontFamily: DISPLAY, fontSize: 11, color: C.mute,
+                  letterSpacing: '-0.003em', lineHeight: 1.45,
+                  textAlign: 'center',
+                }}>
+                  {(() => {
+                    const txt = t('pricingPromoLine')(p.promoCode);
+                    const parts = txt.split(p.promoCode);
+                    return (
+                      <>
+                        {parts[0]}
+                        <strong style={{
+                          fontFamily: MONO, fontSize: 10.5,
+                          color: accent, letterSpacing: '0.06em',
+                          fontWeight: 600,
+                        }}>{p.promoCode}</strong>
+                        {parts[1] || ''}
+                      </>
+                    );
+                  })()}
+                </p>
+              )}
             </div>
           );
         })()}
