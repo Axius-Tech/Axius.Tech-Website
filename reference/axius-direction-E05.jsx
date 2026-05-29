@@ -1198,7 +1198,15 @@ window.AxiusDirectionE05 = function () {
     // "Ring Andrés" escalation, the A./AI./Reply markers, and the
     // visitor-POV chip rewrite.  Old transcripts (v1) get auto-purged
     // on first load, so returning visitors see the new surface.
-    const STORAGE_KEY = 'axius:chat:quiet05:v2';
+    //
+    // Namespaced by `lang` so EN and ES each get their own saved
+    // transcript.  Without this, a visitor who opens the chat in
+    // English, then switches to Spanish, would see the cached English
+    // greeting + EN-AI responses in what's supposed to be the ES UI.
+    // With the namespace + key={lang} on the AskAndres mount below,
+    // switching language remounts the surface with a fresh greeting
+    // in the new language.
+    const STORAGE_KEY = `axius:chat:quiet05:v2:${lang}`;
     const STORAGE_TTL_MS = 24 * 60 * 60 * 1000;
     const loadSaved = () => {
       if (typeof localStorage === 'undefined') return null;
@@ -2455,7 +2463,7 @@ window.AxiusDirectionE05 = function () {
         height: 440,
       }}>
         {mode === 'chat' ? (
-          <AskAndres onBack={() => setMode('card')} autofocus operatorChrome/>
+          <AskAndres key={lang} onBack={() => setMode('card')} autofocus operatorChrome/>
         ) : (
           <>
             {/* Header: OPERATOR (tangerine) · AI ONLINE (mint pulse).
@@ -2613,7 +2621,7 @@ window.AxiusDirectionE05 = function () {
         overflow: 'hidden',
       }}>
         {mode === 'chat' ? (
-          <AskAndres onBack={backToCard} autofocus/>
+          <AskAndres key={lang} onBack={backToCard} autofocus/>
         ) : (
         <div style={{
           flex: 1,
