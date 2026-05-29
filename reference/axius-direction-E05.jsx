@@ -379,6 +379,7 @@ window.AxiusDirectionE05 = function () {
       chatRingNoWebhook:   'standby · response window applies',
       // Operator-card variant (Hero B)
       opCardOperator:    'Operator',
+      opCardOnline:      'AI online',
       opCardRole:        'Operator · Medellín',
       opCardEmail:       'Email',
       opCardHours:       'Hours (MDE)',
@@ -387,20 +388,22 @@ window.AxiusDirectionE05 = function () {
       opCardNow:         'Currently',
       opCardMessage:     'Ask a question',
       opCardLeaveNote:   'Leave a note',
-      // Chat reply markers — appear only on messages Andrés actually
-      // typed (via the Telegram transcript route).  "Live" used to
-      // imply real-time presence; "Reply" reads as an async response.
-      chatAndresHere:    'Andrés replied',
-      chatAndresLive:    'Reply',
+      // System line displayed once when the visitor's transcript has
+      // been queued — landing in the chat after the visitor asks
+      // something escalation-worthy.  No "Live" badge anywhere; replies
+      // render as quiet plain text so the surface stays one register.
+      chatAndresHere:    'Andrés got the transcript',
       askAndresSuggestions: [
-        'What\'s currently breaking operationally?',
+        // Ordered from highest to lowest converting.  All chips are
+        // first-person statements / asks from the visitor's POV — they
+        // become the visitor's opening message when tapped, so they
+        // have to read as something the visitor would actually say.
+        'Everything depends on me',
         'We\'re drowning in tools',
         'Leads slip through the cracks',
-        'Everything depends on me',
+        'Things keep breaking',
         'We need better systems',
         'Show me what you\'d improve',
-        'How does onboarding work?',
-        'What would you automate first?',
       ],
       askAndresSend: 'Send ↵',
       dispatchLabel: 'Dispatch',
@@ -606,6 +609,7 @@ window.AxiusDirectionE05 = function () {
       chatRingNoWebhook:   'aplica ventana de respuesta',
       // Variante Operator Card (Hero B)
       opCardOperator:    'Operador',
+      opCardOnline:      'IA en línea',
       opCardRole:        'Operador · Medellín',
       opCardEmail:       'Email',
       opCardHours:       'Horario (MDE)',
@@ -614,22 +618,22 @@ window.AxiusDirectionE05 = function () {
       opCardNow:         'Actualmente',
       opCardMessage:     'Hacer una pregunta',
       opCardLeaveNote:   'Dejar una nota',
-      // Marcadores de respuesta en chat — aparecen solo en mensajes
-      // que Andrés escribió de verdad (vía la ruta de transcripción
-      // por Telegram).  Antes decía "En vivo"; ahora "Respuesta" para
-      // que se lea como respuesta asíncrona, no presencia en tiempo
-      // real.
-      chatAndresHere:    'Andrés respondió',
-      chatAndresLive:    'Respuesta',
+      // Línea de sistema que aparece una vez cuando la transcripción
+      // del visitante queda en cola.  Sin badge "En vivo" — las
+      // respuestas son texto plano para que la superficie quede en
+      // un solo registro.
+      chatAndresHere:    'Andrés recibió la transcripción',
       askAndresSuggestions: [
-        '¿Qué se está rompiendo operativamente?',
+        // Ordenadas de mayor a menor conversión.  Todas son frases en
+        // primera persona desde la perspectiva del visitante — al
+        // tocar una se convierte en su mensaje inicial, así que tiene
+        // que sonar como algo que el visitante diría.
+        'Todo depende de mí',
         'Estamos ahogados en herramientas',
         'Se nos escapan leads',
-        'Todo depende de mí',
+        'Todo se nos rompe',
         'Necesitamos mejores sistemas',
         '¿Qué mejorarías tú primero?',
-        '¿Cómo funciona el onboarding?',
-        '¿Qué automatizarías primero?',
       ],
       askAndresSend: 'Enviar ↵',
       dispatchLabel: 'Despacho',
@@ -1190,7 +1194,11 @@ window.AxiusDirectionE05 = function () {
     // is mirrored to localStorage on every change and rehydrated on
     // mount.  After 24h the saved blob is treated as expired and
     // discarded, so the visitor gets a fresh chat the next day.
-    const STORAGE_KEY = 'axius:chat:quiet05';
+    // Bumped to v2 when the operator-card / chat surface dropped its
+    // "Ring Andrés" escalation, the A./AI./Reply markers, and the
+    // visitor-POV chip rewrite.  Old transcripts (v1) get auto-purged
+    // on first load, so returning visitors see the new surface.
+    const STORAGE_KEY = 'axius:chat:quiet05:v2';
     const STORAGE_TTL_MS = 24 * 60 * 60 * 1000;
     const loadSaved = () => {
       if (typeof localStorage === 'undefined') return null;
@@ -1896,12 +1904,20 @@ window.AxiusDirectionE05 = function () {
               </>
             )}
           </div>
-          {/* Top-right availability dots (green "ONLINE" in operator
-              chrome, tangerine "OPEN" in the default chat) used to live
-              here.  Removed: the pulse implied real-time presence the
-              operator can't honour.  The chat is still a useful surface
-              for context-gathering; transcripts route to Andrés for an
-              async reply within his stated response window. */}
+          {/* AI presence dot — mint pulse on the right side of the
+              chat header, mirroring the OperatorCard's "AI ONLINE"
+              cue.  Refers to the AI standby being awake; the human
+              operator's availability is intentionally not signalled
+              here so visitors don't expect a real-time reply from
+              Andrés himself. */}
+          <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
+            <span aria-hidden style={{
+              display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+              background: C.mint,
+              animation: 'axQ05Pulse 2.4s ease-out infinite',
+            }}/>
+            <Eyebrow color={C.dim}>{t('opCardOnline')}</Eyebrow>
+          </div>
         </div>
 
         <div ref={scrollRef} className="ax-quiet05-scroll" style={{
@@ -2195,46 +2211,25 @@ window.AxiusDirectionE05 = function () {
         }}>{m.text}</div>
       </div>
     );
-    // 'andres' role — tangerine A. glyph.  Live replies from Telegram
-    // get a small LIVE badge; canned chip answers (m.live === false)
-    // render without it so they read as a natural human typing.
+    // 'andres' role — actual Telegram-routed reply from the operator.
+    // Previously rendered with a tangerine "A." glyph and a "Reply"
+    // badge; both removed for a cleaner one-register surface.  The
+    // visitor's own messages keep their right-aligned bubble, so the
+    // speaker is still unambiguous without any label.
     if (m.role === 'andres') return (
-      <div style={{display: 'flex', gap: 10, alignItems: 'flex-start'}}>
-        <span style={{
-          fontFamily: SERIF, fontStyle: 'italic', fontSize: 14,
-          color: C.tangerine, flexShrink: 0, lineHeight: 1, paddingTop: 2,
-        }}>A.</span>
-        <div style={{flex: 1}}>
-          {m.live !== false && (
-            <span style={{
-              display: 'inline-block', marginRight: 8,
-              padding: '2px 6px',
-              background: C.tangerine, color: '#FFFFFF',
-              fontFamily: MONO, fontSize: 8, fontWeight: 600,
-              letterSpacing: '0.18em', textTransform: 'uppercase',
-              verticalAlign: 'middle',
-            }}>{t('chatAndresLive') || 'Live'}</span>
-          )}
-          <span style={{
-            fontFamily: DISPLAY, fontSize: 13, color: C.ink, lineHeight: 1.55,
-            whiteSpace: 'pre-wrap',
-          }}>{m.text}</span>
-        </div>
-      </div>
+      <div style={{
+        fontFamily: DISPLAY, fontSize: 13, color: C.ink, lineHeight: 1.55,
+        whiteSpace: 'pre-wrap',
+      }}>{m.text}</div>
     );
-    const isAi = m.role === 'bot-ai';
+    // 'bot' / 'bot-ai' replies — also unlabelled.  AI answers used to
+    // carry a lavender "AI." glyph; bare text matches the operator
+    // reply treatment so the conversation reads as one voice.
     return (
-      <div style={{display: 'flex', gap: 10, alignItems: 'flex-start'}}>
-        <span style={{
-          fontFamily: SERIF, fontStyle: 'italic', fontSize: 14,
-          color: isAi ? C.lavender : C.tangerine,
-          flexShrink: 0, lineHeight: 1, paddingTop: 2,
-        }}>{isAi ? 'AI.' : 'A.'}</span>
-        <div style={{
-          fontFamily: DISPLAY, fontSize: 13, color: C.ink, lineHeight: 1.55,
-          whiteSpace: 'pre-wrap', flex: 1,
-        }}>{m.text}</div>
-      </div>
+      <div style={{
+        fontFamily: DISPLAY, fontSize: 13, color: C.ink, lineHeight: 1.55,
+        whiteSpace: 'pre-wrap',
+      }}>{m.text}</div>
     );
   };
 
@@ -2453,23 +2448,34 @@ window.AxiusDirectionE05 = function () {
         width: '100%',
         display: 'flex', flexDirection: 'column',
         overflow: 'hidden',
-        minHeight: 440,
+        // Fixed height — was minHeight, which let the card grow as
+        // chat messages piled up.  Locking the box means the message
+        // list scrolls internally (flex:1 + overflowY:auto inside) and
+        // the surrounding hero layout stays stable.
+        height: 440,
       }}>
         {mode === 'chat' ? (
           <AskAndres onBack={() => setMode('card')} autofocus operatorChrome/>
         ) : (
           <>
-            {/* Header: OPERATOR (tangerine) — no live availability pulse.
-                A green "ONLINE" dot used to sit on the right, but it
-                implied real-time availability the operator can't honour.
-                Quiet single-line eyebrow keeps the directory grammar
-                without making a promise. */}
+            {/* Header: OPERATOR (tangerine) · AI ONLINE (mint pulse).
+                Pulse refers to the AI standby, not the operator's
+                real-time availability — the surface stays useful at
+                every hour without over-promising on the human. */}
             <div style={{
               padding: '14px 22px',
               borderBottom: `1px solid ${C.line}`,
-              display: 'flex', alignItems: 'center',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
               <Eyebrow color={C.tangerine}>{t('opCardOperator')}</Eyebrow>
+              <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
+                <span aria-hidden style={{
+                  display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+                  background: C.mint,
+                  animation: 'axQ05Pulse 2.4s ease-out infinite',
+                }}/>
+                <Eyebrow color={C.dim}>{t('opCardOnline')}</Eyebrow>
+              </div>
             </div>
 
             {/* Identity row */}
