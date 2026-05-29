@@ -3521,23 +3521,20 @@ window.AxiusDirectionE05 = function () {
           </div>
         </div>
 
-        {/* Workflow Capacity intro — hover to expand.  Same compact
-            hover-reveal pattern as the hero "How we work" eyebrow:
-            title is always visible; body + 4-row weight table + footer
-            line fade in on hover so the section reads as a single
-            quiet line until the visitor signals interest. */}
+        {/* Workflow Capacity intro — hover to expand.  Fully transparent
+            (no surface card, no enclosing border) so the section reads
+            as inline section copy.  Eyebrow color shifts on hover to
+            signal that the body, weight table, and footer line are
+            revealable; everything else lives flush with the page. */}
         <div
           onMouseEnter={() => setCapacityHover(true)}
           onMouseLeave={() => setCapacityHover(false)}
           style={{
             marginBottom: 36,
-            background: C.surface, border: `1px solid ${C.line}`,
             cursor: 'default',
-            transition: 'border-color .3s ease',
-            borderColor: capacityHover ? C.lineHi : C.line,
           }}>
           <div style={{
-            padding: capacityHover ? '20px 28px' : '14px 28px',
+            padding: capacityHover ? '20px 0' : '14px 0',
             transition: 'padding .35s ease',
           }}>
             <Eyebrow color={capacityHover ? C.tangerine : C.mute} style={{
@@ -3672,9 +3669,33 @@ window.AxiusDirectionE05 = function () {
             const rows = expandedSamples(cat);
             return (
               <div style={{
-                background: C.surface, border: `1px solid ${C.line}`,
+                background: C.surface,
+                border: `1px solid ${recoFor === cat.id ? C.lavender : C.line}`,
                 position: 'sticky', top: 80,
+                transition: 'border-color .3s ease',
               }}>
+                {/* RECOMMENDED FOR YOU — slim lavender strip across the
+                    top of the panel.  Lives outside the regular header
+                    row so it can't compete with the category name and
+                    count for space.  Appears only when the AI pivot
+                    points at this category. */}
+                {recoFor === cat.id && (
+                  <div style={{
+                    padding: '6px 24px',
+                    background: C.lavender,
+                    display: 'flex', alignItems: 'center', gap: 8,
+                  }}>
+                    <span style={{
+                      width: 6, height: 6, borderRadius: '50%',
+                      background: '#FFFFFF', display: 'inline-block',
+                    }}/>
+                    <span style={{
+                      fontFamily: MONO, fontSize: 9, fontWeight: 600,
+                      color: '#FFFFFF',
+                      letterSpacing: '0.22em', textTransform: 'uppercase',
+                    }}>{t('sec04RecommendBadge')}</span>
+                  </div>
+                )}
                 <div style={{
                   padding: '16px 24px', borderBottom: `1px solid ${C.line}`,
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -3686,14 +3707,6 @@ window.AxiusDirectionE05 = function () {
                       background: activeAccent,
                     }}/>
                     <Eyebrow color={C.ink}>{tr(cat, 'name')} — {t('sec04SampleEntries')}</Eyebrow>
-                    {recoFor === cat.id && (
-                      <span style={{
-                        marginLeft: 4, padding: '2px 6px',
-                        background: C.lavender, color: '#FFFFFF',
-                        fontFamily: MONO, fontSize: 8, fontWeight: 600,
-                        letterSpacing: '0.18em', textTransform: 'uppercase',
-                      }}>{t('sec04RecommendBadge')}</span>
-                    )}
                   </div>
                   <Eyebrow color={C.mute}>{rows.length} / {cat.count} · {t('sec04ScrollMore')}</Eyebrow>
                 </div>
@@ -3851,7 +3864,7 @@ window.AxiusDirectionE05 = function () {
         <Eyebrow style={{marginBottom: 28}}>{t('sec05Eyebrow')}</Eyebrow>
         <HoverHead
           accent={C.mint}
-          style={{fontSize: 84, letterSpacing: '-0.045em', maxWidth: 1080, marginBottom: 72}}
+          style={{maxWidth: 1080, marginBottom: 72}}
           prefix={t('sec05TitlePrefix')}
           italic={t('sec05TitleItalic')}
           suffix={t('sec05TitleSuffix')}/>
@@ -4016,12 +4029,13 @@ window.AxiusDirectionE05 = function () {
           ))}
         </div>
 
-        {/* Founder Track — quiet footer panel under the tier row.
-            Horizontal layout: label / question / capacity / chip row
-            on the left, CTA on the right. */}
+        {/* Founder Track — quiet footer block under the tier row.
+            Transparent (no surface card, no enclosing border); the
+            uppercase chips on the right of the question keep enough
+            visual structure on their own.  Horizontal layout: label /
+            question / chip row on the left, CTA on the right. */}
         <div style={{
-          marginTop: 24, padding: '28px 32px',
-          background: C.surface, border: `1px solid ${C.line}`,
+          marginTop: 24, padding: '28px 0',
           display: 'grid', gridTemplateColumns: '1fr auto', gap: 40,
           alignItems: 'center',
         }}>
@@ -4380,7 +4394,7 @@ window.AxiusDirectionE05 = function () {
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec08Eyebrow')}</Eyebrow>
             <HoverHead
-              style={{maxWidth: 720}}
+              style={{whiteSpace: 'nowrap'}}
               prefix={t('sec08TitlePrefix')}
               italic={t('sec08TitleItalic')}
               suffix={t('sec08TitleSuffix')}/>
@@ -4531,7 +4545,7 @@ window.AxiusDirectionE05 = function () {
       }}>
         <Eyebrow style={{marginBottom: 24}}>{t('sec09Eyebrow')}</Eyebrow>
         <HoverHead
-          style={{maxWidth: 1000, marginBottom: 44, fontSize: 60, letterSpacing: '-0.038em', lineHeight: 1.05}}
+          style={{maxWidth: 1000, marginBottom: 44}}
           prefix={t('sec09TitlePrefix')}
           italic={t('sec09TitleItalic')}
           suffix={t('sec09TitleSuffix')}/>
