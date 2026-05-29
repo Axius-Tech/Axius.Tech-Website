@@ -166,7 +166,7 @@ window.AxiusCommitments = [
 
 // ─── DATA: METHODOLOGY ──────────────────────────────────────
 window.AxiusMethodology = [
-  { n: '01', name: 'Audit',     nameEs: 'Auditoría', body: 'Inventory the stack.\nFind the leaks.\nDeliver the report.', bodyEs: 'Inventariar el stack.\nEncontrar las fugas.\nEntregar el reporte.', artifact: 'stack_audit.pdf',    timing: 'Days 1–7',  timingEs: 'Días 1–7' },
+  { n: '01', name: 'Audit',     nameEs: 'Auditoría', body: 'Inventory the systems.\nFind the leaks.\nDeliver the report.', bodyEs: 'Inventariar los sistemas.\nEncontrar las fugas.\nEntregar el reporte.', artifact: 'stack_audit.pdf',    timing: 'Days 1–7',  timingEs: 'Días 1–7' },
   { n: '02', name: 'Configure', nameEs: 'Configurar', body: 'Map workflows to your business.\nYou sign off in writing.', bodyEs: 'Mapear workflows a tu negocio.\nFirmas la aprobación por escrito.', artifact: 'config_map.json',    timing: 'Days 8–14', timingEs: 'Días 8–14' },
   { n: '03', name: 'Operate',   nameEs: 'Operar',     body: 'Run it.\nLog tickets. Ship fixes.\nReport monthly.',         bodyEs: 'Operarlo.\nRegistrar tickets. Lanzar fixes.\nReportar cada mes.',     artifact: 'monthly_report.md',  timing: 'Month 1+',  timingEs: 'Mes 1+' },
   { n: '04', name: 'Evolve',    nameEs: 'Evolucionar', body: 'Review quarterly.\nThe roadmap stays yours.',               bodyEs: 'Revisar cada trimestre.\nEl roadmap sigue siendo tuyo.',              artifact: 'roadmap.notion',     timing: 'Quarterly', timingEs: 'Trimestral' },
@@ -423,8 +423,8 @@ window.AxiusFAQ = [
     aEs: 'Capacidad de workflows activos (medida en puntos, por tier), ventanas de respuesta garantizadas, llamadas de estrategia programadas, un reporte mensual de operaciones y una revisión trimestral del roadmap.' },
   { q: 'How do you onboard a new business?',
     qEs: '¿Cómo hacen el onboarding?',
-    a: 'Setup runs 7–14 days by tier. You get a stack audit, a configuration map, and a 30-day plan. Monthly billing starts after sign-off.',
-    aEs: 'El setup toma 7–14 días según el tier. Recibes una auditoría de stack, un mapa de configuración y un plan a 30 días. El cobro mensual empieza después de la aprobación.' },
+    a: 'Setup runs 7–14 days by tier. You get a systems audit, a configuration map, and a 30-day plan. Monthly billing starts after sign-off.',
+    aEs: 'El setup toma 7–14 días según el tier. Recibes una auditoría de sistemas, un mapa de configuración y un plan a 30 días. El cobro mensual empieza después de la aprobación.' },
   { q: 'Who owns the work, the code, the accounts?',
     qEs: '¿Quién es dueño del trabajo, el código, las cuentas?',
     a: 'You do. Every artifact lives in your accounts. We work inside your tools. If you ever leave, everything stays documented and operational.',
@@ -453,8 +453,8 @@ window.AxiusFounder = {
   photo: 'andres-toro.jpg',
   bio: "Hi, I'm Andrés.\n\nAfter years working inside SMB operations, I kept seeing the same issue: fragmented systems, scattered contractors, and founders stuck managing operational complexity themselves.\n\nAxius was built to solve that.\n\nWe oversee the operational side of your business's tech through one accountable layer, combining structured systems, AI-assisted execution, and specialist support when needed.\n\nThe goal is simple: your business keeps moving without you managing the tech side of it.",
   bioEs: "Hola, soy Andrés.\n\nDespués de años trabajando en operaciones de PyMEs, vi el mismo patrón una y otra vez: sistemas fragmentados, contratistas dispersos, y fundadores atrapados gestionando ellos mismos toda la complejidad operativa.\n\nAxius nació para resolver eso.\n\nOperamos el lado tecnológico de tu negocio a través de una sola capa responsable, combinando sistemas estructurados, ejecución asistida por IA y especialistas cuando hace falta.\n\nEl objetivo es simple: tu negocio sigue avanzando sin que tú tengas que operar la tech.",
-  quote: '"Most SMBs don\'t need a CTO. They need someone who quietly handles the tech function so the founder can stop being IT."',
-  quoteEs: '"La mayoría de PyMEs no necesitan un CTO. Necesitan a alguien que opere la función tech en silencio para que el fundador deje de ser el de IT."',
+  quote: '"Most SMBs don\'t need a CTO. They need someone who quietly handles the systems behind the business so the founder can stop being IT."',
+  quoteEs: '"La mayoría de PyMEs no necesitan un CTO. Necesitan a alguien que opere en silencio los sistemas detrás del negocio para que el fundador deje de ser el de IT."',
   facts: [
     { k: 'based', v: 'Altamonte Springs, FL · in Medellín now' },
     { k: 'available', v: 'US business hours' },

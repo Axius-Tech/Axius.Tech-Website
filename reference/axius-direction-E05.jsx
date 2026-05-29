@@ -315,7 +315,7 @@ window.AxiusDirectionE05 = function () {
       sec02TitleBuild:  'build',
       sec02TitleP2:     ' a business, ',
       sec02TitleNot:    'not',
-      sec02TitleP3:     ' maintain a stack.',
+      sec02TitleP3:     ' maintain its systems.',
       sec02ColLabels:   ['The symptom', 'The cost', 'The resolution'],
       sec02ColBodies:   [
         'Five contractors. Three Slack threads. The site breaks Friday. The CRM never got connected properly.',
@@ -381,7 +381,7 @@ window.AxiusDirectionE05 = function () {
           'Sets operational direction',
           'Owns outcomes and execution',
           'Accountable when systems change',
-          'Same hand on your stack',
+          'Same hand on your systems',
         ] },
         { eyebrow: 'AI systems',       title: 'Increase speed and continuity.', bullets: [
           'Maintain workflow context',
@@ -391,7 +391,7 @@ window.AxiusDirectionE05 = function () {
           'Keep documentation current',
         ] },
         { eyebrow: 'Specialists',      title: 'Integrated when depth is needed.', bullets: [
-          'Vetted specialists across the stack',
+          'Vetted specialists across the work',
           'Engineering, automation, design, infrastructure',
           'Managed entirely by the operator',
           'No vendor coordination on your side',
@@ -408,7 +408,7 @@ window.AxiusDirectionE05 = function () {
       // — Section 08: Founder (was 07) —
       sec08Eyebrow:     '08 · The Operator',
       sec08TitlePrefix: 'The hand on ',
-      sec08TitleItalic: 'your stack',
+      sec08TitleItalic: 'your operations',
       sec08TitleSuffix: '.',
       sec08VerifyLinkedin: 'LinkedIn',
       sec08TalkToMe:       'Talk to me',
@@ -422,7 +422,7 @@ window.AxiusDirectionE05 = function () {
       ctaTitlePrefix:   'Begin a',
       ctaTitleItalic:   'conversation',
       ctaTitleSuffix:   '.',
-      ctaBody:          'Thirty minutes. You leave with a one-page audit either way. No pitch, no pressure — just a clear picture of your stack.',
+      ctaBody:          'Thirty minutes. You leave with a one-page audit either way. No pitch, no pressure — just a clear picture of your systems.',
       footerCity:       'altamonte springs, fl · remote · in medellín now',
       footerCopy:       '© 2026',
       // Chat header
@@ -543,7 +543,7 @@ window.AxiusDirectionE05 = function () {
       sec02TitleBuild:  'construir',
       sec02TitleP2:     ' un negocio, ',
       sec02TitleNot:    'no',
-      sec02TitleP3:     ' mantener un stack.',
+      sec02TitleP3:     ' mantener sus sistemas.',
       sec02ColLabels:   ['El síntoma', 'El costo', 'La resolución'],
       sec02ColBodies:   [
         'Cinco contratistas. Tres hilos de Slack. El sitio se cae el viernes. El CRM nunca se conectó como debía.',
@@ -605,7 +605,7 @@ window.AxiusDirectionE05 = function () {
           'Define la dirección operativa',
           'Responsable de los resultados y la ejecución',
           'Sigue respondiendo cuando hay cambios',
-          'La misma mano sobre tu stack',
+          'La misma mano sobre tus sistemas',
         ] },
         { eyebrow: 'Sistemas de IA', title: 'Aumentan velocidad y continuidad.', bullets: [
           'Mantienen contexto del workflow',
@@ -615,7 +615,7 @@ window.AxiusDirectionE05 = function () {
           'Mantienen la documentación al día',
         ] },
         { eyebrow: 'Especialistas', title: 'Integrados cuando se necesita profundidad.', bullets: [
-          'Especialistas verificados en todo el stack',
+          'Especialistas verificados en todo el trabajo',
           'Engineering, automatización, diseño, infraestructura',
           'Gestionados completamente por el operador',
           'Sin coordinación de proveedores de tu lado',
@@ -632,7 +632,7 @@ window.AxiusDirectionE05 = function () {
       // — Sección 08: Fundador (era 07) —
       sec08Eyebrow:     '08 · El Operador',
       sec08TitlePrefix: 'La mano sobre ',
-      sec08TitleItalic: 'tu stack',
+      sec08TitleItalic: 'tus operaciones',
       sec08TitleSuffix: '.',
       sec08VerifyLinkedin: 'LinkedIn',
       sec08TalkToMe:       'Hablemos',
@@ -646,7 +646,7 @@ window.AxiusDirectionE05 = function () {
       ctaTitlePrefix:   'Comencemos una',
       ctaTitleItalic:   'conversación',
       ctaTitleSuffix:   '.',
-      ctaBody:          'Treinta minutos. Te llevas una auditoría de una página, pase lo que pase. Sin pitch, sin presión — solo una imagen clara de tu stack.',
+      ctaBody:          'Treinta minutos. Te llevas una auditoría de una página, pase lo que pase. Sin pitch, sin presión — solo una imagen clara de tus sistemas.',
       footerCity:       'altamonte springs, fl · remoto · en medellín ahora',
       footerCopy:       '© 2026',
       chatBack:         'Volver',
