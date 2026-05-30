@@ -67,9 +67,9 @@ window.AxiusConfig = {
   // routes here directly; when null/empty, the card falls back to the
   // discovery-call booking flow.  Replace with real URLs from Stripe.
   checkoutUrls: {
-    operador:      '',
-    equipo:        '',
-    departamento:  '',
+    operador:      'https://buy.stripe.com/7sY8wOcMEe7B6nWbT1cbC00',
+    equipo:        'https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01',
+    departamento:  'https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02',
   },
 };
 
