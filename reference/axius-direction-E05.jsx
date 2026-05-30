@@ -4439,14 +4439,18 @@ window.AxiusDirectionE05 = function () {
     // (and tints its eyebrow caption tangerine), matching the prior
     // single-photo hover behaviour but spread across three frames.
     const captions = t('sec08FigCaptions');
+    const founderPhoto = (window.AxiusFounder && window.AxiusFounder.photo) || '/assets/andres-toro.jpg';
     const frames = [
-      { fig: 'Fig. 01', caption: captions[0],  crop: '50% 30%',
+      { fig: 'Fig. 01', caption: captions[0], crop: '50% 30%',
+        photo:  founderPhoto,
         idle:   'grayscale(1) contrast(1.02)',
         active: 'grayscale(0) saturate(1.05) contrast(1.02)' },
-      { fig: 'Fig. 02', caption: captions[1], crop: '50% 20%',
+      { fig: 'Fig. 02', caption: captions[1], crop: '50% 45%',
+        photo:  '/assets/andres-toro-studio.jpg',
         idle:   'grayscale(0.92) sepia(0.18) contrast(1.06)',
         active: 'grayscale(0) saturate(1.05) contrast(1.02)' },
-      { fig: 'Fig. 03', caption: captions[2], crop: '40% 35%',
+      { fig: 'Fig. 03', caption: captions[2], crop: '50% 35%',
+        photo:  '/assets/andres-toro-on-the-go.jpg',
         idle:   'grayscale(0.95) sepia(0.06) contrast(1.06) brightness(0.98)',
         active: 'grayscale(0) saturate(1.06) contrast(1.02)' },
     ];
@@ -4586,7 +4590,7 @@ window.AxiusDirectionE05 = function () {
           background: C.panel,
           cursor: 'default',
         }}>
-        <img src={window.AxiusFounder.photo} alt={`Andrés Toro · ${f.caption}`} style={{
+        <img src={f.photo || window.AxiusFounder.photo} alt={`Andrés Toro · ${f.caption}`} style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%', objectFit: 'cover',
           objectPosition: f.crop,
