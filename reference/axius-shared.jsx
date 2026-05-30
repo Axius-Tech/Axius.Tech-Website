@@ -450,7 +450,7 @@ window.AxiusFounder = {
   based: 'Altamonte Springs, FL',
   currentlyIn: 'Medellín, Colombia',
   email: 'andres@axius.tech',
-  photo: 'andres-toro.jpg',
+  photo: '/assets/andres-toro.jpg',
   bio: "Hi, I'm Andrés.\n\nAfter years working inside SMB operations, I kept seeing the same issue: fragmented systems, scattered contractors, and founders stuck managing operational complexity themselves.\n\nAxius was built to solve that.\n\nWe oversee the operational side of your business's tech through one accountable layer, combining structured systems, AI-assisted execution, and specialist support when needed.\n\nThe goal is simple: your business keeps moving without you managing the tech side of it.",
   bioEs: "Hola, soy Andrés.\n\nDespués de años trabajando en operaciones de PyMEs, vi el mismo patrón una y otra vez: sistemas fragmentados, contratistas dispersos, y fundadores atrapados gestionando ellos mismos toda la complejidad operativa.\n\nAxius nació para resolver eso.\n\nOperamos el lado tecnológico de tu negocio a través de una sola capa responsable, combinando sistemas estructurados, ejecución asistida por IA y especialistas cuando hace falta.\n\nEl objetivo es simple: tu negocio sigue avanzando sin que tú tengas que operar la tech.",
   quote: '"Most SMBs don\'t need a CTO. They need someone who quietly handles the systems behind the business so the founder can stop being IT."',
