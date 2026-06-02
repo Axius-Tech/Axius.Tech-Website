@@ -422,9 +422,18 @@ window.AxiusFabricatedDeadline = '2026-08-01T00:00:00-05:00'; // Bogotá local
 
 ```js
 window.axiusFabricationLive = function () {
+  // Dev override — only honored when `localStorage.getItem('axius:devmode') === '1'`.
+  // Lets the implementer verify post-deadline behavior without changing the system clock.
+  if (typeof localStorage !== 'undefined' &&
+      localStorage.getItem('axius:devmode') === '1') {
+    const override = localStorage.getItem('axius:deadline-override');
+    if (override) return Date.now() < new Date(override).getTime();
+  }
   return Date.now() < new Date(window.AxiusFabricatedDeadline).getTime();
 };
 ```
+
+Devmode + override combination is used by §11.2 verification step (post-deadline auto-unmount).
 
 ### 9.3 Top-of-file checklist in `axius-shared.jsx`
 
@@ -511,11 +520,13 @@ A small `<DevDeadlineNote/>` floating chip renders **only when** `localStorage.g
 
 ### 10.4 Outcomes (3 entries)
 
-| id | EN | ES | Tier |
+| id | EN template | ES template | Tier |
 |---|---|---|---|
-| `fix-one` | Fix one critical system reliably · from $1k/mo | Arreglar un sistema crítico con confianza · desde $1k/mes | Operador |
-| `run-many` | Run multiple systems together with continuity · from $2.5k/mo | Operar múltiples sistemas con continuidad · desde $2.5k/mes | Equipo |
-| `delegate` | Fully delegate the tech layer · from $5k/mo | Delegar completamente la capa de tech · desde $5k/mes | Departamento |
+| `fix-one` | Fix one critical system reliably · from ${operadorPrice}/mo | Arreglar un sistema crítico con confianza · desde ${operadorPrice}/mes | Operador |
+| `run-many` | Run multiple systems together with continuity · from ${equipoPrice}/mo | Operar múltiples sistemas con continuidad · desde ${equipoPrice}/mes | Equipo |
+| `delegate` | Fully delegate the tech layer · from ${departamentoPrice}/mo | Delegar completamente la capa de tech · desde ${departamentoPrice}/mes | Departamento |
+
+Prices are templated: at render time, `{tier}Price` is read from `AxiusPricing.find(p => p.id === '<tier-id>').price` and formatted as `$1k`, `$2.5k`, `$5k`. This keeps outcome-chip copy in sync if pricing ever changes in `AxiusPricing`. Implementation provides a small `formatTierPrice(priceUsd)` helper that returns `"$1k"`, `"$2.5k"`, `"$5k"` (rounding logic: divide by 1000, then `.toFixed(1)` and strip trailing `.0`).
 
 ### 10.5 Fabricated outcome metric strings (4 tiles, lift on 2026-08-01)
 
@@ -609,7 +620,7 @@ A second pass (during implementation, not spec) authors all 60 rationales using 
 | Chat seed (skipper) | skip → open chat → first 3 bubbles are buttoned questions | matches |
 | Pricing tier dynamic | answer outcome=`departamento` → Departamento card has tangerine outline | matches |
 | Catalog filter | answer industry=`hospitality` → only `'hospitality'` and `'all'` tagged items render | matches |
-| Catalog "View all" | click → all 120 render, personalization state unchanged | matches |
+| Catalog "View all" | click → all 129 render (full `AxiusCatalog`), personalization state unchanged | matches |
 | Recommendations panel | answer all 3 → 3 cards render with rationale | matches |
 | Fabricated content guard (pre-deadline) | DevTools console: `axiusFabricationLive()` → `true` | `true` |
 | Fabricated content guard (post-deadline) | mock with `localStorage.setItem('axius:deadline-override', '2026-09-01')` (dev hook) → fabricated unmounts | unmounts |
@@ -646,7 +657,7 @@ The Stripe + Telegram wiring from the prior session is untouched. Spec verifies 
 
 ## 14. Open items requiring user input before implementation
 
-1. **Catalog industry tagging.** The implementation author will propose initial tags for all 120 `AxiusCatalog` items in a sidecar review document; Andrés confirms or adjusts before merge.
+1. **Catalog industry tagging.** The implementation author will propose initial tags for all 9 `AxiusCatalog` categories (per §3.3.1) in a sidecar review document; Andrés confirms or adjusts before merge.
 2. **Recommendations matrix.** 60 cells (10 industries × 6 challenges) need rationale strings authored. The implementation author proposes them; Andrés reviews EN + ES before merge.
 3. **`AxiusOperationalMetrics.activeSystems`.** Single string Andrés sets — e.g., "in pilot", "tracking 4 live", "tracking 9 live". Honest, updates as the practice grows.
 4. **(Future)** Real testimonials, case studies, GBP URL, founder video URL — none required for v1 launch, all drop in when Andrés has them.
