@@ -833,3 +833,24 @@ window.AxiusCatalogTags = {
   grow:     ['ecommerce', 'wellness', 'professional', 'hospitality', 'automotive', 'realestate'],
   creative: ['ecommerce', 'wellness', 'hospitality', 'professional'],
 };
+
+// AxiusRecommendations[industryId][challengeId] = { samples: ['001', ...], rationaleEN, rationaleES }
+// Implementation note: omitted cells fall back to "first 3 samples from the
+// highest-affinity category tagged for the industry" — see F.jsx render code.
+window.AxiusRecommendations = {
+  realestate: {
+    leadsleak:   { samples: ['001','002','017'], rationaleEN: 'Stop bleeding the warm pipeline before scaling acquisition.',
+                                                 rationaleES: 'Frenar la fuga del pipeline tibio antes de escalar adquisición.' },
+    manualdata:  { samples: ['035','037','107'], rationaleEN: 'Cross-tool sync + SaaS audit get the operational layer clean.',
+                                                 rationaleES: 'Sync entre herramientas + auditoría SaaS limpian la capa operativa.' },
+    commsscatter:{ samples: ['019','017','107'], rationaleEN: 'Unify inbound channels before adding new ones.',
+                                                 rationaleES: 'Unificar canales entrantes antes de sumar nuevos.' },
+    bottleneck:  { samples: ['004','003','053'], rationaleEN: 'Voice + DM AI agents take the founder out of the hot loop.',
+                                                 rationaleES: 'Agentes IA de voz y DM sacan al fundador del loop caliente.' },
+    visibility:  { samples: ['064','052','065'], rationaleEN: 'Operational dashboards + scoring make next-step obvious.',
+                                                 rationaleES: 'Dashboards operativos + scoring vuelven obvia la siguiente acción.' },
+    handoffs:    { samples: ['018','034','019'], rationaleEN: 'Triage and document automation make every handoff identical.',
+                                                 rationaleES: 'Triage y automatización de documentos hacen idéntica cada entrega.' },
+  },
+  // Additional industry cells filled in Phase 9 Task 9.1.
+};
