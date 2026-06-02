@@ -1,0 +1,14 @@
+{
+  "name": "axius-tech-website",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "python3 -m http.server 4321",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
+    "e2e:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
