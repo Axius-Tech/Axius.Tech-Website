@@ -691,3 +691,40 @@ window.axiusFabricationLive = function () {
   }
   return Date.now() < new Date(window.AxiusFabricatedDeadline).getTime();
 };
+
+window.AxiusFabricated = window.AxiusFabricated || {};
+window.AxiusFabricated.caseStudies = [
+  {
+    id: 'cs-marianas-cantina',
+    company: "Mariana's Cantina Group",
+    subtitle:   'Three-location restaurant group, South Florida',
+    subtitleEs: 'Grupo de restaurantes de tres locaciones, sur de Florida',
+    body:   "Inventory reconciliation was eating two manager-nights a week across three locations. Axius stood up a Shopify-to-spreadsheet daily sync with a Slack alert for variance over 2%. Managers stopped working Sundays.",
+    bodyEs: "La reconciliación de inventario consumía dos noches de gerencia por semana en tres locaciones. Axius armó un sync diario de Shopify a planilla con alerta de Slack si la varianza superaba 2%. Los gerentes dejaron de trabajar los domingos.",
+    outcome:   'Manager hours back: 8h / week',
+    outcomeEs: 'Horas de gerencia recuperadas: 8h / semana',
+    industry: 'hospitality',
+  },
+  {
+    id: 'cs-hartwell-bain',
+    company: 'Hartwell & Bain LLP',
+    subtitle:   'Boutique litigation firm, Charlotte NC, 6 attorneys',
+    subtitleEs: 'Bufete boutique de litigios, Charlotte NC, 6 abogados',
+    body:   "Intake forms were re-typed three times — once by the receptionist, once into Clio, once into the document templates. Axius stitched a single-entry intake that pushes into all three. Onboarding a new matter dropped from 45 min to 8.",
+    bodyEs: "Los formularios de intake se retecleaban tres veces — uno la recepcionista, uno en Clio, uno en las plantillas. Axius armó un intake de una sola entrada que empuja a los tres. Abrir un caso pasó de 45 min a 8.",
+    outcome:   'Intake time: 45m → 8m',
+    outcomeEs: 'Tiempo de intake: 45m → 8m',
+    industry: 'legal',
+  },
+  {
+    id: 'cs-bridgepoint',
+    company: 'Bridgepoint Realty Partners',
+    subtitle:   'Independent brokerage, Tampa FL, 14 agents',
+    subtitleEs: 'Inmobiliaria independiente, Tampa FL, 14 agentes',
+    body:   "Missed calls during showings were costing leads weekly. Axius routed missed-call SMS to a tier-aware AI replier and posted high-intent ones into a dedicated Slack channel for the founder. First-week measurable lift was a closing the agent told us 'wouldn't have happened'.",
+    bodyEs: "Las llamadas perdidas durante visitas costaban leads semanalmente. Axius enrutó el SMS de llamada perdida a un respondedor IA por tier y publicó las de alta intención en un canal de Slack dedicado para el fundador. El primer cierre medible fue uno que el agente dijo 'no habría pasado'.",
+    outcome:   'Recovered showings: 11 in 30 days',
+    outcomeEs: 'Visitas recuperadas: 11 en 30 días',
+    industry: 'realestate',
+  },
+];
