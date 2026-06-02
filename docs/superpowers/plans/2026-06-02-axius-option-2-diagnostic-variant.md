@@ -8,6 +8,15 @@
 
 **Tech Stack:** Static HTML + JSX compiled by `@babel/standalone` in the browser. No build step. React 18 via CDN. Vercel serverless functions in `api/`. Playwright for e2e tests (already in `node_modules`, exposed via a new minimal `package.json`).
 
+**Color/typography convention:** `window.AxiusTokens` (defined in [reference/axius-shared.jsx:96-121](../../reference/axius-shared.jsx#L96-L121)) is **dark-mode oriented** (e.g. `bg: '#0F0E0C'`, `ink: '#F5F1EA'`). The Quiet 0.5 user-facing surfaces — including this entire Option 2 variant — render on a **light cream canvas**. Throughout this plan, use these literals instead of `T.*` references:
+- Canvas: `'#F7F6F2'`
+- Display serif: `"'Source Serif 4', serif"`
+- Dim ink on light: `'rgba(10,9,7,0.55)'`
+- Primary ink on light: `'#0F0E0C'`
+- Hairline borders on light: `'1px solid rgba(10,9,7,0.16)'` (or `0.08` for softer)
+- Tangerine accent (matches `T.copper`): `'#B8743C'`
+Do NOT reference `T.canvas`, `T.serif`, or `T.dim` — those names do not exist on the tokens object.
+
 **Spec:** [docs/superpowers/specs/2026-06-02-axius-option-2-diagnostic-variant-design.md](../specs/2026-06-02-axius-option-2-diagnostic-variant-design.md)
 
 **Replace-before-launch deadline:** `2026-08-01T00:00:00-05:00` (Bogotá local). Fabricated content auto-unmounts after this.
@@ -826,11 +835,11 @@ window.AxiusDiagnostic = function (props) {
     return React.createElement(
       'section',
       { 'data-axius-diagnostic-step': 1,
-        style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+        style: { minHeight: '100vh', padding: '64px 32px', background: '#F7F6F2' } },
       React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
         React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
-        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 12 } }, tr('step1Title')),
-        React.createElement('p',  { style: { color: T.dim, marginBottom: 32 } }, tr('kicker')),
+        React.createElement('h2', { style: { fontFamily: "'Source Serif 4', serif", fontSize: 44, marginBottom: 12 } }, tr('step1Title')),
+        React.createElement('p',  { style: { color: 'rgba(10,9,7,0.55)', marginBottom: 32 } }, tr('kicker')),
         React.createElement('div', {
           style: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 } },
           (window.AxiusIndustries || []).map(i =>
@@ -947,11 +956,11 @@ Inside `window.AxiusDiagnostic`, between Step 1 and `return null`, add:
   if (step === 2) {
     return React.createElement('section', {
       'data-axius-diagnostic-step': 2,
-      style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+      style: { minHeight: '100vh', padding: '64px 32px', background: '#F7F6F2' } },
       React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
         React.createElement(BackChevron, { onClick: () => setStep(1) }),
         React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
-        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 32 } }, tr('step2Title')),
+        React.createElement('h2', { style: { fontFamily: "'Source Serif 4', serif", fontSize: 44, marginBottom: 32 } }, tr('step2Title')),
         React.createElement('div', {
           style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 } },
           (window.AxiusChallenges || []).map(c =>
@@ -974,11 +983,11 @@ Inside `window.AxiusDiagnostic`, between Step 1 and `return null`, add:
     };
     return React.createElement('section', {
       'data-axius-diagnostic-step': 3,
-      style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+      style: { minHeight: '100vh', padding: '64px 32px', background: '#F7F6F2' } },
       React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
         React.createElement(BackChevron, { onClick: () => setStep(2) }),
         React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
-        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 32 } }, tr('step3Title')),
+        React.createElement('h2', { style: { fontFamily: "'Source Serif 4', serif", fontSize: 44, marginBottom: 32 } }, tr('step3Title')),
         React.createElement('div', {
           style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 } },
           (window.AxiusOutcomes || []).map(o => {
