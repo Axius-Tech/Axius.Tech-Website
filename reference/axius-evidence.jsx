@@ -173,3 +173,35 @@ window.AxiusEvidence.MetricsF = function () {
     ),
   );
 };
+
+window.AxiusEvidence.GBPCardF = function () {
+  const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
+  const g = window.AxiusGBP || {};
+  if (!g.url) {
+    return React.createElement('section', { id: 'gbp',
+      style: { padding: '64px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
+               background: '#F7F6F2', textAlign: 'center' } },
+      React.createElement('p', { style: { fontStyle: 'italic', color: 'rgba(10,9,7,0.55)',
+                                            maxWidth: 600, margin: '0 auto' } },
+        lang === 'es'
+          ? 'Perfil de Google Business próximamente — dejando este espacio para que las reseñas aterricen naturalmente.'
+          : 'Google Business profile coming soon — leaving room here so reviews land naturally.'),
+    );
+  }
+  return React.createElement('section', { id: 'gbp',
+    style: { padding: '64px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
+             background: '#F7F6F2', textAlign: 'center', color: '#0F0E0C' } },
+    React.createElement('div', { style: { display: 'inline-block' } },
+      React.createElement('span', { style: { fontFamily: "'Source Serif 4', serif",
+                                               fontSize: 28, fontWeight: 600 } },
+        g.rating + '★'),
+      React.createElement('span', { style: { marginLeft: 12, color: 'rgba(10,9,7,0.65)' } },
+        `${g.reviewCount} ${lang === 'es' ? 'reseñas' : 'reviews'}`),
+    ),
+    React.createElement('div', { style: { marginTop: 8 } },
+      React.createElement('a', { href: g.url, target: '_blank', rel: 'noopener noreferrer',
+        style: { color: '#B8743C', textDecoration: 'none', fontSize: 13 } },
+        lang === 'es' ? 'Leer todas las reseñas en Google →' : 'Read all reviews on Google →'),
+    ),
+  );
+};
