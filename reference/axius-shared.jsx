@@ -854,3 +854,23 @@ window.AxiusRecommendations = {
   },
   // Additional industry cells filled in Phase 9 Task 9.1.
 };
+
+window.AxiusTestimonials      = [];   // populated when real testimonials arrive
+window.AxiusCaseStudies       = [];   // real case studies (fabricated ones live under AxiusFabricated.caseStudies)
+window.AxiusGBP               = { url: null, rating: null, reviewCount: null };
+window.AxiusFounderVideo      = { url: null, poster: null, durationSec: null };
+
+window.AxiusOperationalMetrics = {
+  // Honest values, sourced from the practice itself. Andrés maintains.
+  activeSystems: 'in pilot',  // e.g. 'tracking 9 live'
+  responseWindow: {
+    operador:     '72h',
+    equipo:       '48h',
+    departamento: '< 24h',
+  },
+  cadence: {
+    operador:     'monthly',
+    equipo:       'biweekly',
+    departamento: 'weekly',
+  },
+};
