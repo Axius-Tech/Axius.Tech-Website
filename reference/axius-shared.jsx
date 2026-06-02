@@ -662,3 +662,32 @@ window.AxiusComment = function ({ children, copper }) {
     </div>
   );
 };
+
+// ════════════════════════════════════════════════════════════════════════
+// ⚠️  FABRICATED CONTENT — REPLACE BEFORE 2026-08-01
+// ════════════════════════════════════════════════════════════════════════
+// Every entry under window.AxiusFabricated.* is invented for v1 launch and
+// will auto-unmount at midnight Bogotá time on the date above. To replace
+// with real content, edit the matching value under window.AxiusFabricated.*
+// AND populate the non-fabricated equivalent (e.g., real testimonials in
+// window.AxiusTestimonials, real case studies in window.AxiusCaseStudies).
+// After the deadline the fabricated entries simply do not render; honest
+// empty states take their place.
+//
+// Fabricated entries:
+//   • AxiusFabricated.caseStudies[0..2]    — 3 invented client stories
+//   • AxiusFabricated.outcomeMetrics[0..3] — 4 numeric outcome tiles
+//   • AxiusFabricated.demos[0..2]          — 3 CSS-animated mockups
+//   • AxiusFabricated.beforeAfter[0..1]    — 2 stylized mock-screenshot pairs
+// ════════════════════════════════════════════════════════════════════════
+
+window.AxiusFabricatedDeadline = '2026-08-01T00:00:00-05:00';
+
+window.axiusFabricationLive = function () {
+  if (typeof localStorage !== 'undefined' &&
+      localStorage.getItem('axius:devmode') === '1') {
+    const override = localStorage.getItem('axius:deadline-override');
+    if (override) return Date.now() < new Date(override).getTime();
+  }
+  return Date.now() < new Date(window.AxiusFabricatedDeadline).getTime();
+};
