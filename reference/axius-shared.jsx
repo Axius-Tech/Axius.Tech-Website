@@ -874,3 +874,50 @@ window.AxiusOperationalMetrics = {
     departamento: 'weekly',
   },
 };
+
+window.AxiusPersonalization = (function () {
+  const KEY = 'axius:perso:v1';
+  const TTL_DAYS = 30;
+  const listeners = new Set();
+
+  function defaultState() {
+    return { industry: null, challenge: null, outcome: null,
+             industryOther: null, skipped: false, completedAt: null, version: 1 };
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      const ageDays = (Date.now() - parsed.completedAt) / 86400000;
+      if (ageDays > TTL_DAYS) return defaultState();
+      return parsed;
+    } catch (_) { return defaultState(); }
+  }
+  function persist(state) { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {} }
+  function notify(state)  { listeners.forEach(fn => { try { fn(state); } catch (_) {} }); }
+
+  let state = load();
+
+  return {
+    get: () => ({ ...state }),
+    set: (patch) => {
+      state = { ...state, ...patch, completedAt: Date.now() };
+      persist(state); notify(state);
+    },
+    skip: () => {
+      state = { ...state, skipped: true, completedAt: Date.now() };
+      persist(state); notify(state);
+    },
+    reset: () => {
+      try { localStorage.removeItem(KEY); } catch (_) {}
+      state = defaultState(); notify(state);
+    },
+    subscribe: (fn) => {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    },
+    hasAnswered: () => Boolean(state.industry || state.skipped),
+    isComplete:  () => Boolean(state.industry && state.challenge && state.outcome),
+  };
+})();
