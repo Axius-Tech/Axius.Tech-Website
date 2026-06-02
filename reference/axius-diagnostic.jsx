@@ -106,6 +106,27 @@ window.AxiusDiagnostic = function (props) {
   return null;
 };
 
+window.AxiusDiagnostic.installStyles = function () {
+  if (document.getElementById('axius-diagnostic-styles')) return;
+  const el = document.createElement('style');
+  el.id = 'axius-diagnostic-styles';
+  el.textContent = `
+    [data-axius-diagnostic-step] { position: relative; }
+    @media (max-width: 768px) {
+      [data-axius-diagnostic-step] { padding: 24px 16px !important; }
+      [data-axius-diagnostic-step] h2 { font-size: 28px !important; }
+      [data-axius-diagnostic-step] div[style*='grid'] {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+      [data-axius-diagnostic-step] button[style*='padding: 18px'] {
+        padding: 16px !important;
+      }
+    }
+  `;
+  document.head.appendChild(el);
+};
+
 // Tiny helpers (kept inside the file to avoid extra script loads)
 function chipStyle(active) {
   return {
