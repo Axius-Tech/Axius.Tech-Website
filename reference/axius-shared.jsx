@@ -770,3 +770,52 @@ window.AxiusFabricated.beforeAfter = [
     after:   'auto-routed with audit trail',
     afterEs: 'enrutado automático con auditoría' },
 ];
+
+window.AxiusIndustries = [
+  { id: 'realestate',   label: 'Real estate / brokerage',           labelEs: 'Inmobiliaria',
+                        kicker:   'For real-estate operators —',    kickerEs: 'Para operadores inmobiliarios —' },
+  { id: 'hospitality',  label: 'Restaurant / hospitality',          labelEs: 'Restaurante / hostelería',
+                        kicker:   'For hospitality operators —',    kickerEs: 'Para operadores de hostelería —' },
+  { id: 'legal',        label: 'Legal — small / mid firm',          labelEs: 'Legal — firma pequeña / mediana',
+                        kicker:   'For legal operators —',          kickerEs: 'Para operadores legales —' },
+  { id: 'healthcare',   label: 'Healthcare / dental',               labelEs: 'Salud / odontología',
+                        kicker:   'For healthcare operators —',     kickerEs: 'Para operadores de salud —' },
+  { id: 'homeservices', label: 'Home services (HVAC, plumbing, contractors)',
+                        labelEs: 'Servicios para el hogar (HVAC, plomería, contratistas)',
+                        kicker:   'For home-services operators —',  kickerEs: 'Para operadores de servicios para el hogar —' },
+  { id: 'professional', label: 'Professional services (consultancy, agency)',
+                        labelEs: 'Servicios profesionales (consultoría, agencia)',
+                        kicker:   'For professional-services operators —', kickerEs: 'Para operadores de servicios profesionales —' },
+  { id: 'ecommerce',    label: 'E-commerce / DTC',                  labelEs: 'E-commerce / DTC',
+                        kicker:   'For e-commerce operators —',     kickerEs: 'Para operadores de e-commerce —' },
+  { id: 'automotive',   label: 'Auto dealership / repair',          labelEs: 'Concesionaria / taller automotriz',
+                        kicker:   'For automotive operators —',     kickerEs: 'Para operadores automotrices —' },
+  { id: 'wellness',     label: 'Wellness / fitness (gym, studio, spa)',
+                        labelEs: 'Bienestar / fitness (gimnasio, estudio, spa)',
+                        kicker:   'For wellness operators —',       kickerEs: 'Para operadores de bienestar —' },
+  { id: 'other',        label: 'Other — tell us',                   labelEs: 'Otro — cuéntanos',
+                        kicker:   'For {free-text} operators —',    kickerEs: 'Para operadores de {free-text} —' },
+];
+
+window.AxiusChallenges = [
+  { id: 'leadsleak',    label: 'Leads slip through the cracks',                  labelEs: 'Los leads se nos escapan' },
+  { id: 'manualdata',   label: 'Manual data entry eats hours',                   labelEs: 'La carga manual de datos consume horas' },
+  { id: 'commsscatter', label: 'Customer comms scattered across tools',          labelEs: 'Comunicación con clientes dispersa entre herramientas' },
+  { id: 'bottleneck',   label: "I'm the bottleneck on everything",               labelEs: 'Yo soy el cuello de botella en todo' },
+  { id: 'visibility',   label: "No visibility into what's actually working",     labelEs: 'Sin visibilidad de qué está funcionando' },
+  { id: 'handoffs',     label: 'Onboarding / handoffs are inconsistent',         labelEs: 'Onboarding / entregas inconsistentes' },
+];
+
+window.AxiusOutcomes = [
+  { id: 'fix-one',  tier: 'operador',
+    labelTemplate:   'Fix one critical system reliably · from {price}/mo',
+    labelTemplateEs: 'Arreglar un sistema crítico con confianza · desde {price}/mes' },
+  { id: 'run-many', tier: 'equipo',
+    labelTemplate:   'Run multiple systems together with continuity · from {price}/mo',
+    labelTemplateEs: 'Operar múltiples sistemas con continuidad · desde {price}/mes' },
+  { id: 'delegate', tier: 'departamento',
+    labelTemplate:   'Fully delegate the tech layer · from {price}/mo',
+    labelTemplateEs: 'Delegar completamente la capa de tech · desde {price}/mes' },
+];
+
+window.AxiusOutcomeToTier = { 'fix-one': 'operador', 'run-many': 'equipo', 'delegate': 'departamento' };
