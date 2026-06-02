@@ -47,7 +47,62 @@ window.AxiusDiagnostic = function (props) {
       ),
     );
   }
-  // Steps 2 + 3 added in Task 3.2.
+  if (step === 2) {
+    return React.createElement('section', {
+      'data-axius-diagnostic-step': 2,
+      style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+      React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
+        React.createElement(BackChevron, { onClick: () => setStep(1) }),
+        React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
+        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 32 } }, tr('step2Title')),
+        React.createElement('div', {
+          style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 } },
+          (window.AxiusChallenges || []).map(c =>
+            React.createElement('button', {
+              key: c.id, type: 'button',
+              onClick: () => { setChallenge(c.id); setStep(3); },
+              style: chipStyle(challenge === c.id) },
+              lang === 'es' ? c.labelEs : c.label)
+          ),
+        ),
+      ),
+    );
+  }
+
+  if (step === 3) {
+    const fmt = (price) => '$' + (price / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    const tierPrice = (tier) => {
+      const p = (window.AxiusPricing || []).find(x => x.id === tier);
+      return p ? fmt(p.price) : '';
+    };
+    return React.createElement('section', {
+      'data-axius-diagnostic-step': 3,
+      style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+      React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
+        React.createElement(BackChevron, { onClick: () => setStep(2) }),
+        React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
+        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 32 } }, tr('step3Title')),
+        React.createElement('div', {
+          style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 } },
+          (window.AxiusOutcomes || []).map(o => {
+            const tpl = lang === 'es' ? o.labelTemplateEs : o.labelTemplate;
+            const label = tpl.replace('{price}', tierPrice(o.tier));
+            return React.createElement('button', {
+              key: o.id, type: 'button',
+              onClick: () => {
+                setOutcome(o.id);
+                window.AxiusPersonalization.set({
+                  industry, industryOther: industry === 'other' ? industryOther : null,
+                  challenge, outcome: o.id, skipped: false,
+                });
+              },
+              style: chipStyle(outcome === o.id) }, label);
+          }),
+        ),
+      ),
+    );
+  }
+
   return null;
 };
 
@@ -70,6 +125,14 @@ function SkipLink({ onSkip }) {
              border: 'none', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace',
              fontSize: 11, letterSpacing: '0.18em', color: 'rgba(10,9,7,0.55)' } },
     'SKIP — SHOW EVERYTHING');
+}
+function BackChevron({ onClick }) {
+  return React.createElement('button', {
+    type: 'button', onClick: onClick,
+    style: { position: 'absolute', top: 24, left: 32, background: 'transparent',
+             border: 'none', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace',
+             fontSize: 11, letterSpacing: '0.18em', color: 'rgba(10,9,7,0.55)' } },
+    '← BACK');
 }
 function OtherInput({ value, onCommit }) {
   const [v, setV] = React.useState(value || '');
