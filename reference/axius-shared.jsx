@@ -819,3 +819,17 @@ window.AxiusOutcomes = [
 ];
 
 window.AxiusOutcomeToTier = { 'fix-one': 'operador', 'run-many': 'equipo', 'delegate': 'departamento' };
+
+// Initial category → industries tagging. Maintainers: adjust freely.
+// Categories tagged 'all' surface for every industry.
+window.AxiusCatalogTags = {
+  sales:    ['all'],
+  cx:       ['all'],
+  ops:      ['all'],
+  ai:       ['all'],
+  data:     ['all'],
+  web:      ['ecommerce', 'professional', 'wellness', 'realestate', 'hospitality'],
+  soft:     ['professional', 'legal', 'healthcare', 'homeservices'],
+  grow:     ['ecommerce', 'wellness', 'professional', 'hospitality', 'automotive', 'realestate'],
+  creative: ['ecommerce', 'wellness', 'hospitality', 'professional'],
+};
