@@ -739,3 +739,34 @@ window.AxiusFabricated.outcomeMetrics = [
   { id: 'om-window',    value: '<24h',  label:   'sustained response window',
                                         labelEs: 'ventana de respuesta sostenida' },
 ];
+
+window.AxiusFabricated.demos = [
+  { id: 'demo-missedcall',
+    title:   'Missed call recovery',
+    titleEs: 'Recuperación de llamadas perdidas',
+    captions:   ['ring fails', 'auto-reply within 30s', 'ticket opens in CRM'],
+    captionsEs: ['llamada cae', 'auto-respuesta en 30s', 'ticket abre en CRM'] },
+  { id: 'demo-leadqual',
+    title:   'Lead qualification',
+    titleEs: 'Calificación de leads',
+    captions:   ['visitor question', 'tier-aware response', 'calendar invite'],
+    captionsEs: ['pregunta del visitante', 'respuesta por tier', 'invitación de calendario'] },
+  { id: 'demo-opreport',
+    title:   'Operations report',
+    titleEs: 'Reporte de operaciones',
+    captions:   ['Monday → Friday', 'monthly summary', 'in your inbox'],
+    captionsEs: ['Lunes → Viernes', 'resumen mensual', 'en tu inbox'] },
+];
+
+window.AxiusFabricated.beforeAfter = [
+  { id: 'ba-scattered',
+    before:   'scattered spreadsheets',
+    beforeEs: 'planillas dispersas',
+    after:   'single ops board',
+    afterEs: 'panel de ops único' },
+  { id: 'ba-handoff',
+    before:   'manual handoff between tools',
+    beforeEs: 'entrega manual entre herramientas',
+    after:   'auto-routed with audit trail',
+    afterEs: 'enrutado automático con auditoría' },
+];
