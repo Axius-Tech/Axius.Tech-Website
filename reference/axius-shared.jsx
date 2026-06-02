@@ -728,3 +728,14 @@ window.AxiusFabricated.caseStudies = [
     industry: 'realestate',
   },
 ];
+
+window.AxiusFabricated.outcomeMetrics = [
+  { id: 'om-leadresp',  value: '38%',   label:   'faster lead response on avg.',
+                                        labelEs: 'respuesta a leads más rápida en promedio' },
+  { id: 'om-hoursback', value: '6.5h',  label:   '/ week reclaimed by founders',
+                                        labelEs: '/ semana recuperadas por fundadores' },
+  { id: 'om-unattend',  value: '3.1×',  label:   'more workflows running unattended',
+                                        labelEs: 'más flujos corriendo sin supervisión' },
+  { id: 'om-window',    value: '<24h',  label:   'sustained response window',
+                                        labelEs: 'ventana de respuesta sostenida' },
+];
