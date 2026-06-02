@@ -30,3 +30,7 @@ out/
 .vercel
 
 .superpowers/
+
+# ─── Playwright artifacts ─────────────────────────────────
+test-results/
+playwright-report/
