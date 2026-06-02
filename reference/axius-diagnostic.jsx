@@ -1,7 +1,6 @@
 // Axius diagnostic wizard — 3 steps: Industry → Challenge → Outcome.
 // Reads/writes window.AxiusPersonalization. Localized via window.AxiusConfig.lang.
 window.AxiusDiagnostic = function (props) {
-  const T = window.AxiusTokens;
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
   const tr = (key, fallback) => {
     const tableEN = window.AxiusDiagnosticCopyEN;
@@ -15,24 +14,28 @@ window.AxiusDiagnostic = function (props) {
   const [industryOther, setIndustryOther] = React.useState('');
   const [challenge, setChallenge] = React.useState(null);
   const [outcome, setOutcome] = React.useState(null);
+  const otherFocusRef = React.useRef(null);
 
   // Step 1 — Industry chips
   if (step === 1) {
     return React.createElement(
       'section',
       { 'data-axius-diagnostic-step': 1,
-        style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+        style: { minHeight: '100vh', padding: '64px 32px', background: '#F7F6F2' } },
       React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
         React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
-        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 12 } }, tr('step1Title')),
-        React.createElement('p',  { style: { color: T.dim, marginBottom: 32 } }, tr('kicker')),
+        React.createElement('h2', { style: { fontFamily: "'Source Serif 4', serif", fontSize: 44, marginBottom: 12 } }, tr('step1Title')),
+        React.createElement('p',  { style: { color: 'rgba(10,9,7,0.55)', marginBottom: 32 } }, tr('kicker')),
         React.createElement('div', {
           style: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 } },
           (window.AxiusIndustries || []).map(i =>
             React.createElement('button', {
               key: i.id, type: 'button',
               onClick: () => {
-                if (i.id === 'other') return; // handled by inline input
+                if (i.id === 'other') {
+                  if (otherFocusRef.current) otherFocusRef.current();
+                  return;
+                }
                 setIndustry(i.id); setStep(2);
               },
               style: chipStyle(industry === i.id) },
@@ -42,6 +45,7 @@ window.AxiusDiagnostic = function (props) {
         // Inline 'Other' input revealed when the Other chip is focused
         React.createElement(OtherInput, {
           value: industryOther,
+          focusRef: otherFocusRef,
           onCommit: (val) => { setIndustry('other'); setIndustryOther(val); setStep(2); },
         }),
       ),
@@ -50,11 +54,11 @@ window.AxiusDiagnostic = function (props) {
   if (step === 2) {
     return React.createElement('section', {
       'data-axius-diagnostic-step': 2,
-      style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+      style: { minHeight: '100vh', padding: '64px 32px', background: '#F7F6F2' } },
       React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
         React.createElement(BackChevron, { onClick: () => setStep(1) }),
         React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
-        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 32 } }, tr('step2Title')),
+        React.createElement('h2', { style: { fontFamily: "'Source Serif 4', serif", fontSize: 44, marginBottom: 32 } }, tr('step2Title')),
         React.createElement('div', {
           style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 } },
           (window.AxiusChallenges || []).map(c =>
@@ -77,11 +81,11 @@ window.AxiusDiagnostic = function (props) {
     };
     return React.createElement('section', {
       'data-axius-diagnostic-step': 3,
-      style: { minHeight: '100vh', padding: '64px 32px', background: T.canvas } },
+      style: { minHeight: '100vh', padding: '64px 32px', background: '#F7F6F2' } },
       React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
         React.createElement(BackChevron, { onClick: () => setStep(2) }),
         React.createElement(SkipLink, { onSkip: () => window.AxiusPersonalization.skip() }),
-        React.createElement('h2', { style: { fontFamily: T.serif, fontSize: 44, marginBottom: 32 } }, tr('step3Title')),
+        React.createElement('h2', { style: { fontFamily: "'Source Serif 4', serif", fontSize: 44, marginBottom: 32 } }, tr('step3Title')),
         React.createElement('div', {
           style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 } },
           (window.AxiusOutcomes || []).map(o => {
@@ -91,6 +95,9 @@ window.AxiusDiagnostic = function (props) {
               key: o.id, type: 'button',
               onClick: () => {
                 setOutcome(o.id);
+                // Parent (axius-direction-F.jsx in Phase 4) unmounts this wizard
+                // on AxiusPersonalization change via hasAnswered(); we intentionally
+                // stay on step 3 here — the parent owns the unmount transition.
                 window.AxiusPersonalization.set({
                   industry, industryOther: industry === 'other' ? industryOther : null,
                   challenge, outcome: o.id, skipped: false,
@@ -155,11 +162,19 @@ function BackChevron({ onClick }) {
              fontSize: 11, letterSpacing: '0.18em', color: 'rgba(10,9,7,0.55)' } },
     '← BACK');
 }
-function OtherInput({ value, onCommit }) {
+function OtherInput({ value, onCommit, focusRef }) {
+  const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
+  const table = (lang === 'es' ? window.AxiusDiagnosticCopyES : window.AxiusDiagnosticCopyEN) || {};
   const [v, setV] = React.useState(value || '');
+  const inputRef = React.useRef(null);
+  React.useEffect(() => {
+    if (focusRef) focusRef.current = () => inputRef.current && inputRef.current.focus();
+  }, [focusRef]);
   return React.createElement('div', { style: { marginTop: 24 } },
     React.createElement('input', {
-      placeholder: 'Other — type your industry',
+      ref: inputRef,
+      placeholder: table.placeholderOther,
+      'aria-label': table.placeholderOther,
       value: v, onChange: (e) => setV(e.target.value),
       onKeyDown: (e) => { if (e.key === 'Enter' && v.trim().length > 1) onCommit(v.trim()); },
       maxLength: 60,
@@ -170,31 +185,36 @@ function OtherInput({ value, onCommit }) {
       style: { marginLeft: 8, padding: '12px 16px', background: '#0F0E0C',
                color: '#F7F6F2', border: 'none', cursor: 'pointer',
                fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.18em' } },
-      'CONTINUE →'),
+      (table.continueButton || 'Continue →').toUpperCase()),
   );
 }
 
 // Copy tables (separate so they can be edited without touching wizard logic)
 window.AxiusDiagnosticCopyEN = {
-  kicker:     'A 30-second diagnostic',
-  step1Title: 'What industry are you in?',
-  step2Title: 'Where does the operation feel heaviest?',
-  step3Title: 'How much should Axius take on?',
-  back:       '← Back',
-  skipLink:   'Skip — show everything',
-  continue:   'Continue →',
+  kicker:           'A 30-second diagnostic',
+  step1Title:       'What industry are you in?',
+  step2Title:       'Where does the operation feel heaviest?',
+  step3Title:       'How much should Axius take on?',
+  back:             '← Back',
+  skipLink:         'Skip — show everything',
+  continue:         'Continue →',
+  placeholderOther: 'Other — type your industry',
+  continueButton:   'Continue →',
 };
 window.AxiusDiagnosticCopyES = {
-  kicker:     'Diagnóstico de 30 segundos',
-  step1Title: '¿En qué industria estás?',
-  step2Title: '¿Dónde se siente más pesada la operación?',
-  step3Title: '¿Cuánto debería asumir Axius?',
-  back:       '← Volver',
-  skipLink:   'Saltar — mostrar todo',
-  continue:   'Continuar →',
+  kicker:           'Diagnóstico de 30 segundos',
+  step1Title:       '¿En qué industria estás?',
+  step2Title:       '¿Dónde se siente más pesada la operación?',
+  step3Title:       '¿Cuánto debería asumir Axius?',
+  back:             '← Volver',
+  skipLink:         'Saltar — mostrar todo',
+  continue:         'Continuar →',
+  placeholderOther: 'Otro — escribe tu industria',
+  continueButton:   'Continuar →',
 };
 
 window.AxiusDiagnosticBar = function () {
+  if (!window.AxiusPersonalization) return null;
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
   const [state, setState] = React.useState(window.AxiusPersonalization.get());
   React.useEffect(() => window.AxiusPersonalization.subscribe(setState), []);
@@ -231,7 +251,7 @@ window.AxiusDiagnosticBar = function () {
     React.createElement('span', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
       React.createElement('span', { style: { width: 6, height: 6, borderRadius: '50%',
                                               background: '#B8743C' } }),
-      React.createElement('span', { dangerouslySetInnerHTML: { __html: text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>') } }),
+      React.createElement('span', null, text),
     ),
     React.createElement('button', {
       type: 'button',
