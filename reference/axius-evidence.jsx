@@ -113,3 +113,63 @@ function nextQuarter(lang) {
   const adjY = q > 4 ? year + 1 : year;
   return `Q${adjQ} ${adjY}`;
 }
+
+window.AxiusEvidence.MetricsF = function () {
+  const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
+  const op = window.AxiusOperationalMetrics || {};
+  const fabLive = window.axiusFabricationLive();
+  const outcomes = fabLive
+    ? ((window.AxiusFabricated && window.AxiusFabricated.outcomeMetrics) || [])
+    : [];
+
+  return React.createElement('section', { id: 'metrics',
+    style: { padding: '96px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
+             background: '#F7F6F2', color: '#0F0E0C' } },
+    React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto',
+                                            display: 'grid', gridTemplateColumns: '1fr 1fr',
+                                            gap: 32 } },
+      React.createElement('div', null,
+        React.createElement('p', { style: { fontFamily: 'JetBrains Mono, monospace',
+                                              fontSize: 11, letterSpacing: '0.18em',
+                                              color: 'rgba(10,9,7,0.55)', marginBottom: 16 } },
+          lang === 'es' ? 'OPERACIONAL' : 'OPERATIONAL'),
+        React.createElement('ul', { style: { listStyle: 'none', padding: 0, margin: 0,
+                                                lineHeight: 1.7 } },
+          React.createElement('li', null, lang === 'es'
+            ? `Ventana de respuesta: ${op.responseWindow?.departamento || '< 24h'} (Departamento) / ${op.responseWindow?.equipo || '48h'} (Equipo) / ${op.responseWindow?.operador || '72h'} (Operador)`
+            : `Response window: ${op.responseWindow?.departamento || '< 24h'} (Departamento) / ${op.responseWindow?.equipo || '48h'} (Equipo) / ${op.responseWindow?.operador || '72h'} (Operador)`),
+          React.createElement('li', null, lang === 'es'
+            ? `Sistemas activos: ${op.activeSystems || 'in pilot'}`
+            : `Active systems: ${op.activeSystems || 'in pilot'}`),
+          React.createElement('li', null, lang === 'es'
+            ? `Cadencia: semanal / quincenal / mensual`
+            : `Cadence: weekly / biweekly / monthly`),
+        ),
+      ),
+      React.createElement('div', null,
+        React.createElement('p', { style: { fontFamily: 'JetBrains Mono, monospace',
+                                              fontSize: 11, letterSpacing: '0.18em',
+                                              color: 'rgba(10,9,7,0.55)', marginBottom: 16 } },
+          lang === 'es' ? 'RESULTADOS' : 'OUTCOMES'),
+        fabLive
+          ? React.createElement('div', { style: { display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 } },
+              outcomes.map(o => React.createElement('div', { key: o.id,
+                style: { padding: 16, border: '1px solid rgba(10,9,7,0.16)' } },
+                React.createElement('div', { style: { fontFamily: "'Source Serif 4', serif",
+                                                        fontSize: 28, fontWeight: 600,
+                                                        color: '#0F0E0C' } }, o.value),
+                React.createElement('div', { style: { fontSize: 13,
+                                                        color: 'rgba(10,9,7,0.65)',
+                                                        marginTop: 4 } },
+                  lang === 'es' ? (o.labelEs || o.label) : o.label),
+              )),
+            )
+          : React.createElement('p', { style: { fontStyle: 'italic',
+                                                  color: 'rgba(10,9,7,0.55)' } },
+              lang === 'es' ? 'Métricas de resultados se publican en Q3 2026.'
+                            : 'Outcome metrics publish Q3 2026.'),
+      ),
+    ),
+  );
+};
