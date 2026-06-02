@@ -11,8 +11,10 @@ const harness = (extraInit = '') => `
     <script type="text/babel" src="/reference/axius-diagnostic.jsx"></script>
     <script type="text/babel" src="/reference/axius-direction-F.jsx"></script>
     <script type="text/babel">
-      ${extraInit}
-      function boot(){ if (!window.AxiusDirectionF) return setTimeout(boot, 50);
+      function boot(){
+        if (!window.AxiusDirectionF || !window.AxiusPersonalization)
+          return setTimeout(boot, 50);
+        ${extraInit}
         ReactDOM.createRoot(document.getElementById('root'))
           .render(React.createElement(window.AxiusDirectionF));
       } boot();
@@ -31,5 +33,18 @@ test.describe('AxiusDirectionF', () => {
     await page.setContent(harness(), { waitUntil: 'networkidle' });
     await expect(page.locator('[data-axius-diagnostic-step="1"]')).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('text=What industry are you in?')).toBeVisible();
+  });
+
+  test('Hero kicker appears after answering industry', async ({ page }) => {
+    await page.goto('/');
+    await page.setContent(harness(`
+      // Seed personalization to "complete" state BEFORE the React root mounts
+      // so HeroF renders with the kicker on first render.
+      window.AxiusPersonalization.set({
+        industry: 'realestate', challenge: 'leadsleak', outcome: 'fix-one',
+        skipped: false,
+      });
+    `), { waitUntil: 'networkidle' });
+    await expect(page.locator('text=/For real-estate operators —/')).toBeVisible({ timeout: 15_000 });
   });
 });
