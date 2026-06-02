@@ -193,3 +193,52 @@ window.AxiusDiagnosticCopyES = {
   skipLink:   'Saltar — mostrar todo',
   continue:   'Continuar →',
 };
+
+window.AxiusDiagnosticBar = function () {
+  const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
+  const [state, setState] = React.useState(window.AxiusPersonalization.get());
+  React.useEffect(() => window.AxiusPersonalization.subscribe(setState), []);
+
+  if (!state.industry && !state.skipped) return null; // nothing to surface
+
+  const industryLabel = (() => {
+    if (state.industry === 'other') return state.industryOther || '—';
+    const i = (window.AxiusIndustries || []).find(x => x.id === state.industry);
+    return i ? (lang === 'es' ? i.labelEs : i.label) : '—';
+  })();
+  const challengeLabel = (() => {
+    if (!state.challenge) return null;
+    const c = (window.AxiusChallenges || []).find(x => x.id === state.challenge);
+    return c ? (lang === 'es' ? c.labelEs : c.label) : null;
+  })();
+
+  const isSkipped = state.skipped;
+  const text = isSkipped
+    ? (lang === 'es' ? 'Mostrando todas las capacidades' : 'Showing all capabilities')
+    : (lang === 'es' ? 'Personalizado para ' : 'Personalized for ') +
+      (challengeLabel ? industryLabel + ' · ' + challengeLabel : industryLabel);
+  const cta = isSkipped
+    ? (lang === 'es' ? 'Hacer diagnóstico de 30s' : 'Run the 30s diagnostic')
+    : (lang === 'es' ? 'Reiniciar' : 'Reset');
+
+  return React.createElement('div', {
+    style: { position: 'fixed', top: 0, left: 0, right: 0, zIndex: 999,
+             height: 44, background: 'rgba(247,246,242,0.92)',
+             backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+             borderBottom: '1px solid rgba(10,9,7,0.08)',
+             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+             padding: '0 24px', fontFamily: 'Inter, system-ui, sans-serif', fontSize: 13 } },
+    React.createElement('span', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+      React.createElement('span', { style: { width: 6, height: 6, borderRadius: '50%',
+                                              background: '#B8743C' } }),
+      React.createElement('span', { dangerouslySetInnerHTML: { __html: text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>') } }),
+    ),
+    React.createElement('button', {
+      type: 'button',
+      onClick: () => window.AxiusPersonalization.reset(),
+      style: { background: 'transparent', border: 'none', cursor: 'pointer',
+               fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+               letterSpacing: '0.18em', color: 'rgba(10,9,7,0.55)' } },
+      cta.toUpperCase()),
+  );
+};
