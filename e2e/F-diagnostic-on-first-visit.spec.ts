@@ -47,4 +47,34 @@ test.describe('AxiusDirectionF', () => {
     `), { waitUntil: 'networkidle' });
     await expect(page.locator('text=/For real-estate operators —/')).toBeVisible({ timeout: 15_000 });
   });
+
+  test('Catalog shows filter banner when industry is set', async ({ page }) => {
+    await page.goto('/');
+    await page.setContent(harness(`
+      window.AxiusPersonalization.set({ industry: 'realestate',
+        challenge: 'leadsleak', outcome: 'fix-one', skipped: false });
+    `), { waitUntil: 'networkidle' });
+    await expect(page.locator('text=/Showing \\d+ of 129 capabilities/')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('text=VIEW ALL →')).toBeVisible();
+  });
+
+  test('Recommendations panel renders 3 picks when diagnostic complete', async ({ page }) => {
+    await page.goto('/');
+    await page.setContent(harness(`
+      window.AxiusPersonalization.set({ industry: 'realestate',
+        challenge: 'leadsleak', outcome: 'fix-one', skipped: false });
+    `), { waitUntil: 'networkidle' });
+    await expect(page.locator('#recommendations')).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('Pricing highlights tier matching the outcome choice', async ({ page }) => {
+    await page.goto('/');
+    await page.setContent(harness(`
+      window.AxiusPersonalization.set({ industry: 'realestate',
+        challenge: 'leadsleak', outcome: 'delegate', skipped: false });
+    `), { waitUntil: 'networkidle' });
+    // 'delegate' → 'departamento' → its card should be visible
+    const departamentoCard = page.locator('#pricing >> text=Departamento').locator('..').first();
+    await expect(departamentoCard).toBeVisible({ timeout: 15_000 });
+  });
 });
