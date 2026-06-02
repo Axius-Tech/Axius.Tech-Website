@@ -52,10 +52,12 @@ This spec defines a **second, parallel option** that implements every recommenda
 
 Two HTML entry points:
 
-- `index.html` (modified): loads `axius-diagnostic.jsx`, `axius-shared.jsx`, `axius-evidence.jsx`, `axius-visual.jsx`, `axius-direction-F.jsx` and renders `window.AxiusDirectionF` into `#stage-quiet06`.
-- `v1/index.html` (new, byte-identical clone of the current `index.html`): loads `axius-secrets.local.jsx`, `axius-shared.jsx`, `axius-direction-E05.jsx` and renders `window.AxiusDirectionE05` into `#stage-quiet05`.
+- `index.html` (modified): loads `axius-secrets.local.jsx`, `axius-shared.jsx`, `axius-diagnostic.jsx`, `axius-evidence.jsx`, `axius-visual.jsx`, `axius-direction-F.jsx` and renders `window.AxiusDirectionF` into `#stage-quiet06`. The mount-point id `stage-quiet06` is fixed (referenced in §11.2 verification grep).
+- `v1/index.html` (new): a clone of the current `index.html` as it exists immediately before any Option 2 implementation work begins. Loads `axius-secrets.local.jsx`, `axius-shared.jsx`, `axius-direction-E05.jsx` and renders `window.AxiusDirectionE05` into `#stage-quiet05`. **The `v1/index.html` must NOT include any of the new Option 2 scripts** (`axius-diagnostic.jsx`, `axius-evidence.jsx`, `axius-visual.jsx`, `axius-direction-F.jsx`) — Option 1 should not have access to any new globals, and should render byte-identically to today's `/`.
 
-Both entry points share the same `reference/` directory and `assets/`, so font preconnect, founder photo, and shared data live in one place.
+Both entry points share the same `reference/` directory and `assets/`. Because `axius-shared.jsx` is loaded by both, its **additive** changes (§3.3) must not affect Option 1's behavior. Since every Option 2 addition is a new `window.*` assignment and Option 1 reads none of them, this invariant holds by construction.
+
+**Reference for "byte-identical":** §11 verifications compare `v1/index.html` against a snapshot of the **pre-implementation** `index.html` (captured at the start of execution), not against the modified post-implementation `index.html`. The snapshot lives at `docs/superpowers/specs/snapshots/2026-06-02-pre-implementation-index.html` and is committed before any other file is touched.
 
 ### 3.2 File layout
 
@@ -87,8 +89,8 @@ Additions (each as a single new `window.*` assignment at the bottom of the file,
 - `window.AxiusIndustries` — 10 entries (id, label EN/ES, kicker EN/ES, description EN/ES).
 - `window.AxiusChallenges` — 6 entries (id, label EN/ES, copy EN/ES).
 - `window.AxiusOutcomes` — 3 entries (id, label EN/ES, mapped pricing tier id).
-- `window.AxiusRecommendations` — 60-cell matrix (`industryId × challengeId` → 3 hand-picked workflow refs from existing `AxiusCatalog` + 1-line rationale EN/ES).
-- `window.AxiusCatalogTags` — `{ catalogItemId: [industryId, ...] }` mapping. Initial tagging covers 100% of items with sensible defaults; user edits before launch.
+- `window.AxiusRecommendations` — 60-cell matrix (`industryId × challengeId` → 3 hand-picked sample-item refs by their existing `n` value + 1-line rationale EN/ES). See §10.8 for the data shape and §3.3.1 for catalog identity.
+- `window.AxiusCatalogTags` — **category-level** tagging: `{ categoryId: [industryId, ...] }` where `categoryId` is the existing `id` field on each `AxiusCatalog[i]` entry (`'sales' | 'cx' | 'ops' | 'ai' | 'data' | 'web' | 'soft' | 'grow' | 'creative'`). Initial tagging covers all 9 categories; user adjusts before launch. **Why category-level not item-level:** the catalog ships only ~4 sample items per category (the `samples` array on each category) and a `count` integer for the rest. There is no per-item identity for the unsampled 93 items, so item-level tagging is undefined for the bulk of the catalog. Category tagging filters at the natural granularity that already exists in the data.
 - `window.AxiusTestimonials` — empty array `[]` in v1.
 - `window.AxiusCaseStudies` — empty array in v1 (the **fabricated** ones live under `AxiusFabricated.caseStudies`).
 - `window.AxiusOperationalMetrics` — derived from `AxiusPricing` SLA values; honest.
@@ -100,7 +102,23 @@ Additions (each as a single new `window.*` assignment at the bottom of the file,
   - `.demos` — 3 CSS-animated mockup recipes.
   - `.beforeAfter` — 2 stylized mock-screenshot recipes.
 - `window.AxiusFabricatedDeadline` — `'2026-08-01T00:00:00-05:00'` (Bogotá local time).
+- `window.AxiusOutcomeToTier` — explicit data mapping `{ 'fix-one': 'operador', 'run-many': 'equipo', 'delegate': 'departamento' }`, consumed by §5.4 so the binding is data, not code.
 - `window.AxiusPersonalization` — runtime state container + pub-sub API (see §3.4).
+
+### 3.3.1 Catalog identity decision (resolves the per-item ID gap)
+
+`window.AxiusCatalog` (axius-shared.jsx:176) is **9 categories** with:
+- a category-level `id` (e.g., `'sales'`), `name`, `nameEs`, `count` (integer), and `stack` string;
+- a `samples` array of ~4 illustrative items per category, each with a stable `n` value (e.g., `'001'`, `'037'`, `'120'`);
+- no addressable identity for the **93 unsampled items** that fill out the `count`.
+
+Total addressable items = sum of `count` fields = **16 + 17 + 16 + 14 + 13 + 15 + 15 + 11 + 12 = 129** (not 120). The spec uses 129 throughout; any place a fixed number appears, it derives from `AxiusCatalog.reduce((a, c) => a + c.count, 0)` at runtime so future catalog edits don't break the UI text.
+
+**Two granularities used by Option 2:**
+- **Catalog filter (§5.3)** operates at **category granularity**. `AxiusCatalogTags[categoryId]` lists which industries each category serves. Filtered catalog hides whole categories not tagged for the visitor's industry. Categories tagged `'all'` always render.
+- **Recommendations panel (§5.2)** operates at **sample-item granularity**. Each cell of `AxiusRecommendations` references items by their actual `n` string (e.g., `'001'`, `'037'`, `'118'`) — only the 36 known samples are eligible. If a (industry × challenge) cell isn't authored, the engine falls back to "first 3 samples from the highest-affinity tagged category" so the panel never renders empty.
+
+This decision keeps both surfaces implementable against the data that actually exists. **No upstream change to `AxiusCatalog` is required.**
 
 A top-of-shared-file comment block lists every fabricated entry and the deadline, so it's visible to any developer who opens the file (see §9).
 
@@ -159,9 +177,11 @@ React.useEffect(() => P.subscribe(setPerso), []);
 const showInline = !P.hasAnswered();
 ```
 
-- First-time visitor (`!hasAnswered`) → diagnostic fills the first viewport; hero shifts down to the second viewport.
-- Returning answered visitor → diagnostic collapses to a slim sticky bar ("Personalized for **Real Estate · Leads slip through** [Reset]") at the top; hero is the first viewport.
-- Skipped visitor → same slim bar, but reads "Showing all capabilities · [Run the 30s diagnostic]".
+- First-time visitor (`!hasAnswered`) → diagnostic fills the first viewport; hero shifts down to the second viewport. **No slim bar yet** (the diagnostic itself occupies the equivalent space).
+- Returning answered visitor → diagnostic does not mount. **The slim bar mounts at the top of the page from t=0 and remains pinned** (it is not scroll-gated). Hero is the first viewport beneath it.
+- Skipped visitor → same as answered visitor: slim bar pinned from t=0, but reads "Showing all capabilities · [Run the 30s diagnostic]".
+
+**Note:** the spec's `<DiagnosticBar>` is always pinned for returning/skipped visitors. The "fades in on scroll past 80vh" behavior referenced in §4.4 applies **only to first-time visitors** while they are still scrolling past the inline diagnostic — once they answer or skip, the bar pins immediately and stays pinned. The intent: never have a moment where a returning visitor sees no indication of their personalized state.
 
 ### 4.2 Step state machine
 
@@ -208,9 +228,10 @@ Layout: single row of 3 on desktop, single column on mobile. Each chip subtle-re
 
 ### 4.4 Slim sticky bar (post-answer)
 
-- 44px height, fixed top, fades in on scroll past 80vh.
-- Left: small dot + "Personalized for **{industry · challenge}**".
-- Right: a `[Reset]` chip — calls `AxiusPersonalization.reset()`, re-mounts the full diagnostic.
+- 44px height, fixed top.
+- **Mount timing**: pinned from t=0 for any visitor whose state is already answered or skipped at page load. For first-time visitors, mounts only after they answer/skip (during the same session) and remains pinned thereafter.
+- Left: small dot + "Personalized for **{industry · challenge}**" (or "Showing all capabilities" if skipped).
+- Right: a `[Reset]` chip (or `[Run the 30s diagnostic]` if skipped) — calls `AxiusPersonalization.reset()`, re-mounts the full inline diagnostic at top.
 
 ### 4.5 Skip mechanics
 
@@ -249,19 +270,20 @@ Inserts as a new section between Hero (00) and Commitments (01).
 
 When `state.industry && !state.skipped`:
 
-- Catalog renders only items whose `AxiusCatalogTags[itemId]` includes `state.industry` (or items tagged `'all'`).
-- A persistent top-right control "Showing N of 120 capabilities for {industry} — **View all**" toggles the filter off without resetting personalization.
-- Catalog visual treatment is unchanged from E05's design.
+- Catalog renders only **categories** whose `AxiusCatalogTags[categoryId]` includes `state.industry` OR `'all'`. Filtering at category granularity, per §3.3.1.
+- Top-right control reads "Showing **{shownCount} of {totalCount}** capabilities for **{industry}** — **View all**" where:
+  - `totalCount = AxiusCatalog.reduce((a, c) => a + c.count, 0)` — currently **129**, derived at render time.
+  - `shownCount = filteredCategories.reduce((a, c) => a + c.count, 0)` — runtime sum across categories that survived the filter.
+- Clicking **View all** toggles a local `viewAll` flag without resetting personalization (state stays).
+- Catalog visual treatment is unchanged from E05's design (same category headers, same `samples` rendering).
 
 ### 5.4 Pricing tier emphasis
 
 The existing E05 Pricing renders `AxiusPricing[i].featured === true` with the tangerine outline. In F:
 
-- `featured` is computed dynamically from `state.outcome`:
-  - `outcome === 'operador'` → Operador tier featured
-  - `outcome === 'equipo'` → Equipo tier featured (matches existing static default)
-  - `outcome === 'departamento'` → Departamento tier featured
-- When skipped or incomplete, falls back to the existing static `featured: true` on Equipo.
+- F.jsx **computes `featured` locally per-render**; it never mutates the shared `AxiusPricing` array. If F mutated the shared array, Option 1 at `/v1` would render with a wrong (or changing) featured tier — a silent regression of Option 1.
+- The local computation reads `state.outcome` → tier via the explicit data table `window.AxiusOutcomeToTier` (added in §3.3): `{ 'fix-one': 'operador', 'run-many': 'equipo', 'delegate': 'departamento' }`.
+- When skipped or incomplete, F's local `featured` honors each tier's original static `featured` flag from `AxiusPricing` (Equipo today). No mutation.
 
 ### 5.5 Chat seed — three modes
 
@@ -530,7 +552,7 @@ Each entry: `{ company, subtitle, body, outcome }`. Invented specific names per 
 | Component | Empty state copy EN | ES |
 |---|---|---|
 | Testimonials | Quiet by design — the first published voices land Q3 2026 after our pilot cohort completes. | Discreto por diseño — las primeras voces publicadas aterrizan en Q3 2026 cuando nuestra cohorte piloto complete. |
-| Case studies (post-deadline) | Case studies publish quarterly — next set drops Q4 2026. | Los casos de estudio se publican trimestralmente — el próximo lote llega en Q4 2026. |
+| Case studies (post-deadline) | Case studies publish quarterly — next set drops {NEXT_QUARTER}. | Los casos de estudio se publican trimestralmente — el próximo lote llega en {NEXT_QUARTER}. |
 | Outcome metric tile (post-deadline) | Outcome metrics publish Q3 2026. | Métricas de resultados se publican en Q3 2026. |
 | GBP (no URL) | Google Business profile coming soon — leaving room here so reviews land naturally. | Perfil de Google Business próximamente — dejando este espacio para que las reseñas aterricen naturalmente. |
 | Founder video (no URL) | 60-second intro from Andrés — recording soon. | Intro de 60 segundos con Andrés — grabando pronto. |
@@ -541,21 +563,25 @@ Rather than list 60 cells inline here, the spec defines the schema:
 
 ```
 AxiusRecommendations[industryId][challengeId] = {
-  catalogItemIds: ['n037', 'n084', 'n112'],   // refs to existing AxiusCatalog
+  samples: ['001', '037', '118'],     // refs by the existing `n` field on
+                                       //   AxiusCatalog[i].samples[j].n —
+                                       //   only the 36 known samples are eligible
   rationaleEN: 'short 1-line why this combination',
   rationaleES: '...'
 }
 ```
 
-A second pass (during implementation, not spec) authors all 60 rationales using the existing catalog as the source pool. Implementation includes a fallback: if a specific cell is missing, the engine surfaces the top 3 catalog items tagged with the industry.
+Valid `n` values today (from `axius-shared.jsx:176-294`): `'001'` `'002'` `'003'` `'004'` `'017'` `'018'` `'019'` `'020'` `'034'` `'035'` `'036'` `'037'` `'050'` `'051'` `'052'` `'053'` `'064'` `'065'` `'066'` `'067'` `'077'` `'078'` `'079'` `'080'` `'092'` `'093'` `'094'` `'095'` `'107'` `'108'` `'109'` `'110'` `'118'` `'119'` `'120'` `'121'`.
+
+A second pass (during implementation, not spec) authors all 60 rationales using these 36 samples as the source pool. Implementation includes a fallback: if a specific `(industry, challenge)` cell is missing OR references an `n` that isn't currently in the catalog, the engine surfaces the first 3 samples from the highest-affinity category for that industry per `AxiusCatalogTags`. This makes the panel resilient to catalog edits.
 
 ### 10.9 Catalog industry tagging
 
-`window.AxiusCatalogTags` is a dictionary `{ catalogItemId: industryId[] }`. Default tagging strategy:
+`window.AxiusCatalogTags` is a dictionary `{ categoryId: industryId[] }` keyed on the existing category `id` field (one of `'sales' | 'cx' | 'ops' | 'ai' | 'data' | 'web' | 'soft' | 'grow' | 'creative'`), per §3.3.1. Default tagging strategy:
 
-- Items with workflows obviously serving one industry (e.g., "shopify · stripe · csv inventory reconciliation") get the matching industry tag.
-- Items broadly applicable (e.g., "AI FAQ chatbot", "Email signature ops") get tag `'all'`.
-- The implementation author proposes initial tags during build; Andrés reviews and adjusts before the spec is closed in `axius-shared.jsx`.
+- Categories obviously universal (e.g., `'sales'`, `'cx'`, `'ops'`) get tag `'all'`.
+- Categories with a vertical-specific stack (e.g., `'web'` → e-commerce/professional) get the matching industries.
+- The implementation author proposes initial tags during build; Andrés reviews and adjusts before the spec is closed in `axius-shared.jsx`. A category may carry multiple industry tags.
 
 ---
 
@@ -575,7 +601,8 @@ A second pass (during implementation, not spec) authors all 60 rationales using 
 |---|---|---|
 | `/` serves Option 2 | `curl -s https://axius-tech-website.vercel.app/ \| grep "AxiusDirectionF\|stage-quiet06"` | match |
 | `/v1/` serves Option 1 | `curl -sI https://axius-tech-website.vercel.app/v1/` | 200 |
-| `/v1/` is byte-identical to today's `/` | diff cached snapshot of current prod HTML against new `/v1/` | identical except `<link rel="canonical">` |
+| `/v1/` byte-identical to pre-implementation `/` | `diff docs/superpowers/specs/snapshots/2026-06-02-pre-implementation-index.html v1/index.html` | identical except `<link rel="canonical">` |
+| `/v1/` does NOT include any Option 2 scripts | `grep -E "axius-diagnostic\|axius-evidence\|axius-visual\|axius-direction-F" v1/index.html` | no matches |
 | Diagnostic localStorage | open DevTools after answering → `localStorage.getItem('axius:perso:v1')` exists | populated |
 | Reset works | click Reset → `localStorage.getItem('axius:perso:v1')` → `null` | `null` |
 | Chat seed (completer) | answer diagnostic → open chat → first bubble references industry/challenge/outcome | matches |
