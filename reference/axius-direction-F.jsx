@@ -683,6 +683,19 @@ function CTAF({ perso }) {
   ], { background: F_CANVAS });
 }
 
+// ─── Evidence wiring (Phase 5) ──────────────────────────────
+// EvidenceF mounts the four evidence sections — Testimonials, CaseStudies,
+// Metrics, GBP — between Founder and FAQ in the composition root.
+function EvidenceF() {
+  const E = window.AxiusEvidence || {};
+  return React.createElement(React.Fragment, null,
+    E.TestimonialsF && React.createElement(E.TestimonialsF),
+    E.CaseStudiesF  && React.createElement(E.CaseStudiesF),
+    E.MetricsF      && React.createElement(E.MetricsF),
+    E.GBPCardF      && React.createElement(E.GBPCardF),
+  );
+}
+
 // ─── Composition root ────────────────────────────────────────
 
 window.AxiusDirectionF = function () {
@@ -714,7 +727,7 @@ window.AxiusDirectionF = function () {
       React.createElement(ModelF, { perso }),
       // BeforeAfterF will be wired in Phase 6
       React.createElement(FounderF, { perso }),
-      // EvidenceF will be wired in Phase 5
+      React.createElement(EvidenceF),
       React.createElement(FAQF, { perso }),
       // ChatF will be wired in Phase 7
       React.createElement(CTAF, { perso }),

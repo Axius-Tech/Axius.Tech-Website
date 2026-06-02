@@ -9,11 +9,13 @@ const harness = (extraInit = '') => `
     <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
     <script type="text/babel" src="/reference/axius-shared.jsx"></script>
     <script type="text/babel" src="/reference/axius-diagnostic.jsx"></script>
+    <script type="text/babel" src="/reference/axius-evidence.jsx"></script>
     <script type="text/babel" src="/reference/axius-direction-F.jsx"></script>
     <script type="text/babel">
       function boot(){
         if (!window.AxiusDirectionF || !window.AxiusPersonalization
-            || !window.AxiusDiagnostic || !window.AxiusDiagnosticBar)
+            || !window.AxiusDiagnostic || !window.AxiusDiagnosticBar
+            || !window.AxiusEvidence?.TestimonialsF)
           return setTimeout(boot, 50);
         ${extraInit}
         ReactDOM.createRoot(document.getElementById('root'))
@@ -86,6 +88,19 @@ test.describe('AxiusDirectionF', () => {
         challenge: 'leadsleak', outcome: 'fix-one', skipped: false });
     `), { waitUntil: 'networkidle' });
     for (const id of ['hero','recommendations','commitments','method','catalog','pricing','comparison','founder','faq','cta']) {
+      await expect(page.locator(`#${id}`)).toBeVisible({ timeout: 15_000 });
+    }
+  });
+
+  test('Evidence sections render under F', async ({ page }) => {
+    await page.goto('/');
+    await page.setContent(harness(`
+      window.addEventListener('load', () => {
+        window.AxiusPersonalization.set({ industry: 'realestate',
+          challenge: 'leadsleak', outcome: 'fix-one', skipped: false });
+      });
+    `), { waitUntil: 'networkidle' });
+    for (const id of ['testimonials','case-studies','metrics','gbp']) {
       await expect(page.locator(`#${id}`)).toBeVisible({ timeout: 15_000 });
     }
   });
