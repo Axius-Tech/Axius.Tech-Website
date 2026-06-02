@@ -1425,7 +1425,7 @@ function CatalogF({ perso }) {
 }
 ```
 
-**Implementation note:** the actual visual treatment of the catalog cards should match E05's. Copy the relevant JSX from `reference/axius-direction-E05.jsx` (the section labeled "03 · CATALOG") into the loop body so the look matches.
+**Implementation note:** the actual visual treatment of the catalog cards should match E05's. In `reference/axius-direction-E05.jsx`, find the section that renders the catalog by searching for `id="catalog"` (or `data-screen-label="04 Catalog"`) and copy its JSX into the loop body so the look matches.
 
 - [ ] **Step 3: Define `<PricingF/>` with locally-computed `featured`**
 
@@ -1452,7 +1452,7 @@ function PricingF({ perso }) {
 }
 ```
 
-**Implementation note:** as with CatalogF, faithfully duplicate the visual layout from E05's Pricing section.
+**Implementation note:** as with CatalogF, faithfully duplicate the visual layout from E05's Pricing section. Find it in E05 via `id="pricing"` (or `data-screen-label="06 Pricing"`).
 
 - [ ] **Step 4: Wire into F's render**
 
@@ -1491,17 +1491,22 @@ git commit -m "F.jsx: Recommendations panel, catalog filter, pricing dynamic fea
 
 - [ ] **Step 1: Identify the sections to duplicate**
 
-Read `reference/axius-direction-E05.jsx` and identify these sections, copy each one's JSX into F as a separate component:
-- 01 · COMMITMENTS  → `<CommitmentsF/>`
-- 02 · THE MESS     → `<MessF/>`
-- 05 · METHODOLOGY (if applicable) → `<MethodologyF/>`
-- 06 · COMPARISON   → `<ComparisonF/>`
-- 07 · FOUNDER      → `<FounderF/>` (this section also hosts the FounderVideo from `axius-visual.jsx`)
-- 09 · FAQ          → `<FAQF/>`
+In `reference/axius-direction-E05.jsx` the canonical section ids and labels are:
 
-For each: copy E05's JSX verbatim, change the section id only if needed for `<a href="#...">` references.
+| section `id` | `data-screen-label`        | F component        |
+|--------------|----------------------------|--------------------|
+| `commitments`| `01 Commitments`           | `<CommitmentsF/>`  |
+| `mess`       | `02 The Mess`              | `<MessF/>`         |
+| `method`     | `03 Method`                | `<MethodologyF/>`  |
+| `comparison` | `05 Comparison`            | `<ComparisonF/>`   |
+| `model`      | `07 The Model`             | `<ModelF/>`        |
+| `founder`    | `08 The Operator`          | `<FounderF/>` (also hosts `<FounderVideoF/>` from axius-visual.jsx) |
+| `faq`        | `09 Appendix`              | `<FAQF/>`          |
+| `cta`        | `10 CTA` (final CTA strip) | `<CTAF/>`          |
 
-**Implementation guidance:** keep the visual treatment identical to E05. Read the section, copy the JSX, name the function with `F` suffix. Inside F these are just children of the main composition.
+For each: open E05, find by `id` (use Read tool with grep for `id="<id>"`), copy that section's JSX verbatim into F as a function named with the `F` suffix. Keep the section ids identical so `<a href="#catalog">` and similar in-page anchors still work. Inside F these are children of the main composition.
+
+**Implementation guidance:** keep the visual treatment identical to E05. Do NOT change section ids — they're used by in-page anchor links throughout E05's hero CTAs and the chat surface.
 
 - [ ] **Step 2: Wire into F's render in the order**
 
@@ -1510,18 +1515,21 @@ HeroF
 RecommendationsPanel (if isComplete)
 CommitmentsF
 MessF
-DemosF                 (from axius-visual.jsx — Phase 7)
+MethodologyF
+DemosF                 (from axius-visual.jsx — Phase 6)
 CatalogF
 PricingF
 ComparisonF
-BeforeAfterF           (from axius-visual.jsx — Phase 7)
+ModelF
+BeforeAfterF           (from axius-visual.jsx — Phase 6)
 FounderF + FounderVideoF
-EvidenceF              (from axius-evidence.jsx — Phase 6)
+EvidenceF              (from axius-evidence.jsx — Phase 5)
 FAQF
-ChatF                  (from Phase 8)
+ChatF                  (from Phase 7)
+CTAF
 ```
 
-For tasks in this phase, leave the Phase 6/7/8 components stubbed as `null` placeholders.
+For tasks in this phase, leave Phase 5/6/7 components stubbed as `null` placeholders. They get wired in their respective phases.
 
 - [ ] **Step 3: Smoke test — F renders all sections after diagnostic completion**
 
@@ -2108,12 +2116,49 @@ function renderCompleterIntro(perso, lang) {
 }
 
 function renderSkipperFlow(perso, lang) {
-  // Renders the 3 buttoned questions sequentially — when answered,
-  // persists to AxiusPersonalization.set() and transitions to completer view.
-  // For first MVP, implement as a single-screen "Click your industry first"
-  // bubble that walks through the 3 questions in sequence.
-  // (Full implementation reuses the diagnostic chip data from window.AxiusIndustries etc.)
-  return /* implement */;
+  // Three sequential buttoned-question bubbles. Each commits to
+  // AxiusPersonalization on click; once all three are answered, the chat
+  // re-renders in completer mode (driven by AxiusPersonalization.isComplete()).
+  const stage = !perso.industry ? 'industry'
+              : !perso.challenge ? 'challenge'
+              : !perso.outcome   ? 'outcome'
+              : 'done';
+
+  if (stage === 'industry') {
+    return React.createElement('div', { className: 'chat-bubble' },
+      React.createElement('p', null,
+        lang === 'es' ? '¿En qué industria estás?' : 'What industry are you in?'),
+      React.createElement('div', { className: 'chat-chips' },
+        (window.AxiusIndustries || []).map(i =>
+          React.createElement('button', {
+            key: i.id, type: 'button',
+            onClick: () => window.AxiusPersonalization.set({ industry: i.id }) },
+            lang === 'es' ? i.labelEs : i.label))));
+  }
+  if (stage === 'challenge') {
+    return React.createElement('div', { className: 'chat-bubble' },
+      React.createElement('p', null,
+        lang === 'es' ? '¿Dónde se siente más pesada la operación?' : 'Where does the operation feel heaviest?'),
+      React.createElement('div', { className: 'chat-chips' },
+        (window.AxiusChallenges || []).map(c =>
+          React.createElement('button', {
+            key: c.id, type: 'button',
+            onClick: () => window.AxiusPersonalization.set({ challenge: c.id }) },
+            lang === 'es' ? c.labelEs : c.label))));
+  }
+  if (stage === 'outcome') {
+    return React.createElement('div', { className: 'chat-bubble' },
+      React.createElement('p', null,
+        lang === 'es' ? '¿Cuánto debería asumir Axius?' : 'How much should Axius take on?'),
+      React.createElement('div', { className: 'chat-chips' },
+        (window.AxiusOutcomes || []).map(o =>
+          React.createElement('button', {
+            key: o.id, type: 'button',
+            onClick: () => window.AxiusPersonalization.set({ outcome: o.id }) },
+            (lang === 'es' ? o.labelTemplateEs : o.labelTemplate).replace('{price}', '')))));
+  }
+  // stage === 'done' — fall through to completer intro on next render
+  return renderCompleterIntro(perso, lang);
 }
 ```
 
