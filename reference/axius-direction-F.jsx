@@ -683,6 +683,233 @@ function CTAF({ perso }) {
   ], { background: F_CANVAS });
 }
 
+// ─── 10b · Chat (Phase 7) ───────────────────────────────────
+// ChatF is a duplicated (not imported) simplified version of the E05 chat
+// surface. It auto-detects one of three modes when it mounts:
+//   • completer — diagnostic is complete; greeting recaps the answers + 3 picks
+//   • skipper   — visitor hit "Skip → see catalog"; three sequential buttoned
+//                 diagnostic bubbles commit answers back to AxiusPersonalization
+//   • open      — neither complete nor skipped; original E05 greeting + open input
+// The input bar is always present and posts to AxiusConfig.ringWebhookUrl
+// (Telegram bridge) on submit — fire-and-forget. Pixel-perfect E05 fidelity
+// (full chip set, dispatch animations, 60s AI fallback) is intentionally out
+// of scope for Phase 7 per the simplified-Phase 7 carve-out in the plan.
+function ChatF({ perso }) {
+  const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
+  const P = window.AxiusPersonalization;
+  const mode = P.isComplete()
+    ? 'completer'
+    : (perso.skipped ? 'skipper' : 'open');
+
+  const [openInput, setOpenInput] = React.useState('');
+
+  return React.createElement('section', { id: 'chat',
+    style: { padding: '96px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
+             background: '#F7F6F2', color: '#0F0E0C' } },
+    React.createElement('div', { style: { maxWidth: 720, margin: '0 auto',
+                                            border: '1px solid rgba(10,9,7,0.16)',
+                                            background: '#FFFFFF' } },
+      // Header
+      React.createElement('div', { style: { padding: '12px 16px',
+        borderBottom: '1px solid rgba(10,9,7,0.08)',
+        display: 'flex', alignItems: 'center', gap: 10,
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+        letterSpacing: '0.18em', color: 'rgba(10,9,7,0.65)' } },
+        React.createElement('span', { style: { width: 6, height: 6, borderRadius: '50%',
+                                                 background: '#7A9272',
+                                                 boxShadow: '0 0 0 4px rgba(122,146,114,0.16)' } }),
+        React.createElement('span', null, lang === 'es' ? 'OPERADOR · EN LÍNEA' : 'OPERATOR · ONLINE'),
+      ),
+      // Messages
+      React.createElement('div', { style: { padding: 24, minHeight: 240,
+                                              display: 'flex', flexDirection: 'column', gap: 16 } },
+        mode === 'completer' && renderCompleterBubble(perso, lang),
+        mode === 'skipper'   && renderSkipperFlow(perso, lang, P),
+        mode === 'open'      && renderOpenBubble(lang),
+      ),
+      // Input bar (always present; posts to Telegram bridge)
+      React.createElement('form', {
+        onSubmit: (e) => {
+          e.preventDefault();
+          if (!openInput.trim()) return;
+          postToTelegram(openInput.trim(), perso, lang);
+          setOpenInput('');
+        },
+        style: { display: 'flex', borderTop: '1px solid rgba(10,9,7,0.08)',
+                 padding: 12 } },
+        React.createElement('input', {
+          type: 'text', value: openInput,
+          onChange: (e) => setOpenInput(e.target.value),
+          placeholder: lang === 'es' ? 'Escribe un mensaje…' : 'Type a message…',
+          style: { flex: 1, border: 'none', outline: 'none',
+                   fontFamily: 'Inter, system-ui, sans-serif', fontSize: 15,
+                   padding: '8px 12px', background: 'transparent', color: '#0F0E0C' } }),
+        React.createElement('button', { type: 'submit',
+          style: { background: '#0F0E0C', color: '#F7F6F2', border: 'none',
+                   padding: '8px 16px', cursor: 'pointer',
+                   fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+                   letterSpacing: '0.18em' } },
+          lang === 'es' ? 'ENVIAR →' : 'SEND →'),
+      ),
+    ),
+  );
+}
+
+function renderCompleterBubble(perso, lang) {
+  const rec = ((window.AxiusRecommendations || {})[perso.industry] || {})[perso.challenge];
+  const picks = ((rec && rec.samples) || [])
+    .map(n => (window.AxiusCatalog || []).flatMap(c => c.samples || []).find(s => s.n === n))
+    .filter(Boolean);
+
+  const industryLabel = perso.industry === 'other'
+    ? perso.industryOther
+    : ((window.AxiusIndustries || []).find(x => x.id === perso.industry) || {})[lang === 'es' ? 'labelEs' : 'label'];
+  const challengeLabel = ((window.AxiusChallenges || []).find(x => x.id === perso.challenge) || {})[lang === 'es' ? 'labelEs' : 'label'];
+  const outcomeLabel = ((window.AxiusOutcomes || []).find(x => x.id === perso.outcome) || {});
+  const outcomeTemplate = lang === 'es' ? outcomeLabel.labelTemplateEs : outcomeLabel.labelTemplate;
+  const outcomeText = (outcomeTemplate || perso.outcome || '')
+    .replace(' · from {price}/mo', '')
+    .replace(' · desde {price}/mes', '')
+    .replace(' · {price}/mo', '')
+    .replace(' · ${price}/mes', '')
+    .replace('{price}', '')
+    .replace('/mo', '')
+    .replace('/mes', '')
+    .trim() || perso.outcome;
+
+  const greeting = lang === 'es'
+    ? `Dijiste que estás en ${industryLabel || perso.industry}, tu mayor fricción es ${challengeLabel || perso.challenge}, y quieres ${outcomeText}.`
+    : `You said you're in ${industryLabel || perso.industry}, your biggest friction is ${challengeLabel || perso.challenge}, and you want to ${outcomeText.toLowerCase()}.`;
+
+  return React.createElement(React.Fragment, null,
+    React.createElement('div', { style: { padding: 16, background: 'rgba(184,116,60,0.08)',
+                                            border: '1px solid rgba(184,116,60,0.24)' } },
+      React.createElement('p', { style: { margin: 0, fontSize: 14, lineHeight: 1.6 } }, greeting),
+      picks.length > 0 && React.createElement('p', { style: { margin: '12px 0 0',
+                                                                 fontSize: 14, lineHeight: 1.6 } },
+        lang === 'es' ? 'Basado en eso, empezaría con:' : "Based on that, I'd start with:"),
+      picks.length > 0 && React.createElement('ul', { style: { margin: '4px 0 0 16px',
+                                                                  padding: 0, fontSize: 14 } },
+        picks.map(p => React.createElement('li', { key: p.n }, p.name))),
+      React.createElement('p', { style: { margin: '16px 0 0', fontSize: 14, lineHeight: 1.6 } },
+        lang === 'es' ? '¿Cuál es la configuración actual? Te muestro cómo lo estructuraríamos.'
+                      : "What's the current setup? I'll tell you exactly how we'd structure it."),
+    ),
+    React.createElement('div', { style: { display: 'flex', gap: 8, flexWrap: 'wrap' } },
+      React.createElement('button', { type: 'button',
+        style: chatChipStyle(true),
+        onClick: () => {} },
+        lang === 'es' ? 'Caminar por uno →' : 'Walk me through →'),
+      React.createElement('a', { href: (window.AxiusConfig && window.AxiusConfig.bookingUrl) || '#',
+        target: '_blank', rel: 'noopener noreferrer',
+        style: { ...chatChipStyle(false), textDecoration: 'none' } },
+        lang === 'es' ? 'Agendar llamada →' : 'Book a call →'),
+      React.createElement('a', { href: 'mailto:andres@axius.tech', style: { ...chatChipStyle(false), textDecoration: 'none' } },
+        lang === 'es' ? 'Escribir a Andrés' : 'Message Andrés directly'),
+    ),
+  );
+}
+
+function renderSkipperFlow(perso, lang, P) {
+  // Three sequential buttoned-question bubbles. Each click commits to
+  // AxiusPersonalization; once all three are answered, the chat re-renders
+  // in completer mode (driven by AxiusPersonalization.isComplete()).
+  const stage = !perso.industry ? 'industry'
+              : !perso.challenge ? 'challenge'
+              : !perso.outcome   ? 'outcome'
+              : 'done';
+
+  if (stage === 'industry') {
+    return React.createElement('div', { style: chatBubbleStyle() },
+      React.createElement('p', { style: { margin: 0, fontSize: 14, lineHeight: 1.6 } },
+        lang === 'es' ? '¿En qué industria estás?' : 'What industry are you in?'),
+      React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 } },
+        (window.AxiusIndustries || []).map(i =>
+          React.createElement('button', {
+            key: i.id, type: 'button',
+            style: chatChipStyle(false),
+            onClick: () => P.set({ industry: i.id, industryOther: null, skipped: false }) },
+            lang === 'es' ? i.labelEs : i.label))));
+  }
+  if (stage === 'challenge') {
+    return React.createElement('div', { style: chatBubbleStyle() },
+      React.createElement('p', { style: { margin: 0, fontSize: 14, lineHeight: 1.6 } },
+        lang === 'es' ? '¿Dónde se siente más pesada la operación?' : 'Where does the operation feel heaviest?'),
+      React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 } },
+        (window.AxiusChallenges || []).map(c =>
+          React.createElement('button', {
+            key: c.id, type: 'button',
+            style: chatChipStyle(false),
+            onClick: () => P.set({ challenge: c.id }) },
+            lang === 'es' ? c.labelEs : c.label))));
+  }
+  if (stage === 'outcome') {
+    return React.createElement('div', { style: chatBubbleStyle() },
+      React.createElement('p', { style: { margin: 0, fontSize: 14, lineHeight: 1.6 } },
+        lang === 'es' ? '¿Cuánto debería asumir Axius?' : 'How much should Axius take on?'),
+      React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 } },
+        (window.AxiusOutcomes || []).map(o =>
+          React.createElement('button', {
+            key: o.id, type: 'button',
+            style: chatChipStyle(false),
+            onClick: () => P.set({ outcome: o.id, skipped: false }) },
+            (lang === 'es' ? o.labelTemplateEs : o.labelTemplate)
+              .replace(' · from {price}/mo', '')
+              .replace(' · desde {price}/mes', '')))));
+  }
+  // stage === 'done' — render completer
+  return renderCompleterBubble(perso, lang);
+}
+
+function renderOpenBubble(lang) {
+  return React.createElement('div', { style: chatBubbleStyle() },
+    React.createElement('p', { style: { margin: 0, fontSize: 14, lineHeight: 1.6 } },
+      lang === 'es'
+        ? 'La mayoría de empresas no necesitan más software. Necesitan a alguien operando los sistemas que ya tienen. ¿Qué está frenando al negocio?'
+        : "Most companies don't actually need more software. They need someone operating the systems they already have. Tell me what's currently slowing the business down."),
+  );
+}
+
+function chatChipStyle(primary) {
+  return {
+    appearance: 'none', cursor: 'pointer',
+    background: primary ? '#0F0E0C' : 'transparent',
+    color: primary ? '#F7F6F2' : '#0F0E0C',
+    border: '1px solid rgba(10,9,7,0.16)',
+    padding: '8px 12px',
+    fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+    letterSpacing: '0.18em', textTransform: 'uppercase',
+  };
+}
+function chatBubbleStyle() {
+  return { padding: 16, background: 'rgba(10,9,7,0.04)',
+           border: '1px solid rgba(10,9,7,0.08)' };
+}
+
+// Telegram bridge POST — best-effort, fire-and-forget. No UI feedback in the
+// Phase 7 simplified version. When ringWebhookUrl/ringWebhookChatId aren't
+// configured we silently drop; diagnostic context is still preserved in
+// localStorage for follow-up.
+function postToTelegram(text, perso, lang) {
+  const cfg = window.AxiusConfig || {};
+  if (!cfg.ringWebhookUrl || !cfg.ringWebhookChatId) return;
+  const ctx = perso.industry || perso.skipped
+    ? `[axius option2 ${lang.toUpperCase()}] industry=${perso.industry || '-'} challenge=${perso.challenge || '-'} outcome=${perso.outcome || '-'} skipped=${perso.skipped}`
+    : `[axius option2 ${lang.toUpperCase()}]`;
+  const payload = {
+    chat_id: cfg.ringWebhookChatId,
+    text: `${ctx}\n\n${text}`,
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+  };
+  try {
+    fetch(cfg.ringWebhookUrl, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(() => {});
+  } catch (_) {}
+}
+
 // ─── Evidence wiring (Phase 5) ──────────────────────────────
 // EvidenceF mounts the four evidence sections — Testimonials, CaseStudies,
 // Metrics, GBP — between Founder and FAQ in the composition root.
@@ -734,7 +961,7 @@ window.AxiusDirectionF = function () {
       React.createElement(FounderF, { perso }),
       React.createElement(EvidenceF),
       React.createElement(FAQF, { perso }),
-      // ChatF will be wired in Phase 7
+      React.createElement(ChatF, { perso }),
       React.createElement(CTAF, { perso }),
     ),
   );
