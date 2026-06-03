@@ -177,7 +177,7 @@ window.AxiusEvidence.MetricsF = function () {
 window.AxiusEvidence.GBPCardF = function () {
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
   const g = window.AxiusGBP || {};
-  if (!g.url) {
+  if (!g.url || g.rating == null || g.reviewCount == null) {
     return React.createElement('section', { id: 'gbp',
       style: { padding: '64px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
                background: '#F7F6F2', textAlign: 'center', color: '#0F0E0C' } },
