@@ -10,12 +10,14 @@ const harness = (extraInit = '') => `
     <script type="text/babel" src="/reference/axius-shared.jsx"></script>
     <script type="text/babel" src="/reference/axius-diagnostic.jsx"></script>
     <script type="text/babel" src="/reference/axius-evidence.jsx"></script>
+    <script type="text/babel" src="/reference/axius-visual.jsx"></script>
     <script type="text/babel" src="/reference/axius-direction-F.jsx"></script>
     <script type="text/babel">
       function boot(){
         if (!window.AxiusDirectionF || !window.AxiusPersonalization
             || !window.AxiusDiagnostic || !window.AxiusDiagnosticBar
-            || !window.AxiusEvidence?.TestimonialsF)
+            || !window.AxiusEvidence?.TestimonialsF
+            || !window.AxiusVisual?.DemosF)
           return setTimeout(boot, 50);
         ${extraInit}
         ReactDOM.createRoot(document.getElementById('root'))
@@ -103,5 +105,18 @@ test.describe('AxiusDirectionF', () => {
     for (const id of ['testimonials','case-studies','metrics','gbp']) {
       await expect(page.locator(`#${id}`)).toBeVisible({ timeout: 15_000 });
     }
+  });
+
+  test('Visual sections render under F before deadline', async ({ page }) => {
+    await page.goto('/');
+    await page.setContent(harness(`
+      window.addEventListener('load', () => {
+        window.AxiusPersonalization.set({ industry: 'realestate',
+          challenge: 'leadsleak', outcome: 'fix-one', skipped: false });
+      });
+    `), { waitUntil: 'networkidle' });
+    await expect(page.locator('#demos')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('#before-after')).toBeVisible();
+    await expect(page.locator('#founder-video')).toBeVisible();
   });
 });

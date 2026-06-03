@@ -706,6 +706,10 @@ window.AxiusDirectionF = function () {
     if (window.AxiusDiagnostic && window.AxiusDiagnostic.installStyles)
       window.AxiusDiagnostic.installStyles();
   }, []);
+  React.useEffect(() => {
+    if (window.AxiusVisual && window.AxiusVisual.installStyles)
+      window.AxiusVisual.installStyles();
+  }, []);
 
   const showInline = !P.hasAnswered();
 
@@ -720,12 +724,13 @@ window.AxiusDirectionF = function () {
       React.createElement(CommitmentsF, { perso }),
       React.createElement(MessF, { perso }),
       React.createElement(MethodologyF, { perso }),
-      // DemosF will be wired in Phase 6
+      window.AxiusVisual?.DemosF && React.createElement(window.AxiusVisual.DemosF),
       React.createElement(CatalogF, { perso }),
       React.createElement(PricingF, { perso }),
       React.createElement(ComparisonF, { perso }),
       React.createElement(ModelF, { perso }),
-      // BeforeAfterF will be wired in Phase 6
+      window.AxiusVisual?.BeforeAfterF && React.createElement(window.AxiusVisual.BeforeAfterF),
+      window.AxiusVisual?.FounderVideoF && React.createElement(window.AxiusVisual.FounderVideoF),
       React.createElement(FounderF, { perso }),
       React.createElement(EvidenceF),
       React.createElement(FAQF, { perso }),

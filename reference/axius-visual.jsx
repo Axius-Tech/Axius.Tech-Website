@@ -66,6 +66,57 @@ window.AxiusVisual.DemosF = function () {
   );
 };
 
+window.AxiusVisual.BeforeAfterF = function () {
+  if (!window.axiusFabricationLive()) return null;
+  const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
+  const pairs = (window.AxiusFabricated && window.AxiusFabricated.beforeAfter) || [];
+  if (pairs.length === 0) return null;
+
+  const [flipped, setFlipped] = React.useState({});
+
+  return React.createElement('section', { id: 'before-after',
+    style: { padding: '96px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
+             background: '#F7F6F2', color: '#0F0E0C' } },
+    React.createElement('div', { style: { maxWidth: 1100, margin: '0 auto' } },
+      React.createElement('h2', { style: { fontFamily: "'Source Serif 4', serif",
+                                            fontSize: 36, marginBottom: 32 } },
+        lang === 'es' ? 'Antes / después' : 'Before / after'),
+      React.createElement('div', { style: { display: 'grid',
+                                              gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 } },
+        pairs.map(p => {
+          const isFlipped = !!flipped[p.id];
+          return React.createElement('div', { key: p.id,
+            onClick: () => setFlipped(f => ({ ...f, [p.id]: !f[p.id] })),
+            style: { cursor: 'pointer', display: 'flex', gap: 16 } },
+            React.createElement('div', { style: { flex: 1, padding: 24,
+                                                     background: '#FEF3E8',
+                                                     border: '1px solid rgba(10,9,7,0.08)',
+                                                     minHeight: 160, opacity: isFlipped ? 0.3 : 1,
+                                                     transition: 'opacity .3s' } },
+              React.createElement('div', { style: { fontFamily: 'JetBrains Mono, monospace',
+                                                       fontSize: 10, letterSpacing: '0.18em',
+                                                       color: 'rgba(10,9,7,0.55)', marginBottom: 8 } },
+                lang === 'es' ? 'ANTES' : 'BEFORE'),
+              React.createElement('p', { style: { margin: 0, fontSize: 15 } },
+                lang === 'es' ? (p.beforeEs || p.before) : p.before)),
+            React.createElement('div', { style: { flex: 1, padding: 24,
+                                                     background: '#E8F4EC',
+                                                     border: '1px solid rgba(10,9,7,0.08)',
+                                                     minHeight: 160, opacity: isFlipped ? 1 : 0.3,
+                                                     transition: 'opacity .3s' } },
+              React.createElement('div', { style: { fontFamily: 'JetBrains Mono, monospace',
+                                                       fontSize: 10, letterSpacing: '0.18em',
+                                                       color: 'rgba(10,9,7,0.55)', marginBottom: 8 } },
+                lang === 'es' ? 'DESPUÉS' : 'AFTER'),
+              React.createElement('p', { style: { margin: 0, fontSize: 15 } },
+                lang === 'es' ? (p.afterEs || p.after) : p.after)),
+          );
+        }),
+      ),
+    ),
+  );
+};
+
 // Inject the demo keyframes once (idempotent)
 window.AxiusVisual.installStyles = function () {
   if (typeof document === 'undefined') return;
