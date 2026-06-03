@@ -1059,3 +1059,94 @@ window.AxiusPersonalization = (function () {
     isComplete:  () => Boolean(state.industry && state.challenge && state.outcome),
   };
 })();
+
+// ════════════════════════════════════════════════════════════════════════
+// OPTION 4 — COMMERCIAL-READY VARIANT (served at /v4)
+// ════════════════════════════════════════════════════════════════════════
+// Used exclusively by axius-direction-H.jsx. Reuses V3 taxonomies and most
+// V3 content data. Adds commercial-specific structures: footer, sticky CTA,
+// structured data for SEO.
+
+// Update AxiusConfig with the live booking URL (additive — does NOT mutate
+// existing fields). If AxiusConfig.bookingUrl was already set elsewhere,
+// preserve it; otherwise set to the discovery-call Cal link.
+if (window.AxiusConfig && !window.AxiusConfig.bookingUrl) {
+  window.AxiusConfig.bookingUrl = 'https://cal.com/andrestoro/discovery-call';
+}
+
+window.AxiusFooterV4 = {
+  legalEntity: 'Axius — Independent Technology Operations Practice',
+  legalEntityEs: 'Axius — Práctica Independiente de Operaciones Tecnológicas',
+  basedLine:    'Operating from Medellín, Colombia · Altamonte Springs, FL',
+  basedLineEs:  'Operando desde Medellín, Colombia · Altamonte Springs, FL',
+  email:        'andres@axius.tech',
+  copyrightYear: 2026,
+  columns: [
+    { headEn: 'Practice',   headEs: 'Práctica',
+      links: [
+        { labelEn: 'Capabilities',   labelEs: 'Capacidades',  href: '#catalog' },
+        { labelEn: 'The Method',     labelEs: 'El Método',    href: '#method' },
+        { labelEn: 'The Model',      labelEs: 'El Modelo',    href: '#model' },
+        { labelEn: 'Pricing',        labelEs: 'Precios',      href: '#pricing' },
+      ],
+    },
+    { headEn: 'About',       headEs: 'Acerca',
+      links: [
+        { labelEn: 'Founder',        labelEs: 'Fundador',     href: '#founder' },
+        { labelEn: 'Proof',          labelEs: 'Pruebas',      href: '#proof' },
+        { labelEn: 'Contact',        labelEs: 'Contacto',     href: 'mailto:andres@axius.tech' },
+        { labelEn: 'Book a Call',    labelEs: 'Agendar Llamada', href: 'https://cal.com/andrestoro/discovery-call' },
+      ],
+    },
+    { headEn: 'Legal',       headEs: 'Legal',
+      links: [
+        { labelEn: 'Privacy Policy', labelEs: 'Política de Privacidad', href: '/v4/privacy.html' },
+        { labelEn: 'Terms of Service', labelEs: 'Términos de Servicio', href: '/v4/terms.html' },
+      ],
+    },
+  ],
+};
+
+// Sticky scroll CTA bar — appears after hero scrolls out of view
+window.AxiusStickyCTAV4 = {
+  scrollThresholdVh: 90,  // appears after scrolling past ~one viewport
+  primary: {
+    labelEn: 'Book a Call', labelEs: 'Agendar Llamada',
+    href:    'https://cal.com/andrestoro/discovery-call',
+  },
+  secondary: {
+    labelEn: 'See Pricing', labelEs: 'Ver Precios',
+    href: '#pricing',
+  },
+  brand: { labelEn: 'AXIUS', labelEs: 'AXIUS' },
+};
+
+// Structured data (JSON-LD) for SEO. Rendered as a <script type="application/ld+json">
+// in v4/index.html — defined here so future updates land in one place.
+window.AxiusJsonLdV4 = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Axius',
+  description: 'Independent technology operations practice. We run the tech side of your business so you can focus on growing it.',
+  url: 'https://axius-tech-website.vercel.app/v4/',
+  image: 'https://axius-tech-website.vercel.app/assets/og.jpg',
+  email: 'andres@axius.tech',
+  founder: { '@type': 'Person', name: 'Andrés Toro' },
+  address: [
+    { '@type': 'PostalAddress', addressLocality: 'Medellín', addressCountry: 'CO' },
+    { '@type': 'PostalAddress', addressLocality: 'Altamonte Springs', addressRegion: 'FL', addressCountry: 'US' },
+  ],
+  serviceType: ['Technology Operations', 'Business Process Automation', 'AI Implementation', 'CRM Integration'],
+  priceRange: '$2,500 - $5,000 per month',
+  offers: [
+    { '@type': 'Offer', name: 'Operator', priceCurrency: 'USD', price: '2500',
+      description: 'Technology ownership for a few critical systems' },
+    { '@type': 'Offer', name: 'Team', priceCurrency: 'USD', price: '5000',
+      description: 'Continuous operational improvement' },
+    { '@type': 'Offer', name: 'Department',
+      description: 'Custom engagement — technology leadership and operational ownership' },
+  ],
+  sameAs: [
+    'https://cal.com/andrestoro/discovery-call',
+  ],
+};
