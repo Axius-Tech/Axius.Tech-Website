@@ -875,6 +875,144 @@ window.AxiusOperationalMetrics = {
   },
 };
 
+// ════════════════════════════════════════════════════════════════════════
+// OPTION 3 — V3 TAXONOMIES + DATA
+// ════════════════════════════════════════════════════════════════════════
+// Used exclusively by axius-direction-G.jsx (served at /v3). Option 2's
+// existing AxiusIndustries/AxiusChallenges/AxiusOutcomes remain untouched.
+// Note: Option 3's diagnostic writes V3 ids back into the same
+// window.AxiusPersonalization store Option 2 uses. When a visitor lands
+// on /v3 first and then visits /, Option 2's filter sees V3 ids it does
+// not recognize and falls back to its generic catalog state — acceptable.
+
+window.AxiusIndustriesV3 = [
+  { id: 'realestate',  label: 'Real Estate',          labelEs: 'Inmobiliaria' },
+  { id: 'healthcare',  label: 'Healthcare',           labelEs: 'Salud' },
+  { id: 'professional',label: 'Professional Services',labelEs: 'Servicios Profesionales' },
+  { id: 'ecommerce',   label: 'Ecommerce',            labelEs: 'Ecommerce' },
+  { id: 'education',   label: 'Education',            labelEs: 'Educación' },
+  { id: 'other',       label: 'Other',                labelEs: 'Otro' },
+];
+
+window.AxiusChallengesV3 = [
+  { id: 'manual',    label: 'Manual Work',          labelEs: 'Trabajo Manual' },
+  { id: 'sales',     label: 'Sales',                labelEs: 'Ventas' },
+  { id: 'support',   label: 'Customer Support',     labelEs: 'Soporte al Cliente' },
+  { id: 'ops',       label: 'Internal Operations',  labelEs: 'Operaciones Internas' },
+  { id: 'reporting', label: 'Reporting',            labelEs: 'Reportería' },
+  { id: 'scaling',   label: 'Scaling',              labelEs: 'Escalamiento' },
+];
+
+window.AxiusOutcomesV3 = [
+  { id: 'revenue',     label: 'More Revenue',     labelEs: 'Más Ingresos' },
+  { id: 'execution',   label: 'Faster Execution', labelEs: 'Ejecución más Rápida' },
+  { id: 'visibility',  label: 'Better Visibility',labelEs: 'Más Visibilidad' },
+  { id: 'costs',       label: 'Lower Costs',      labelEs: 'Menores Costos' },
+  { id: 'chaos',       label: 'Less Chaos',       labelEs: 'Menos Caos' },
+];
+
+// Stage definitions for "THE AXIUS METHOD" (4 stages)
+window.AxiusMethodV3 = [
+  { n: '01', name: 'ASSESS',    bullets: ['Understand the business.', 'Identify bottlenecks.', 'Find opportunities.'],
+                                bulletsEs: ['Entender el negocio.', 'Identificar cuellos de botella.', 'Encontrar oportunidades.'] },
+  { n: '02', name: 'ARCHITECT', bullets: ['Design systems.', 'Prioritize initiatives.', 'Build the roadmap.'],
+                                bulletsEs: ['Diseñar sistemas.', 'Priorizar iniciativas.', 'Construir el roadmap.'] },
+  { n: '03', name: 'OPERATE',   bullets: ['Implement.', 'Maintain.', 'Optimize.', 'Own execution.'],
+                                bulletsEs: ['Implementar.', 'Mantener.', 'Optimizar.', 'Ser dueños de la ejecución.'] },
+  { n: '04', name: 'EVOLVE',    bullets: ['Improve continuously.', 'Increase leverage.', 'Expand capacity.'],
+                                bulletsEs: ['Mejorar continuamente.', 'Aumentar el apalancamiento.', 'Expandir capacidad.'] },
+];
+
+// 3 model pillars
+window.AxiusModelV3 = [
+  { id: 'human',  name: 'HUMAN LEADERSHIP',
+    bullets: ['Direction', 'Ownership', 'Decision-Making', 'Accountability'],
+    bulletsEs: ['Dirección', 'Propiedad', 'Toma de decisiones', 'Responsabilidad'] },
+  { id: 'ai',     name: 'AI WORKFORCE',
+    bullets: ['Immediate Response', 'Monitoring', 'Documentation', 'Execution Support', 'Operational Continuity'],
+    bulletsEs: ['Respuesta inmediata', 'Monitoreo', 'Documentación', 'Soporte de ejecución', 'Continuidad operativa'] },
+  { id: 'specialist', name: 'SPECIALIST NETWORK',
+    bullets: ['Engineering', 'Automation', 'Design', 'Infrastructure', 'Advanced Implementation'],
+    bulletsEs: ['Ingeniería', 'Automatización', 'Diseño', 'Infraestructura', 'Implementación avanzada'] },
+];
+
+// Comparison table for "WHY AXIUS"
+window.AxiusComparisonV3 = [
+  { freelancer: 'Expertise',         employee: 'Time',                axius: 'Ownership',
+    freelancerEs: 'Experticia',      employeeEs: 'Tiempo',            axiusEs: 'Propiedad' },
+  { freelancer: 'Limited Capacity',  employee: 'Internal Dependency', axius: 'Continuous Coverage',
+    freelancerEs: 'Capacidad Limitada', employeeEs: 'Dependencia Interna', axiusEs: 'Cobertura Continua' },
+  { freelancer: 'Multiple Vendors',  employee: 'Single Hire',         axius: 'Full Operating Layer',
+    freelancerEs: 'Múltiples Proveedores', employeeEs: 'Una Sola Contratación', axiusEs: 'Capa Operativa Completa' },
+  { freelancer: 'Reactive Work',     employee: 'Internal Management', axius: 'Ongoing Improvement',
+    freelancerEs: 'Trabajo Reactivo', employeeEs: 'Gestión Interna',   axiusEs: 'Mejora Continua' },
+];
+
+// "What Changes" before/after for WhatChangesV3
+window.AxiusBeforeAfterV3 = {
+  before: ['Developers', 'Automations', 'CRM', 'Website', 'AI tools', 'Support systems', 'Integrations'],
+  beforeEs: ['Desarrolladores', 'Automatizaciones', 'CRM', 'Sitio web', 'Herramientas de IA', 'Sistemas de soporte', 'Integraciones'],
+  after: ['Technology operations', 'System performance', 'Workflow optimization', 'AI implementation', 'Vendor coordination', 'Operational continuity'],
+  afterEs: ['Operaciones tecnológicas', 'Rendimiento de sistemas', 'Optimización de flujos', 'Implementación de IA', 'Coordinación de proveedores', 'Continuidad operativa'],
+  // Outcome metric tiles (fabricated — auto-unmount past 2026-08-01)
+  outcomeMetrics: [
+    { label: 'FASTER EXECUTION',  value: '10×' },
+    { label: 'OPERATIONAL COST',  value: '3× LOWER' },
+    { label: 'RESPONSE SPEED',    value: 'IMMEDIATE AI' },
+    { label: 'VISIBILITY',        value: 'FULL REPORTING' },
+  ],
+};
+
+// Industry-specific workflow recommendations for V3 (only realestate authored)
+window.AxiusRecommendationsV3 = {
+  realestate: {
+    sales:      ['Lead Qualification', 'Missed Call Recovery', 'Appointment Scheduling'],
+    operations: ['CRM Management', 'Document Workflows', 'Reporting Systems'],
+    ai:         ['Voice Agents', 'Follow-up Automation', 'Lead Routing'],
+  },
+  // Other industries: G.jsx falls back to a generic 3×3 from AxiusCatalog samples
+};
+
+// V3 pricing tile definitions (price strings only — wired to existing Stripe Payment Links)
+window.AxiusPricingV3 = [
+  { id: 'operator',   name: 'Operator',
+    sub:   'Technology ownership for a few critical systems.',
+    subEs: 'Propiedad tecnológica para algunos sistemas críticos.',
+    priceLine:   'Starting at $2,500/mo',
+    priceLineEs: 'Desde $2,500/mes',
+    checkoutUrl: 'https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01',
+    featured: false },
+  { id: 'team',       name: 'Team',
+    sub:   'Continuous operational improvement.',
+    subEs: 'Mejora operativa continua.',
+    priceLine:   'Starting at $5,000/mo',
+    priceLineEs: 'Desde $5,000/mes',
+    checkoutUrl: 'https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02',
+    featured: true },
+  { id: 'department', name: 'Department',
+    sub:   'Custom Engagement',
+    subEs: 'Engagement Personalizado',
+    body:   'Technology leadership. Operational ownership. Dedicated capacity.',
+    bodyEs: 'Liderazgo tecnológico. Propiedad operativa. Capacidad dedicada.',
+    priceLine:   null,
+    priceLineEs: null,
+    checkoutUrl: null, // Triggers booking-conversation CTA instead
+    featured: false },
+];
+
+// Proof results by industry (fabricated — auto-unmount past 2026-08-01)
+window.AxiusProofV3 = [
+  { industry: 'Real Estate',          industryEs: 'Inmobiliaria',
+    metric: 'Lead Response Time',     metricEs: 'Tiempo de Respuesta a Leads',
+    value:  '4h → 3m' },
+  { industry: 'Healthcare',           industryEs: 'Salud',
+    metric: 'No-Shows',               metricEs: 'No-Shows',
+    value:  '-65%' },
+  { industry: 'Professional Services',industryEs: 'Servicios Profesionales',
+    metric: 'Administrative Work',    metricEs: 'Trabajo Administrativo',
+    value:  '-70%' },
+];
+
 window.AxiusPersonalization = (function () {
   const KEY = 'axius:perso:v1';
   const TTL_DAYS = 30;
