@@ -194,6 +194,7 @@ function CatalogF({ perso }) {
           : `Showing ${shownCount} of ${totalCount} capabilities for ${indLabel || ind}`),
         React.createElement('button', {
           type: 'button', onClick: () => setViewAll(true),
+          'aria-label': lang === 'es' ? 'Mostrar todas las categorías del catálogo' : 'Show all catalog categories',
           style: { background: 'transparent', border: 'none', cursor: 'pointer',
                    fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
                    letterSpacing: '0.18em', color: '#B8743C' } },
