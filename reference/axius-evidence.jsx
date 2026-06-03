@@ -9,7 +9,7 @@ window.AxiusEvidence.TestimonialsF = function () {
   if (list.length === 0) {
     return React.createElement('section', { id: 'testimonials',
       style: { padding: '96px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
-               background: '#F7F6F2' } },
+               background: '#F7F6F2', color: '#0F0E0C' } },
       React.createElement('div', { style: { maxWidth: 800, margin: '0 auto', textAlign: 'center' } },
         React.createElement('p', { style: { fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
                                               letterSpacing: '0.18em', color: 'rgba(10,9,7,0.55)' } },
@@ -59,7 +59,7 @@ window.AxiusEvidence.CaseStudiesF = function () {
   if (all.length === 0) {
     return React.createElement('section', { id: 'case-studies',
       style: { padding: '96px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
-               background: '#F7F6F2' } },
+               background: '#F7F6F2', color: '#0F0E0C' } },
       React.createElement('div', { style: { maxWidth: 800, margin: '0 auto', textAlign: 'center' } },
         React.createElement('p', { style: { fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
                                               letterSpacing: '0.18em', color: 'rgba(10,9,7,0.55)' } },
@@ -180,7 +180,7 @@ window.AxiusEvidence.GBPCardF = function () {
   if (!g.url) {
     return React.createElement('section', { id: 'gbp',
       style: { padding: '64px 32px', borderTop: '1px solid rgba(10,9,7,0.08)',
-               background: '#F7F6F2', textAlign: 'center' } },
+               background: '#F7F6F2', textAlign: 'center', color: '#0F0E0C' } },
       React.createElement('p', { style: { fontStyle: 'italic', color: 'rgba(10,9,7,0.55)',
                                             maxWidth: 600, margin: '0 auto' } },
         lang === 'es'
