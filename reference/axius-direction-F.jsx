@@ -816,7 +816,10 @@ function renderCompleterBubble(perso, lang) {
     React.createElement('div', { style: { display: 'flex', gap: 8, flexWrap: 'wrap' } },
       React.createElement('button', { type: 'button',
         style: chatChipStyle(true),
-        onClick: () => {} },
+        onClick: () => {
+          const el = document.getElementById('recommendations');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } },
         lang === 'es' ? 'Caminar por uno →' : 'Walk me through →'),
       React.createElement('a', { href: (window.AxiusConfig && window.AxiusConfig.bookingUrl) || '#',
         target: '_blank', rel: 'noopener noreferrer',
