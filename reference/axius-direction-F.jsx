@@ -916,6 +916,8 @@ function chatBubbleStyle() {
 function postToTelegram(text, perso, lang) {
   const cfg = window.AxiusConfig || {};
   if (!cfg.ringWebhookUrl || !cfg.ringWebhookChatId) return;
+  if (cfg.ringWebhookUrl.includes('YOUR_TELEGRAM_BOT_TOKEN')) return;
+  if (cfg.ringWebhookChatId === 'YOUR_TELEGRAM_CHAT_ID') return;
   const ctx = perso.industry || perso.skipped
     ? `[axius option2 ${lang.toUpperCase()}] industry=${perso.industry || '-'} challenge=${perso.challenge || '-'} outcome=${perso.outcome || '-'} skipped=${perso.skipped}`
     : `[axius option2 ${lang.toUpperCase()}]`;
