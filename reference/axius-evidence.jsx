@@ -67,8 +67,8 @@ window.AxiusEvidence.CaseStudiesF = function () {
         React.createElement('p', { style: { fontStyle: 'italic', fontSize: 18, marginTop: 12,
                                               color: 'rgba(10,9,7,0.65)' } },
           lang === 'es'
-            ? `Los casos de estudio se publican trimestralmente — el próximo lote llega en ${nextQuarter(lang)}.`
-            : `Case studies publish quarterly — next set drops ${nextQuarter(lang)}.`),
+            ? `Los casos de estudio se publican trimestralmente — el próximo lote llega en ${window.AxiusEvidence.nextQuarter(lang)}.`
+            : `Case studies publish quarterly — next set drops ${window.AxiusEvidence.nextQuarter(lang)}.`),
       ),
     );
   }
@@ -104,7 +104,7 @@ window.AxiusEvidence.CaseStudiesF = function () {
 };
 
 // Helper — used by both CaseStudiesF post-deadline and elsewhere.
-function nextQuarter(lang) {
+window.AxiusEvidence.nextQuarter = function (lang) {
   const now = new Date();
   const month = now.getMonth(); // 0–11
   const year = now.getFullYear();
@@ -112,7 +112,7 @@ function nextQuarter(lang) {
   const adjQ = q > 4 ? q - 4 : q;
   const adjY = q > 4 ? year + 1 : year;
   return `Q${adjQ} ${adjY}`;
-}
+};
 
 window.AxiusEvidence.MetricsF = function () {
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
