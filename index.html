@@ -53,25 +53,34 @@
 </head>
 <body>
 
-<div id="stage-quiet05" class="stage-quiet05"></div>
+<div id="stage-quiet06" class="stage-quiet05"></div>
 
-<!-- Local-only secrets (gitignored). If missing, Telegram integration stays inert with placeholder credentials. -->
+<!-- Local-only secrets (gitignored). Production loads with placeholder credentials if missing. -->
 <script type="text/babel" src="/reference/axius-secrets.local.jsx"></script>
 
-<!-- Design tokens, data, atoms, AxiusConfig -->
+<!-- Shared tokens, data, atoms, AxiusConfig, AxiusPersonalization, new globals -->
 <script type="text/babel" src="/reference/axius-shared.jsx"></script>
 
-<!-- Quiet 0.5 — the live direction -->
-<script type="text/babel" src="/reference/axius-direction-E05.jsx"></script>
+<!-- Diagnostic wizard + sticky bar -->
+<script type="text/babel" src="/reference/axius-diagnostic.jsx"></script>
+
+<!-- Evidence + Visual layers -->
+<script type="text/babel" src="/reference/axius-evidence.jsx"></script>
+<script type="text/babel" src="/reference/axius-visual.jsx"></script>
+
+<!-- Direction F — Quiet 0.5 evolved (Option 2) -->
+<script type="text/babel" src="/reference/axius-direction-F.jsx"></script>
 
 <script type="text/babel">
   function waitForGlobals(cb) {
-    if (window.AxiusTokens && window.AxiusDirectionE05) cb();
-    else setTimeout(function () { waitForGlobals(cb); }, 40);
+    if (window.AxiusTokens && window.AxiusDirectionF && window.AxiusPersonalization)
+      cb();
+    else
+      setTimeout(function () { waitForGlobals(cb); }, 40);
   }
   waitForGlobals(function () {
-    ReactDOM.createRoot(document.getElementById('stage-quiet05'))
-      .render(React.createElement(window.AxiusDirectionE05));
+    ReactDOM.createRoot(document.getElementById('stage-quiet06'))
+      .render(React.createElement(window.AxiusDirectionF));
   });
 </script>
 
