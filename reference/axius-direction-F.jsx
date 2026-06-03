@@ -576,6 +576,9 @@ function ModelF({ perso }) {
 function FounderF({ perso }) {
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
   const f = window.AxiusFounder || {};
+  const [photoFailed, setPhotoFailed] = React.useState(false);
+  const fallbackCaption = (f.name || 'Andrés Toro') + ' · ' +
+    (lang === 'es' ? 'foto no disponible' : 'photo unavailable');
   return sectionWrap('founder', [
     eyebrow(lang === 'es' ? '08 · El Operador' : '08 · The Operator'),
     React.createElement('div', { key: 'grid',
@@ -584,12 +587,19 @@ function FounderF({ perso }) {
       React.createElement('div', { key: 'photo' },
         React.createElement('div', {
           style: { aspectRatio: '3/4', width: '100%',
-                   border: F_LINE, overflow: 'hidden', background: '#E9E6DF' } },
-          React.createElement('img', {
+                   border: F_LINE, overflow: 'hidden', background: '#E9E6DF',
+                   display: 'flex', alignItems: 'center', justifyContent: 'center',
+                   padding: photoFailed ? 24 : 0 } },
+          !photoFailed && React.createElement('img', {
             src: f.photo, alt: f.name || 'Founder',
-            onError: (e) => { e.target.style.display = 'none'; },
+            onError: () => setPhotoFailed(true),
             style: { width: '100%', height: '100%', objectFit: 'cover',
                      filter: 'grayscale(.15) contrast(1.04)' } }),
+          photoFailed && React.createElement('div', {
+            role: 'img', 'aria-label': fallbackCaption,
+            style: { fontFamily: F_MONO, fontSize: 12, letterSpacing: '0.12em',
+                     color: F_MUTE, textAlign: 'center', textTransform: 'uppercase' } },
+            fallbackCaption),
         ),
         React.createElement('div', {
           style: { fontFamily: F_MONO, fontSize: 11, letterSpacing: '0.18em',
