@@ -110,7 +110,12 @@ function RecommendationsPanel({ perso }) {
     const fallback = cats.flatMap(c => (c.samples || []).map(s =>
       ({ ...s, categoryId: c.id, categoryName: lang === 'es' ? c.nameEs : c.name })
     ));
-    picks = fallback.slice(0, 3);
+    // Concat with dedup by `n`, then trim to 3 — preserves any valid curated picks
+    const seen = new Set(picks.map(p => p.n));
+    for (const f of fallback) {
+      if (picks.length >= 3) break;
+      if (!seen.has(f.n)) { picks.push(f); seen.add(f.n); }
+    }
   }
   const rationale = cell && (lang === 'es' ? cell.rationaleES : cell.rationaleEN);
   const industryLabel = perso.industry === 'other'
