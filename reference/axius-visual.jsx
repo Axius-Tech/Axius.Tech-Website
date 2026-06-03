@@ -129,6 +129,10 @@ window.AxiusVisual.installStyles = function () {
       30%, 90% { opacity: 1; transform: translateY(0); }
       100% { opacity: 0; transform: translateY(-4px); }
     }
+    [data-axius-faq-button]:focus-visible {
+      outline: 2px solid #B8743C;
+      outline-offset: 2px;
+    }
   `;
   document.head.appendChild(el);
 };

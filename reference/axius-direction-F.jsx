@@ -647,6 +647,7 @@ function FAQF({ perso }) {
         style: { borderTop: F_LINE_LO, padding: '20px 0' } },
         React.createElement('button', {
           type: 'button',
+          'data-axius-faq-button': true,
           onClick: () => setOpenIdx(openIdx === i ? -1 : i),
           style: { all: 'unset', cursor: 'pointer', display: 'flex',
                    justifyContent: 'space-between', alignItems: 'baseline',
