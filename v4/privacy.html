@@ -1,0 +1,236 @@
+<!doctype html>
+<!-- REPLACE_BEFORE_LAUNCH: review and update to reflect Axius's actual legal entity, jurisdiction, and policies before promoting widely. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Axius</title>
+<meta name="description" content="Privacy Policy for Axius — Independent Technology Operations Practice.">
+<meta name="theme-color" content="#F7F6F2">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://axius-tech-website.vercel.app/v4/privacy.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #0F0E0C;
+    --dim: rgba(10,9,7,0.65);
+    --mute: rgba(10,9,7,0.55);
+    --line: rgba(10,9,7,0.16);
+    --line-lo: rgba(10,9,7,0.08);
+    --canvas: #F7F6F2;
+    --tanger: #B8743C;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--canvas); color: var(--ink); }
+  body {
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .legal-shell {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 96px 32px 64px;
+  }
+  .legal-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 24px;
+  }
+  .legal-back {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tanger);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.12s ease;
+  }
+  .legal-back:focus-visible,
+  .legal-back:hover {
+    outline: none;
+    border-bottom-color: var(--tanger);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 56px;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin: 0 0 16px;
+    color: var(--ink);
+  }
+  .legal-updated {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--mute);
+    margin-bottom: 48px;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    margin: 56px 0 16px;
+    color: var(--ink);
+  }
+  p {
+    margin: 0 0 16px;
+    color: var(--dim);
+    max-width: 64ch;
+  }
+  ul {
+    margin: 0 0 16px;
+    padding-left: 20px;
+    color: var(--dim);
+  }
+  li { margin-bottom: 8px; line-height: 1.55; }
+  a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--tanger);
+    padding-bottom: 1px;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--tanger);
+    outline-offset: 2px;
+  }
+  code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: rgba(10,9,7,0.04);
+    padding: 2px 6px;
+    border: 1px solid var(--line-lo);
+  }
+  .legal-footer {
+    border-top: 1px solid var(--line-lo);
+    margin-top: 64px;
+    padding-top: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--mute);
+    text-transform: uppercase;
+  }
+  @media (max-width: 640px) {
+    .legal-shell { padding: 64px 20px 48px; }
+    h1 { font-size: 40px; }
+    h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<main class="legal-shell" id="main">
+  <a class="legal-back" href="/v4/" aria-label="Back to Axius homepage">← Back to Axius</a>
+  <div class="legal-eyebrow">Legal · 01</div>
+  <h1>Privacy Policy</h1>
+  <div class="legal-updated">Last updated: 2026-06-03</div>
+
+  <p>
+    Axius operates an independent technology operations practice. This Privacy Policy explains
+    what information we collect when you visit our website, contact us, or engage Axius for
+    a paid engagement, and how we handle it.
+  </p>
+
+  <h2>Information we collect</h2>
+  <ul>
+    <li>
+      <strong>Contact information</strong> — name and email when you submit a contact form,
+      book a discovery call, or email us directly.
+    </li>
+    <li>
+      <strong>Diagnostic answers</strong> — the industry / friction / impact answers you
+      provide in our on-site diagnostic. These live only in your browser
+      (<code>localStorage</code>, key <code>axius:perso:v1</code>) and are never sent to
+      Axius unless you explicitly submit the contact form.
+    </li>
+    <li>
+      <strong>Usage analytics</strong> — basic, aggregate analytics from our hosting platform
+      (Vercel) such as page views and referrers. No tracking cookies are set.
+    </li>
+    <li>
+      <strong>Conversation records</strong> — if you reach out, we keep your message and our
+      replies in our email or internal messaging tools so we can serve you.
+    </li>
+  </ul>
+
+  <h2>How we use it</h2>
+  <ul>
+    <li>To respond to inquiries and serve clients we have engaged.</li>
+    <li>To improve the service and the website.</li>
+    <li>To send transactional information about a paid engagement (invoices, reports).</li>
+  </ul>
+  <p>We do not send marketing emails without your prior consent.</p>
+
+  <h2>Data sharing</h2>
+  <p>
+    We do not sell your data. We share information only with a small set of vetted service
+    providers required to run Axius:
+  </p>
+  <ul>
+    <li><strong>Stripe</strong> — payment processing for monthly subscriptions.</li>
+    <li><strong>Cal.com</strong> — booking and calendar scheduling.</li>
+    <li><strong>Telegram</strong> — Axius's internal operator notifications.</li>
+    <li><strong>Vercel</strong> — hosting and infrastructure.</li>
+  </ul>
+  <p>
+    Each of these processors has their own privacy policies and security practices that govern
+    their handling of any data we pass to them.
+  </p>
+
+  <h2>Cookies and local storage</h2>
+  <p>
+    The Axius website does not set tracking cookies. We use <code>localStorage</code> for one
+    purpose: to remember the answers you give in our on-site diagnostic so the website can
+    show you relevant capabilities and recommendations on subsequent visits. The key is
+    <code>axius:perso:v1</code> and it expires automatically after 30 days. You can clear it
+    at any time from your browser settings.
+  </p>
+
+  <h2>Your rights</h2>
+  <p>
+    You can request access to, correction of, or deletion of any personal information we hold
+    by writing to <a href="mailto:andres@axius.tech">andres@axius.tech</a>. We respond within
+    30 days.
+  </p>
+
+  <h2>Children</h2>
+  <p>
+    Axius's services are intended for businesses and their authorized representatives. We do
+    not knowingly collect information from children under 16.
+  </p>
+
+  <h2>Changes to this policy</h2>
+  <p>
+    We will post material changes here with an updated revision date. Significant changes will
+    be communicated to active clients via email.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions or concerns? Email <a href="mailto:andres@axius.tech">andres@axius.tech</a>.
+  </p>
+
+  <div class="legal-footer">© 2026 Axius · andres@axius.tech</div>
+</main>
+</body>
+</html>
