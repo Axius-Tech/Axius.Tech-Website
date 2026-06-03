@@ -261,7 +261,7 @@ function PricingF({ perso }) {
           `$${t.price}/mo`),
         React.createElement('div', { style: { fontFamily: 'JetBrains Mono, monospace',
                                                 fontSize: 12, color: 'rgba(10,9,7,0.55)', marginBottom: 24 } },
-          `+ $${t.setup} ${lang === 'es' ? 'setup' : 'setup'}`),
+          `+ $${t.setup} ${lang === 'es' ? 'configuración' : 'setup'}`),
         React.createElement('ul', { style: { listStyle: 'none', padding: 0, margin: 0 } },
           ((lang === 'es' ? t.featuresEs : t.features) || []).map((f, i) =>
             React.createElement('li', { key: i, style: { padding: '6px 0', fontSize: 14 } }, '• ' + f)
