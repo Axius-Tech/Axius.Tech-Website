@@ -86,7 +86,17 @@ window.AxiusVisual.BeforeAfterF = function () {
         pairs.map(p => {
           const isFlipped = !!flipped[p.id];
           return React.createElement('div', { key: p.id,
+            role: 'button',
+            tabIndex: 0,
+            'aria-pressed': isFlipped,
+            'aria-label': lang === 'es' ? 'Alternar antes / después' : 'Toggle before / after',
             onClick: () => setFlipped(f => ({ ...f, [p.id]: !f[p.id] })),
+            onKeyDown: (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setFlipped(f => ({ ...f, [p.id]: !f[p.id] }));
+              }
+            },
             style: { cursor: 'pointer', display: 'flex', gap: 16 } },
             React.createElement('div', { style: { flex: 1, padding: 24,
                                                      background: '#FEF3E8',
