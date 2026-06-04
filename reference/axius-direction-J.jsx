@@ -604,13 +604,15 @@ window.AxiusDirectionJ = function () {
       sec01BAfterRight2:    'Same hand on the work, month after month.',
       sec02MethodEyebrow:   '02 · THE METHOD',
       sec03MostRecEyebrow:  '03 · MOST RECOMMENDED',
+      // sec04 = How it Runs (renumbered: precedes pricing)
+      // sec05 = Pricing
       sec03MostRecTitleDefault: 'Nine categories. One operating layer.',
       sec03MostRecTitleTemplate: 'The systems most {industry} ask us to run.',
       sec03ImpactLabel:     'IMPACT',
       sec03ViewAll:         'View full catalog →',
       sec03ViewLess:        '← Show less',
-      sec04PricingEyebrow:  '04 · PRICING',
-      sec05ModelEyebrow:    '05 · HOW IT RUNS',
+      sec04PricingEyebrow:  '05 · PRICING',
+      sec05ModelEyebrow:    '04 · HOW IT RUNS',
       sec05ModelTitle:      'How it runs.',
       sec06OperatorEyebrow: '06 · OPERATOR',
       sec06FactStrip:       'BASED · Altamonte Springs, FL · in Medellín now    ·    AVAILABLE · US business hours    ·    LANGUAGES · EN · ES',
@@ -893,8 +895,8 @@ window.AxiusDirectionJ = function () {
       sec03ImpactLabel:     'IMPACTO',
       sec03ViewAll:         'Ver catálogo completo →',
       sec03ViewLess:        '← Mostrar menos',
-      sec04PricingEyebrow:  '04 · PRECIOS',
-      sec05ModelEyebrow:    '05 · CÓMO OPERA',
+      sec04PricingEyebrow:  '05 · PRECIOS',
+      sec05ModelEyebrow:    '04 · CÓMO OPERA',
       sec05ModelTitle:      'Cómo opera.',
       sec06OperatorEyebrow: '06 · OPERADOR',
       sec06FactStrip:       'BASE · Altamonte Springs, FL · en Medellín ahora    ·    DISPONIBLE · Horario de EE.UU.    ·    IDIOMAS · EN · ES',
@@ -3440,7 +3442,7 @@ window.AxiusDirectionJ = function () {
     const accents = [C.tangerine, C.lavender, C.mint, C.amber];
     const [headH, setHeadH] = React.useState(false);
     return (
-      <section id="method" data-screen-label="03 Method" style={{
+      <section id="method" data-screen-label="02 Method" style={{
         padding: `108px ${pad}px`,
         background: C.panel, borderTop: `1px solid ${C.line}`,
       }}>
@@ -3758,7 +3760,7 @@ window.AxiusDirectionJ = function () {
     };
 
     return (
-      <section id="catalog" data-screen-label="04 Most Recommended" style={{
+      <section id="catalog" data-screen-label="03 Most Recommended" style={{
         padding: `108px ${pad}px`,
         borderTop: `1px solid ${C.line}`,
       }}>
@@ -4320,7 +4322,7 @@ window.AxiusDirectionJ = function () {
       };
     }, []);
     return (
-      <section ref={sectionRef} id="pricing" data-screen-label="06 Pricing" style={{
+      <section ref={sectionRef} id="pricing" data-screen-label="05 Pricing" style={{
         padding: `108px ${pad}px`,
         borderTop: `1px solid ${C.line}`,
       }}>
@@ -4666,7 +4668,7 @@ window.AxiusDirectionJ = function () {
     const accents = [C.tangerine, C.mint, C.lavender, C.amber];
     const pillars = t('modelPillars');
     return (
-      <section id="how-it-runs" data-screen-label="05 How it Runs" style={{
+      <section id="how-it-runs" data-screen-label="04 How it Runs" style={{
         padding: `108px ${pad}px`,
         background: C.panel, borderTop: `1px solid ${C.line}`,
       }}>
@@ -5963,8 +5965,8 @@ window.AxiusDirectionJ = function () {
       <Commitments perso={perso}/>
       <Method/>
       <Catalog perso={perso}/>
-      <Pricing/>
       <Model/>
+      <Pricing/>
       <Founder/>
       <Testimonials perso={perso}/>
       <FAQ/>
