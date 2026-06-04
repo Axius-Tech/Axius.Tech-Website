@@ -1277,8 +1277,9 @@ function BeforeAndAfterJ({ perso }) {
             lang === 'es' ? 'ANTES' : 'BEFORE'),
           React.createElement('p', {
             style: { fontFamily: J_SERIF, fontStyle: 'italic',
-                     fontSize: 22, lineHeight: 1.4, margin: '0 0 24px',
-                     letterSpacing: '-0.02em', color: J_INK } },
+                     fontSize: 20, lineHeight: 1.5, margin: '0 0 24px',
+                     letterSpacing: '-0.02em', color: J_INK,
+                     whiteSpace: 'pre-line' } },
             beforeCopy),
           React.createElement('div', {
             style: { fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
@@ -1328,7 +1329,7 @@ function BeforeAndAfterJ({ perso }) {
         style: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0,
                  borderTop: J_LINE, borderBottom: J_LINE_LO } },
         metrics.map((m, i) => React.createElement(HoverCellJ, { key: i,
-          accent: i % 2 === 0 ? J_TANGER : J_MINT,
+          accent: [J_MINT, J_AMBER, J_TANGER, J_LAVENDER][i % 4],
           style: { padding: '32px 24px',
                    borderLeft: i === 0 ? 'none' : J_LINE_LO } },
           React.createElement('div', { style: {
@@ -1368,14 +1369,16 @@ function MethodJ({ perso }) {
     React.createElement('div', { key: 'grid',
       'data-axius-j-grid': '4col',
       style: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0 } },
-      stages.map((s, i) => React.createElement(HoverCellJ, { key: s.n,
-        accent: i % 2 === 0 ? J_TANGER : J_MINT,
+      stages.map((s, i) => {
+        const acc = [J_MINT, J_AMBER, J_TANGER, J_LAVENDER][i % 4];
+        return React.createElement(HoverCellJ, { key: s.n,
+        accent: acc,
         style: { padding: '24px 20px',
                  borderTop: J_LINE,
                  borderLeft: i === 0 ? 'none' : J_LINE_LO } },
         React.createElement('div', {
           style: { fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
-                   color: J_TANGER, marginBottom: 10 } },
+                   color: acc, marginBottom: 10 } },
           (lang === 'es' ? 'Etapa ' : 'Stage ') + s.n),
         React.createElement('h3', {
           style: { fontFamily: J_SERIF, fontWeight: 500, fontSize: 28,
@@ -1391,7 +1394,8 @@ function MethodJ({ perso }) {
               React.createElement('span', { style: { color: J_TANGER,
                                                        fontFamily: J_MONO, fontSize: 11 } }, '+'),
               React.createElement('span', null, b)))),
-      ))),
+      );
+      })),
   ]);
 }
 
@@ -1421,8 +1425,8 @@ function MostRequestedJ({ perso }) {
     React.createElement('div', { key: 'grid',
       'data-axius-j-grid': '3col',
       style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 } },
-      items.map(item => React.createElement(HoverCellJ, { key: item.n,
-        accent: J_CATEGORY_ACCENT[item.category] || J_TANGER,
+      items.map((item, i) => React.createElement(HoverCellJ, { key: item.n,
+        accent: [J_MINT, J_AMBER, J_TANGER, J_LAVENDER, J_SKY, J_COPPER][i % 6],
         style: { padding: 28, border: J_LINE, background: J_CANVAS,
                  display: 'flex', flexDirection: 'column', minHeight: 200 } },
         React.createElement('div', {
@@ -1579,12 +1583,12 @@ function HowItRunsJ({ perso }) {
       'data-axius-j-grid': '3col',
       style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 } },
       pillars.map((p, i) => React.createElement(HoverCellJ, { key: p.id,
-        accent: [J_TANGER, J_MINT, J_LAVENDER][i % 3],
+        accent: [J_MINT, J_TANGER, J_LAVENDER][i % 3],
         style: { padding: 32, border: J_LINE, background: J_CANVAS,
                  minHeight: 320 } },
         React.createElement('div', {
           style: { fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
-                   color: [J_TANGER, J_MINT, J_LAVENDER][i % 3],
+                   color: [J_MINT, J_TANGER, J_LAVENDER][i % 3],
                    marginBottom: 24, textTransform: 'uppercase' } },
           p.name),
         React.createElement('ul', {
@@ -1622,8 +1626,13 @@ function PricingJ({ perso }) {
     React.createElement('div', { key: 'grid',
       'data-axius-j-grid': '3col',
       style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 } },
-      tiers.map(t => {
+      tiers.map((t, i) => {
         const featured = t.featured;
+        // Cycle per-tile accent: Operator (mint) · Team featured (tangerine) ·
+        // Department (lavender). Featured tile always takes tangerine so the
+        // border + badge stay coherent with the existing 'Most Popular' chrome.
+        const accentCycle = [J_MINT, J_TANGER, J_LAVENDER];
+        const tileAccent = featured ? J_TANGER : accentCycle[i % accentCycle.length];
         const sub  = lang === 'es' ? (t.subEs || t.sub) : t.sub;
         const body = lang === 'es' ? (t.bodyEs || t.body) : t.body;
         const monthly = lang === 'es' ? (t.priceMonthlyEs || t.priceMonthly) : t.priceMonthly;
@@ -1641,7 +1650,7 @@ function PricingJ({ perso }) {
           : null;
 
         return React.createElement(HoverCellJ, { key: t.id,
-          accent: featured ? J_TANGER : J_MINT,
+          accent: tileAccent,
           style: { border: featured ? '2px solid ' + J_TANGER : J_LINE,
                    padding: 32, background: J_CANVAS,
                    display: 'flex', flexDirection: 'column', minHeight: 480,
@@ -1737,13 +1746,15 @@ function TestimonialsJ({ perso }) {
       ? React.createElement('div', { key: 'grid',
           'data-axius-j-grid': '3col',
           style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 } },
-          cases.map(cs => React.createElement(HoverCellJ, { key: cs.id,
-            accent: J_TANGER,
+          cases.map((cs, i) => {
+            const acc = [J_MINT, J_TANGER, J_LAVENDER, J_AMBER, J_SKY][i % 5];
+            return React.createElement(HoverCellJ, { key: cs.id,
+            accent: acc,
             style: { padding: 28, border: J_LINE, background: J_CANVAS,
                      display: 'flex', flexDirection: 'column', minHeight: 320 } },
             React.createElement('div', {
               style: { fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
-                       color: J_TANGER, marginBottom: 12, textTransform: 'uppercase' } },
+                       color: acc, marginBottom: 12, textTransform: 'uppercase' } },
               cs.industry),
             React.createElement('h3', {
               style: { fontFamily: J_SERIF, fontWeight: 500, fontSize: 22,
@@ -1760,9 +1771,10 @@ function TestimonialsJ({ perso }) {
             React.createElement('div', { style: {
               marginTop: 'auto', padding: '12px 0',
               borderTop: J_LINE_LO, fontFamily: J_MONO, fontSize: 12,
-              color: J_TANGER, letterSpacing: '0.04em', fontWeight: 500 } },
+              color: acc, letterSpacing: '0.04em', fontWeight: 500 } },
               lang === 'es' ? (cs.outcomeEs || cs.outcome) : cs.outcome),
-          )))
+            );
+          }))
       : React.createElement('p', { key: 'empty',
           style: { fontFamily: J_SANS, fontSize: 16,
                    fontStyle: 'italic', maxWidth: 600, color: J_INK,
