@@ -1127,7 +1127,8 @@ window.AxiusDirectionJ = function () {
         onMouseLeave={() => setH(false)}
         style={{
           margin: 0, fontFamily: DISPLAY, fontWeight: 600,
-          fontSize: 72, letterSpacing: '-0.04em', lineHeight: 1.0,
+          fontSize: 'clamp(40px, 4.4vw, 56px)',
+          letterSpacing: '-0.035em', lineHeight: 1.05,
           color: C.ink, cursor: 'default',
           ...style,
         }}>
@@ -5216,7 +5217,7 @@ window.AxiusDirectionJ = function () {
         <HoverHead
           accent={C.tangerine}
           italicSweep
-          style={{fontSize: 128, letterSpacing: '-0.055em', lineHeight: 0.92}}
+          style={{fontSize: 'clamp(56px, 6.4vw, 80px)', letterSpacing: '-0.045em', lineHeight: 0.98}}
           prefix={t('ctaTitlePrefix')}
           italic={t('ctaTitleItalic')}
           suffix={t('ctaTitleSuffix')}/>
