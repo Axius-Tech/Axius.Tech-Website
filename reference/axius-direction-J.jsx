@@ -4945,8 +4945,9 @@ window.AxiusDirectionJ = function () {
             const sub    = lang === 'es' ? (cs.subtitleEs|| cs.subtitle): cs.subtitle;
             const outcome= lang === 'es' ? (cs.outcomeEs || cs.outcome) : cs.outcome;
             const firstSentence = (body || '').split(/(?<=[.!?])\s+/)[0];
-            // hasStars: spec says show stars if case study has a star rating
-            // — none of the fabricated cases declare stars, so all show "Review pending".
+            // hasStars: spec says show stars if case study has a star rating.
+            // Fabricated placeholders declare stars: 5 so the temporary cards
+            // display a 5-star row instead of "Review pending".
             const hasStars = !!cs.stars;
             return (
               <HoverCell key={cs.id} accent={accent}

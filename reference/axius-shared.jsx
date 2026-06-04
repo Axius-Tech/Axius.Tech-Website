@@ -704,6 +704,7 @@ window.AxiusFabricated.caseStudies = [
     outcome:   'Manager hours back: 8h / week',
     outcomeEs: 'Horas de gerencia recuperadas: 8h / semana',
     industry: 'hospitality',
+    stars: 5,
   },
   {
     id: 'cs-hartwell-bain',
@@ -715,6 +716,7 @@ window.AxiusFabricated.caseStudies = [
     outcome:   'Intake time: 45m → 8m',
     outcomeEs: 'Tiempo de intake: 45m → 8m',
     industry: 'legal',
+    stars: 5,
   },
   {
     id: 'cs-bridgepoint',
@@ -726,6 +728,7 @@ window.AxiusFabricated.caseStudies = [
     outcome:   'Recovered showings: 11 in 30 days',
     outcomeEs: 'Visitas recuperadas: 11 en 30 días',
     industry: 'realestate',
+    stars: 5,
   },
 ];
 
