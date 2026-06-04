@@ -600,6 +600,11 @@ window.AxiusDirectionJ = function () {
       // Section renumbers / replacements
       sec01BAfterEyebrow:   '01 · BEFORE AND AFTER AXIUS',
       sec01BAfterTitle:     'You started a business. Not a technology department.',
+      sec01BAfterTitleP1:   'You started a ',
+      sec01BAfterTitleItalic: 'business',
+      sec01BAfterTitleP2:   '. Not a technology ',
+      sec01BAfterTitleItalic2: 'department',
+      sec01BAfterTitleP3:   '.',
       sec01BAfterRight1:    'One operator. One layer. Documented systems that compound monthly.',
       sec01BAfterRight2:    'Same hand on the work, month after month.',
       sec02MethodEyebrow:   '02 · THE METHOD',
@@ -608,16 +613,28 @@ window.AxiusDirectionJ = function () {
       // sec05 = Pricing
       sec03MostRecTitleDefault: 'Nine categories. One operating layer.',
       sec03MostRecTitleTemplate: 'The systems most {industry} ask us to run.',
+      sec03MostRecTitleDefaultPrefix: 'Nine categories. One operating ',
+      sec03MostRecTitleDefaultItalic: 'layer',
+      sec03MostRecTitleDefaultSuffix: '.',
+      sec03MostRecTitleTemplatePrefix: 'The systems most {industry} ask us to ',
+      sec03MostRecTitleTemplateItalic: 'run',
+      sec03MostRecTitleTemplateSuffix: '.',
       sec03ImpactLabel:     'IMPACT',
       sec03ViewAll:         'View full catalog →',
       sec03ViewLess:        '← Show less',
       sec04PricingEyebrow:  '05 · PRICING',
       sec05ModelEyebrow:    '04 · HOW IT RUNS',
       sec05ModelTitle:      'How it runs.',
+      sec05ModelTitlePrefix: 'How it ',
+      sec05ModelTitleItalic: 'runs',
+      sec05ModelTitleSuffix: '.',
       sec06OperatorEyebrow: '06 · OPERATOR',
       sec06FactStrip:       'BASED · Altamonte Springs, FL · in Medellín now    ·    AVAILABLE · US business hours    ·    LANGUAGES · EN · ES',
       sec07TestimonialsEyebrow: '07 · CLIENT STORIES',
       sec07TestimonialsTitle: 'Operational results.',
+      sec07TestimonialsTitlePrefix: 'Operational ',
+      sec07TestimonialsTitleItalic: 'results',
+      sec07TestimonialsTitleSuffix: '.',
       sec07TestimonialsEmpty: 'Case studies publish quarterly — next set drops {next}.',
       sec07ReviewPending:   'Review pending',
       sec08FAQEyebrow:      '08 · QUESTIONS',
@@ -886,22 +903,39 @@ window.AxiusDirectionJ = function () {
       dispatchOtherSubmit: 'Enviar →',
       sec01BAfterEyebrow:   '01 · ANTES Y DESPUÉS DE AXIUS',
       sec01BAfterTitle:     'Empezaste un negocio. No un departamento de tecnología.',
+      sec01BAfterTitleP1:   'Empezaste un ',
+      sec01BAfterTitleItalic: 'negocio',
+      sec01BAfterTitleP2:   '. No un departamento de ',
+      sec01BAfterTitleItalic2: 'tecnología',
+      sec01BAfterTitleP3:   '.',
       sec01BAfterRight1:    'Un operador. Una capa. Sistemas documentados que componen cada mes.',
       sec01BAfterRight2:    'La misma mano en el trabajo, mes tras mes.',
       sec02MethodEyebrow:   '02 · EL MÉTODO',
       sec03MostRecEyebrow:  '03 · MÁS RECOMENDADO',
       sec03MostRecTitleDefault: 'Nueve categorías. Una sola capa operativa.',
       sec03MostRecTitleTemplate: 'Los sistemas que más nos piden los operadores de {industry}.',
+      sec03MostRecTitleDefaultPrefix: 'Nueve categorías. Una sola capa ',
+      sec03MostRecTitleDefaultItalic: 'operativa',
+      sec03MostRecTitleDefaultSuffix: '.',
+      sec03MostRecTitleTemplatePrefix: 'Los sistemas que más nos piden los operadores de ',
+      sec03MostRecTitleTemplateItalic: '{industry}',
+      sec03MostRecTitleTemplateSuffix: '.',
       sec03ImpactLabel:     'IMPACTO',
       sec03ViewAll:         'Ver catálogo completo →',
       sec03ViewLess:        '← Mostrar menos',
       sec04PricingEyebrow:  '05 · PRECIOS',
       sec05ModelEyebrow:    '04 · CÓMO OPERA',
       sec05ModelTitle:      'Cómo opera.',
+      sec05ModelTitlePrefix: 'Cómo ',
+      sec05ModelTitleItalic: 'opera',
+      sec05ModelTitleSuffix: '.',
       sec06OperatorEyebrow: '06 · OPERADOR',
       sec06FactStrip:       'BASE · Altamonte Springs, FL · en Medellín ahora    ·    DISPONIBLE · Horario de EE.UU.    ·    IDIOMAS · EN · ES',
       sec07TestimonialsEyebrow: '07 · HISTORIAS DE CLIENTES',
       sec07TestimonialsTitle: 'Resultados operativos.',
+      sec07TestimonialsTitlePrefix: 'Resultados ',
+      sec07TestimonialsTitleItalic: 'operativos',
+      sec07TestimonialsTitleSuffix: '.',
       sec07TestimonialsEmpty: 'Los casos de estudio se publican trimestralmente — próxima entrega {next}.',
       sec07ReviewPending:   'Reseña pendiente',
       sec08FAQEyebrow:      '08 · PREGUNTAS',
@@ -1092,10 +1126,8 @@ window.AxiusDirectionJ = function () {
         onMouseEnter={() => setH(true)}
         onMouseLeave={() => setH(false)}
         style={{
-          margin: 0,
-          fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-          fontSize: 'clamp(36px, 5vw, 56px)',
-          letterSpacing: '-0.025em', lineHeight: 1.05,
+          margin: 0, fontFamily: DISPLAY, fontWeight: 600,
+          fontSize: 72, letterSpacing: '-0.04em', lineHeight: 1.0,
           color: C.ink, cursor: 'default',
           ...style,
         }}>
@@ -3228,14 +3260,10 @@ window.AxiusDirectionJ = function () {
         {/* Header */}
         <div style={{maxWidth: 1100, marginBottom: 64}}>
           <Eyebrow style={{marginBottom: 28}}>{t('sec01BAfterEyebrow')}</Eyebrow>
-          <h2 style={{
-            margin: 0,
-            fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
-            letterSpacing: '-0.025em', color: C.ink,
-          }}>
-            {t('sec01BAfterTitle')}
-          </h2>
+          <HoverHead
+            prefix={`${t('sec01BAfterTitleP1')}${t('sec01BAfterTitleItalic')}${t('sec01BAfterTitleP2')}`}
+            italic={t('sec01BAfterTitleItalic2')}
+            suffix={t('sec01BAfterTitleP3')}/>
         </div>
 
         {/* Friction chips — single-select, mirrors the impact-toggle pattern */}
@@ -3744,6 +3772,18 @@ window.AxiusDirectionJ = function () {
       ? t('sec03MostRecTitleTemplate').replace('{industry}', industryLabelLc + ' operators')
       : t('sec03MostRecTitleDefault');
 
+    const dynamicTitleParts = industryLabelLc
+      ? {
+          prefix: t('sec03MostRecTitleTemplatePrefix').replace('{industry}', industryLabelLc + ' operators'),
+          italic: t('sec03MostRecTitleTemplateItalic'),
+          suffix: t('sec03MostRecTitleTemplateSuffix'),
+        }
+      : {
+          prefix: t('sec03MostRecTitleDefaultPrefix'),
+          italic: t('sec03MostRecTitleDefaultItalic'),
+          suffix: t('sec03MostRecTitleDefaultSuffix'),
+        };
+
     // IMPACT toggle — single-select chips above the catalog grid
     const outcomes = window.AxiusOutcomesV3 || [];
     const activeOutcome = (perso && perso.outcome) || null;
@@ -3772,11 +3812,11 @@ window.AxiusDirectionJ = function () {
         }}>
           <div>
             <Eyebrow style={{marginBottom: 28}}>{t('sec03MostRecEyebrow')}</Eyebrow>
-            <h2 style={{
-              margin: 0, fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-              fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
-              letterSpacing: '-0.025em', color: C.ink, maxWidth: 920,
-            }}>{dynamicTitle}</h2>
+            <HoverHead
+              style={{maxWidth: 920}}
+              prefix={dynamicTitleParts.prefix}
+              italic={dynamicTitleParts.italic}
+              suffix={dynamicTitleParts.suffix}/>
           </div>
           <div style={{textAlign: 'right'}}>
             <div style={{
@@ -4676,11 +4716,10 @@ window.AxiusDirectionJ = function () {
       }}>
         <div style={{maxWidth: 1100, marginBottom: 64}}>
           <Eyebrow style={{marginBottom: 28}}>{t('sec05ModelEyebrow')}</Eyebrow>
-          <h2 style={{
-            margin: 0, fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-            fontSize: 'clamp(40px, 5vw, 56px)', lineHeight: 1.05,
-            letterSpacing: '-0.025em', color: C.ink,
-          }}>{t('sec05ModelTitle')}</h2>
+          <HoverHead
+            prefix={t('sec05ModelTitlePrefix')}
+            italic={t('sec05ModelTitleItalic')}
+            suffix={t('sec05ModelTitleSuffix')}/>
         </div>
 
         <div style={{
@@ -4752,11 +4791,10 @@ window.AxiusDirectionJ = function () {
       }}>
         <div style={{maxWidth: 1100, marginBottom: 64}}>
           <Eyebrow style={{marginBottom: 28}}>{t('sec06OperatorEyebrow')}</Eyebrow>
-          <h2 style={{
-            margin: 0, fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
-            letterSpacing: '-0.025em', color: C.ink,
-          }}>{t('sec08TitlePrefix')}{t('sec08TitleItalic')}{t('sec08TitleSuffix')}</h2>
+          <HoverHead
+            prefix={t('sec08TitlePrefix')}
+            italic={t('sec08TitleItalic')}
+            suffix={t('sec08TitleSuffix')}/>
         </div>
 
         {/* Carousel — fading image swap with dot controls */}
@@ -4944,12 +4982,12 @@ window.AxiusDirectionJ = function () {
           borderTop: `1px solid ${C.line}`,
         }}>
           <Eyebrow style={{marginBottom: 28}}>{t('sec07TestimonialsEyebrow')}</Eyebrow>
-          <h2 style={{
-            margin: '0 0 36px',
-            fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
-            letterSpacing: '-0.025em', color: C.ink,
-          }}>{t('sec07TestimonialsTitle')}</h2>
+          <div style={{marginBottom: 36}}>
+            <HoverHead
+              prefix={t('sec07TestimonialsTitlePrefix')}
+              italic={t('sec07TestimonialsTitleItalic')}
+              suffix={t('sec07TestimonialsTitleSuffix')}/>
+          </div>
           <p style={{
             margin: 0, maxWidth: 560,
             fontFamily: DISPLAY, fontWeight: 400, fontSize: 17,
@@ -4966,12 +5004,10 @@ window.AxiusDirectionJ = function () {
       }}>
         <div style={{maxWidth: 1100, marginBottom: 64}}>
           <Eyebrow style={{marginBottom: 28}}>{t('sec07TestimonialsEyebrow')}</Eyebrow>
-          <h2 style={{
-            margin: 0,
-            fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
-            letterSpacing: '-0.025em', color: C.ink,
-          }}>{t('sec07TestimonialsTitle')}</h2>
+          <HoverHead
+            prefix={t('sec07TestimonialsTitlePrefix')}
+            italic={t('sec07TestimonialsTitleItalic')}
+            suffix={t('sec07TestimonialsTitleSuffix')}/>
         </div>
 
         <div style={{
@@ -5180,6 +5216,7 @@ window.AxiusDirectionJ = function () {
         <HoverHead
           accent={C.tangerine}
           italicSweep
+          style={{fontSize: 128, letterSpacing: '-0.055em', lineHeight: 0.92}}
           prefix={t('ctaTitlePrefix')}
           italic={t('ctaTitleItalic')}
           suffix={t('ctaTitleSuffix')}/>
