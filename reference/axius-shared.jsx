@@ -1345,3 +1345,41 @@ window.AxiusBeforeAndAfterV5 = {
     { label: 'VISIBILITY',        value: 'FULL REPORTING' },
   ],
 };
+
+// ─── ADDITIVE: Option 5 branding pass (Option 1 parity) ──────────
+// Overwrite frictionBefore with editorial period-separated poems
+// matching Option 1's "Mess" cadence (4-5 short lines per friction).
+window.AxiusBeforeAndAfterV5.frictionBefore = {
+  manual: {
+    en: 'Twelve manual hops.\nThree CRMs.\nTwo spreadsheets.\nDifferent numbers each time.\nNobody owns the chain.',
+    es: 'Doce saltos manuales.\nTres CRMs.\nDos planillas.\nNúmeros distintos cada vez.\nNadie es dueño de la cadena.',
+  },
+  sales: {
+    en: 'Leads come in.\nLeads get lost.\nFollow-up depends on memory.\nPipeline depends on Monday.\nNobody owns the chase.',
+    es: 'Los leads entran.\nLos leads se pierden.\nEl follow-up depende de la memoria.\nEl pipeline depende del lunes.\nNadie es dueño del seguimiento.',
+  },
+  support: {
+    en: 'Five inboxes.\nNo triage.\nCustomers waiting hours.\nThe same question, every week.\nNobody owns the queue.',
+    es: 'Cinco inboxes.\nSin triage.\nClientes esperando horas.\nLa misma pregunta, cada semana.\nNadie es dueño de la cola.',
+  },
+  ops: {
+    en: 'Three contractors.\nEight tools.\nThree paid for the same problem.\nNobody talking to anybody.\nNobody owns the stack.',
+    es: 'Tres contratistas.\nOcho herramientas.\nTres pagadas por el mismo problema.\nNadie hablando con nadie.\nNadie es dueño del stack.',
+  },
+  reporting: {
+    en: 'Reports take days.\nNumbers change overnight.\nDecisions wait on email threads.\nThe board asks the wrong questions.\nNobody owns the truth.',
+    es: 'Los reportes toman días.\nLos números cambian de noche a la mañana.\nLas decisiones esperan en hilos de email.\nLa junta hace las preguntas equivocadas.\nNadie es dueño de la verdad.',
+  },
+  scaling: {
+    en: 'Growth means hiring.\nHiring means hiring problems.\nNew people. New tools. New process.\nThe old chaos, larger.\nNobody owns the scale.',
+    es: 'Crecer significa contratar.\nContratar significa contratar problemas.\nNueva gente. Nuevas herramientas. Nuevo proceso.\nEl mismo caos, más grande.\nNadie es dueño de la escala.',
+  },
+};
+
+// Hero eyebrow strings — practice line (left) + ONLY ACCEPTING pill (right).
+window.AxiusHeroEyebrowsV5 = {
+  practiceLine:    { en: 'Axius — An independent technology operations practice',
+                     es: 'Axius — Una práctica independiente de operaciones tecnológicas' },
+  acceptingPre:    { en: 'ONLY ACCEPTING', es: 'SOLO ACEPTANDO' },
+  acceptingAccent: { en: '3 NEW CLIENTS / MONTH', es: '3 CLIENTES NUEVOS / MES' },
+};
