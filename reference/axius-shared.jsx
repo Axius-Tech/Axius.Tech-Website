@@ -1383,3 +1383,51 @@ window.AxiusHeroEyebrowsV5 = {
   acceptingPre:    { en: 'ONLY ACCEPTING', es: 'SOLO ACEPTANDO' },
   acceptingAccent: { en: '3 NEW CLIENTS / MONTH', es: '3 CLIENTES NUEVOS / MES' },
 };
+
+// ════════════════════════════════════════════════════════════════════════
+// OPTION 5 REBUILD — additional data for the E05-forked direction-J
+// ════════════════════════════════════════════════════════════════════════
+
+// Founder Track program (rendered as a separate callout below pricing, not
+// as a tier badge). Sky-blue accent distinguishes it from the regular tiers.
+window.AxiusFounderTrackV5 = {
+  eyebrow:   { en: 'FOUNDER TRACK',                          es: 'FOUNDER TRACK' },
+  title:     { en: 'A separate program for founders.',       es: 'Un programa aparte para fundadores.' },
+  body:      { en: 'For founders running multiple businesses or building a portfolio — one Axius operator across all of them, shared monthly engagement, with continuity. By application only.',
+               es: 'Para fundadores que operan múltiples negocios o construyen un portafolio — un solo operador de Axius en todos, engagement mensual compartido, con continuidad. Solo por aplicación.' },
+  ctaLabel:  { en: 'Apply for Founder Track →',              es: 'Aplicar al Founder Track →' },
+  ctaHref:   'mailto:andres@axius.tech?subject=Founder Track inquiry',
+  accent:    '#6A8194',
+};
+
+// Strings for the entry experience (video + industry dispatch)
+window.AxiusEntryV5 = {
+  videoSkipLabel: { en: 'SKIP →',                            es: 'SALTAR →' },
+  questionTitle:  { en: 'What kind of business are you running?', es: '¿Qué tipo de negocio operas?' },
+  questionEyebrow:{ en: '00 · DISPATCH',                     es: '00 · DESPACHO' },
+  skipQuestion:   { en: 'Skip — show me everything →',       es: 'Saltar — muéstrame todo →' },
+  industryBadgeTemplate: { en: 'AXIUS — TECHNOLOGY OPERATING PARTNER FOR {INDUSTRY}',
+                           es: 'AXIUS — PARTNER DE OPERACIONES TECNOLÓGICAS PARA {INDUSTRY}' },
+  industryBadgeOther:    { en: 'AXIUS — TECHNOLOGY OPERATING PARTNER FOR INDEPENDENT OPERATORS',
+                           es: 'AXIUS — PARTNER DE OPERACIONES TECNOLÓGICAS PARA OPERADORES INDEPENDIENTES' },
+  industryOtherPlaceholder: { en: 'Tell us — one word',      es: 'Cuéntanos — una palabra' },
+};
+
+// Replace afterUniversal with the concise version + add afterSecondary line
+window.AxiusBeforeAndAfterV5.afterUniversal = {
+  en: 'One operator. One layer. Documented systems that compound monthly.',
+  es: 'Un operador. Una capa. Sistemas documentados que componen cada mes.',
+};
+window.AxiusBeforeAndAfterV5.afterSecondary = {
+  en: 'Same hand on the work, month after month.',
+  es: 'La misma mano en el trabajo, mes tras mes.',
+};
+
+// 5 metric tiles (added OPERATIONAL PRECISION; "IMMEDIATE AI" → "IMMEDIATE")
+window.AxiusBeforeAndAfterV5.metrics = [
+  { label: { en: 'FASTER EXECUTION',      es: 'EJECUCIÓN MÁS RÁPIDA' },     value: '10×' },
+  { label: { en: 'OPERATIONAL COST',      es: 'COSTO OPERATIVO' },          value: '3× LOWER' },
+  { label: { en: 'OPERATIONAL PRECISION', es: 'PRECISIÓN OPERATIVA' },      value: 'DOCUMENTED' },
+  { label: { en: 'RESPONSE SPEED',        es: 'VELOCIDAD DE RESPUESTA' },   value: 'IMMEDIATE' },
+  { label: { en: 'VISIBILITY',            es: 'VISIBILIDAD' },              value: 'FULL REPORTING' },
+];
