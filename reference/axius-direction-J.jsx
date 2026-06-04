@@ -4321,7 +4321,7 @@ window.AxiusDirectionJ = function () {
             alignItems: 'flex-end', marginBottom: 64,
           }}>
           <div>
-            <Eyebrow style={{marginBottom: 28}}>{t('sec06Eyebrow')}</Eyebrow>
+            <Eyebrow style={{marginBottom: 28}}>{t('sec04PricingEyebrow')}</Eyebrow>
             <HoverHead
               accent={C.mint}
               style={{whiteSpace: 'nowrap'}}
@@ -4345,38 +4345,59 @@ window.AxiusDirectionJ = function () {
           ))}
         </div>
 
-        {/* Founder Track — quiet footer block under the tier row.
-            Transparent (no surface card, no enclosing border); the
-            uppercase chips on the right of the question keep enough
-            visual structure on their own.  Horizontal layout: label /
-            question / chip row on the left, CTA on the right. */}
-        <div style={{
-          marginTop: 24, padding: '28px 0',
-          display: 'grid', gridTemplateColumns: '1fr auto', gap: 40,
-          alignItems: 'center',
-        }}>
-          <div style={{maxWidth: 740, display: 'flex', flexDirection: 'column', gap: 12}}>
-            <Eyebrow color={C.mute}>{t('pricingFounderTrackLabel')}</Eyebrow>
-            <div style={{
-              fontFamily: DISPLAY, fontWeight: 500, fontSize: 22,
-              color: C.ink, letterSpacing: '-0.022em', lineHeight: 1.2,
-            }}>{t('pricingFounderTrackQuestion')}</div>
-            <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
-              {t('pricingFounderTrackItems').map((item, i) => (
-                <span key={i} style={{
-                  padding: '4px 10px',
-                  border: `1px solid ${C.lineHi}`,
-                  fontFamily: MONO, fontSize: 10, fontWeight: 500,
-                  color: C.dim, letterSpacing: '0.12em', textTransform: 'uppercase',
-                }}>{item}</span>
-              ))}
-            </div>
-          </div>
-          <QuietBtn primary size="md"
-            onClick={() => openBooking(t('pricingFounderTrackSubject'))}>
-            {t('pricingFounderTrackCta')}
-          </QuietBtn>
-        </div>
+        {/* Founder Track — separate program callout BELOW the 3 tiers.
+            HoverCell card with a distinct sky-blue accent. Reads as a
+            program, not a tier badge. */}
+        {(() => {
+          const ft = window.AxiusFounderTrackV5 || {};
+          const ftAccent = ft.accent || '#6A8194';
+          const ftEyebrow = (ft.eyebrow && (ft.eyebrow[lang] || ft.eyebrow.en)) || 'FOUNDER TRACK';
+          const ftTitle   = (ft.title   && (ft.title[lang]   || ft.title.en))   || '';
+          const ftBody    = (ft.body    && (ft.body[lang]    || ft.body.en))    || '';
+          const ftCta     = (ft.ctaLabel&& (ft.ctaLabel[lang]|| ft.ctaLabel.en))|| '';
+          const ftHref    = ft.ctaHref || 'mailto:andres@axius.tech?subject=Founder Track inquiry';
+          return (
+            <HoverCell accent={ftAccent}
+              style={{
+                marginTop: 40,
+                background: C.surface,
+                border: `1px solid ${C.line}`,
+                borderTop: `2px solid ${ftAccent}`,
+                padding: '36px 40px',
+                display: 'grid', gridTemplateColumns: '1fr auto', gap: 40,
+                alignItems: 'center',
+              }}>
+              <div style={{maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 14}}>
+                <Eyebrow color={ftAccent}>{ftEyebrow}</Eyebrow>
+                <h3 style={{
+                  margin: 0,
+                  fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+                  fontSize: 32, lineHeight: 1.15, letterSpacing: '-0.02em',
+                  color: C.ink,
+                }}>{ftTitle}</h3>
+                <p style={{
+                  margin: 0, fontFamily: DISPLAY, fontSize: 15,
+                  color: C.dim, lineHeight: 1.6,
+                  letterSpacing: '-0.003em',
+                }}>{ftBody}</p>
+              </div>
+              <a href={ftHref} style={{
+                appearance: 'none', cursor: 'pointer',
+                background: ftAccent, color: C.bg, border: `1px solid ${ftAccent}`,
+                padding: '14px 22px',
+                fontFamily: MONO, fontSize: 11, fontWeight: 500,
+                letterSpacing: '0.18em', textTransform: 'uppercase',
+                textDecoration: 'none', whiteSpace: 'nowrap',
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                transition: 'all .25s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = C.ink; e.currentTarget.style.borderColor = C.ink; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = ftAccent; e.currentTarget.style.borderColor = ftAccent; }}>
+                {ftCta}
+              </a>
+            </HoverCell>
+          );
+        })()}
       </section>
     );
   };
@@ -4609,28 +4630,19 @@ window.AxiusDirectionJ = function () {
   // header treatment matching every other numbered section.
   const Model = () => {
     const accents = [C.tangerine, C.mint, C.lavender, C.amber];
-    const [headH, setHeadH] = React.useState(false);
     const pillars = t('modelPillars');
     return (
-      <section id="model" data-screen-label="07 The Model" style={{
+      <section id="how-it-runs" data-screen-label="05 How it Runs" style={{
         padding: `108px ${pad}px`,
         background: C.panel, borderTop: `1px solid ${C.line}`,
       }}>
-        <div
-          onMouseEnter={() => setHeadH(true)}
-          onMouseLeave={() => setHeadH(false)}
-          style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80,
-            alignItems: 'flex-end', marginBottom: 80,
-          }}>
-          <div>
-            <Eyebrow style={{marginBottom: 28}}>{t('sec07Eyebrow')}</Eyebrow>
-            <HoverHead
-              style={{maxWidth: 760}}
-              prefix={t('sec07TitlePrefix')}
-              italic={t('sec07TitleItalic')}
-              suffix={t('sec07TitleSuffix')}/>
-          </div>
+        <div style={{maxWidth: 1100, marginBottom: 64}}>
+          <Eyebrow style={{marginBottom: 28}}>{t('sec05ModelEyebrow')}</Eyebrow>
+          <h2 style={{
+            margin: 0, fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+            fontSize: 'clamp(40px, 5vw, 56px)', lineHeight: 1.05,
+            letterSpacing: '-0.025em', color: C.ink,
+          }}>{t('sec05ModelTitle')}</h2>
         </div>
 
         <div style={{
