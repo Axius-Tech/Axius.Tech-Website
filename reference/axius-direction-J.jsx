@@ -1809,56 +1809,127 @@ function TestimonialsJ({ perso }) {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// 11 · OPERATOR (Founder) — drops "WHY AXIUS EXISTS" eyebrow
+// 11 · OPERATOR (Founder) — 3-frame editorial layout ported from E05
+// (Fig. 01 Operator / Fig. 02 In studio / Fig. 03 On the go).
+// Each frame is desaturated at rest and blooms to full colour on hover
+// over 1.4s. Eyebrow caption tints tangerine while hovered.
 // ════════════════════════════════════════════════════════════════════════
+
+// FounderFrameJ — single frame with hover-bloom photo + caption.
+function FounderFrameJ({ photo, fig, caption, crop, idle, active }) {
+  const [h, setH] = React.useState(false);
+  return React.createElement('div', {
+    onMouseEnter: () => setH(true),
+    onMouseLeave: () => setH(false),
+    style: {
+      position: 'relative', overflow: 'hidden',
+      aspectRatio: '4 / 5',
+      border: J_LINE_LO,
+      background: J_CANVAS_LO,
+      cursor: 'default',
+    },
+  },
+    React.createElement('img', {
+      src: photo,
+      alt: 'Andrés Toro · ' + caption,
+      style: {
+        position: 'absolute', inset: 0,
+        width: '100%', height: '100%', objectFit: 'cover',
+        objectPosition: crop,
+        filter: h ? active : idle,
+        transition: 'filter 1.4s cubic-bezier(.2,.8,.2,1)',
+        display: 'block',
+      },
+    }),
+    React.createElement('div', { 'aria-hidden': true, style: {
+      position: 'absolute', inset: 0, pointerEvents: 'none',
+      background: 'linear-gradient(180deg, rgba(247,246,242,0) 60%, rgba(247,246,242,0.72) 100%)',
+    } }),
+    React.createElement('div', { style: {
+      position: 'absolute', bottom: 16, left: 18,
+      transition: 'color .35s ease',
+    } },
+      React.createElement(EyebrowJ, { color: h ? J_TANGER : J_MUTE },
+        fig + ' · ' + caption),
+    ),
+  );
+}
+
 function OperatorJ({ perso }) {
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
   const f = window.AxiusFounder || {};
-  const [photoFailed, setPhotoFailed] = React.useState(false);
-  const fallbackCaption = (f.name || 'Andrés Toro') + ' · ' +
-    (lang === 'es' ? 'foto no disponible' : 'photo unavailable');
+  const cfg = window.AxiusConfig || {};
+  const founderPhoto = (f.photo) || '/assets/andres-toro.jpg';
+  const headingPrefix = lang === 'es' ? 'La mano sobre' : 'The hand on';
+  const headingItalic = lang === 'es' ? ' tus operaciones.' : ' your operations.';
+
+  const captions = lang === 'es'
+    ? ['Operador', 'En estudio', 'En movimiento']
+    : ['Operator', 'In studio', 'On the go'];
+
+  const frames = [
+    { fig: 'Fig. 01', caption: captions[0], crop: '50% 30%',
+      photo: founderPhoto,
+      idle:   'grayscale(1) contrast(1.02)',
+      active: 'grayscale(0) saturate(1.05) contrast(1.02)' },
+    { fig: 'Fig. 02', caption: captions[1], crop: '50% 45%',
+      photo: '/assets/andres-toro-studio.jpg',
+      idle:   'grayscale(0.92) sepia(0.18) contrast(1.06)',
+      active: 'grayscale(0) saturate(1.05) contrast(1.02)' },
+    { fig: 'Fig. 03', caption: captions[2], crop: '50% 35%',
+      photo: '/assets/andres-toro-on-the-go.jpg',
+      idle:   'grayscale(0.95) sepia(0.06) contrast(1.06) brightness(0.98)',
+      active: 'grayscale(0) saturate(1.06) contrast(1.02)' },
+  ];
+
+  const onTalkToMe = () => {
+    const hero = document.getElementById('hero');
+    if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      try { window.dispatchEvent(new CustomEvent('axius:openHeroChat')); } catch (_) {}
+    }, 650);
+  };
+
   return jSection('founder', [
-    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 28 } },
       lang === 'es' ? '08 EL OPERADOR' : '08 THE OPERATOR'),
-    React.createElement('div', { key: 'grid',
-      'data-axius-j-grid': '2col',
-      style: { display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 56,
+    React.createElement('h2', { key: 'h2',
+      style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
+               fontSize: 56, lineHeight: 1.05,
+               letterSpacing: '-0.035em', margin: '0 0 56px', maxWidth: 920 } },
+      headingPrefix, headingItalic),
+    // ─── 3-frame strip ─────────────────────────────────────────
+    React.createElement('div', { key: 'frames',
+      'data-axius-j-grid': '3col',
+      style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 } },
+      frames.map((fr, i) =>
+        React.createElement(FounderFrameJ, Object.assign({ key: i }, fr))),
+    ),
+    // ─── Bio (scrolling) + LinkedIn + Talk-to-me CTA ───────────
+    React.createElement('div', { key: 'below',
+      style: { marginTop: 28,
+               display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 80,
                alignItems: 'start' } },
-      React.createElement('div', { key: 'photo' },
+      React.createElement('div', { key: 'bio',
+        style: { position: 'relative', maxWidth: 600 } },
         React.createElement('div', {
-          style: { aspectRatio: '3/4', width: '100%',
-                   border: J_LINE, overflow: 'hidden', background: '#E9E6DF',
-                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                   padding: photoFailed ? 24 : 0 } },
-          !photoFailed && React.createElement('img', {
-            src: f.photo, alt: f.name || 'Andrés Toro, founder of Axius',
-            onError: () => setPhotoFailed(true),
-            style: { width: '100%', height: '100%', objectFit: 'cover',
-                     filter: 'grayscale(.15) contrast(1.04)' } }),
-          photoFailed && React.createElement('div', {
-            role: 'img', 'aria-label': fallbackCaption,
-            style: { fontFamily: J_MONO, fontSize: 12, letterSpacing: '0.12em',
-                     color: J_MUTE, textAlign: 'center', textTransform: 'uppercase' } },
-            fallbackCaption),
+          style: { maxHeight: 220, overflowY: 'auto', paddingRight: 14,
+                   scrollbarGutter: 'stable' } },
+          String((lang === 'es' ? f.bioEs : f.bio) || '').split(/\n\n+/)
+            .map((para, i) => React.createElement('p', { key: i,
+              style: { margin: i === 0 ? '0 0 14px' : '14px 0',
+                       fontSize: 17, color: J_DIM, lineHeight: 1.6,
+                       letterSpacing: '-0.003em' } },
+              para)),
         ),
-        React.createElement('div', {
-          style: { fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
-                   color: J_MUTE, marginTop: 12, textTransform: 'uppercase' } },
-          'Fig. 01 · ' + (lang === 'es' ? 'Operador' : 'Operator')),
-      ),
-      React.createElement('div', { key: 'bio' },
-        React.createElement('h2', {
-          style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
-                   fontSize: 44, lineHeight: 1.05,
-                   letterSpacing: '-0.03em', margin: '0 0 24px' } },
-          lang === 'es' ? 'La mano sobre tus operaciones.' : 'The hand on your operations.'),
-        React.createElement('p', {
-          style: { fontSize: 16, color: J_DIM, lineHeight: 1.7,
-                   whiteSpace: 'pre-line', margin: '0 0 32px' } },
-          lang === 'es' ? (f.bioEs || '') : (f.bio || '')),
+        React.createElement('div', { 'aria-hidden': true, style: {
+          position: 'absolute', left: 0, right: 14, bottom: 0, height: 42,
+          pointerEvents: 'none',
+          background: 'linear-gradient(180deg, rgba(247,246,242,0), ' + J_CANVAS + ' 88%)',
+        } }),
         React.createElement('blockquote', {
           style: { fontFamily: J_SERIF, fontStyle: 'italic', fontSize: 22,
-                   lineHeight: 1.45, color: J_INK, margin: '0 0 32px',
+                   lineHeight: 1.45, color: J_INK, margin: '32px 0 24px',
                    borderLeft: '2px solid ' + J_TANGER, paddingLeft: 20 } },
           lang === 'es' ? (f.quoteEs || '') : (f.quote || '')),
         React.createElement('div', {
@@ -1866,6 +1937,63 @@ function OperatorJ({ perso }) {
                    color: J_MUTE, display: 'flex', flexWrap: 'wrap', gap: 16 } },
           (f.facts || []).map((fact, i) => React.createElement('span', { key: i },
             fact.k.toUpperCase() + ' · ' + fact.v))),
+      ),
+      React.createElement('div', { key: 'ctas',
+        style: { justifySelf: 'end', alignSelf: 'start',
+                 display: 'flex', alignItems: 'center', gap: 12,
+                 flexWrap: 'wrap' } },
+        cfg.linkedinUrl && React.createElement('a', {
+          href: cfg.linkedinUrl, target: '_blank', rel: 'noopener noreferrer',
+          className: 'axius-j-link',
+          style: {
+            appearance: 'none', cursor: 'pointer',
+            background: 'transparent', color: J_INK,
+            border: '1px solid rgba(10,9,7,0.20)',
+            padding: '13px 18px',
+            fontFamily: J_MONO, fontSize: 11, fontWeight: 500,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            transition: 'all .25s ease',
+          },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.color = J_TANGER;
+            e.currentTarget.style.borderColor = J_TANGER;
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.color = J_INK;
+            e.currentTarget.style.borderColor = 'rgba(10,9,7,0.20)';
+          },
+        },
+          lang === 'es' ? 'VERIFICAR EN LINKEDIN' : 'VERIFY ON LINKEDIN',
+          React.createElement('span', { 'aria-hidden': true }, '↗'),
+        ),
+        React.createElement('button', {
+          type: 'button', onClick: onTalkToMe,
+          className: 'axius-j-btn',
+          style: {
+            appearance: 'none', cursor: 'pointer',
+            background: J_INK, color: J_CANVAS, border: '1px solid ' + J_INK,
+            padding: '13px 22px',
+            fontFamily: J_MONO, fontSize: 11, fontWeight: 500,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            transition: 'all .25s ease',
+          },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.background = J_TANGER;
+            e.currentTarget.style.borderColor = J_TANGER;
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.background = J_INK;
+            e.currentTarget.style.borderColor = J_INK;
+          },
+        },
+          lang === 'es' ? 'CONVERSAR CONMIGO' : 'TALK TO ME',
+          React.createElement('span', { style: { fontFamily: J_SERIF,
+                                                  fontStyle: 'italic',
+                                                  fontSize: 14 } }, '→'),
+        ),
       ),
     ),
   ]);
