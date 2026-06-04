@@ -47,6 +47,26 @@
   html, body { margin: 0; padding: 0; background: #F7F6F2; }
   body { font-family: 'Inter', system-ui, sans-serif; color: #0F0E0C; }
   .stage-quiet09 { width: 100%; max-width: 1800px; margin: 0 auto; background: #F7F6F2; }
+  /* Skip link — keyboard-only, visually hidden until focused. */
+  .axius-skip-link {
+    position: absolute;
+    top: -40px;
+    left: 8px;
+    background: #0F0E0C;
+    color: #F7F6F2;
+    padding: 8px 12px;
+    z-index: 9999;
+    transition: top 0.2s;
+    text-decoration: none;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    border-radius: 2px;
+  }
+  .axius-skip-link:focus {
+    top: 8px;
+    outline: 2px solid #FF5B2A;
+    outline-offset: 2px;
+  }
 </style>
 <script>
   window.addEventListener('error', function (e) {

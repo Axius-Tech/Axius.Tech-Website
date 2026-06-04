@@ -332,10 +332,19 @@ window.AxiusDirectionJ = function () {
   // Quiet 0.5 ships with Option B (operator card) as the only hero.
   const [heroStyle] = React.useState('B');
 
-  // Tier-name translations by AxiusPricing.id
+  // Tier-name translations by AxiusPricing.id.  Includes both the
+  // legacy ES-named ids (operador/equipo/departamento) and the V5
+  // EN ids (operator/team/department) so either pricing source
+  // resolves to the same display name.
   const TIER_NAMES = {
-    en: { operador: 'Operator', equipo: 'Team', departamento: 'Department' },
-    es: { operador: 'Operador', equipo: 'Equipo', departamento: 'Departamento' },
+    en: {
+      operador: 'Operator',  equipo: 'Team',   departamento: 'Department',
+      operator: 'Operator',  team:   'Team',   department:   'Department',
+    },
+    es: {
+      operador: 'Operador',  equipo: 'Equipo', departamento: 'Departamento',
+      operator: 'Operador',  team:   'Equipo', department:   'Departamento',
+    },
   };
   const tierName = (id) => (TIER_NAMES[lang] && TIER_NAMES[lang][id]) || id;
 
@@ -356,7 +365,7 @@ window.AxiusDirectionJ = function () {
       heroSubL1: 'We run the tech side of your business —',
       heroSubL3a: 'all of it — for ',
       heroSubL3b: 'one monthly fee.',
-      heroCta1: 'Book a discovery call',
+      heroCta1: 'Begin',
       heroCta2: 'See the catalog',
       directLineTitle: 'Direct line.',
       directLineAvailable: 'available',
@@ -430,6 +439,7 @@ window.AxiusDirectionJ = function () {
       pricingFounderTrackSubject: 'Axius — Founder Track inquiry',
       pricingGetStarted: 'Get started',
       pricingBookCallSecondary: 'Or book a call first →',
+      pricingBookCustom: 'Book a call →',
       pricingCheckoutSubject: (tier) => `Axius — start ${tier} subscription`,
       // Hero — stat row
       statActiveSystems: 'Active systems',
@@ -507,9 +517,9 @@ window.AxiusDirectionJ = function () {
       sec05ColH:        'In-House',
       sec05ColA:        'Axius',
       sec06Eyebrow:     '06 · Pricing',
-      sec06TitlePrefix: 'Three sizes of ',
-      sec06TitleItalic: 'operating',
-      sec06TitleSuffix: ' layer.',
+      sec06TitlePrefix: 'Pick the layer that ',
+      sec06TitleItalic: 'fits',
+      sec06TitleSuffix: '.',
       // — Section 07: The Model —
       sec07Eyebrow:     '07 · The model',
       sec07TitlePrefix: 'Three roles, ',
@@ -536,13 +546,6 @@ window.AxiusDirectionJ = function () {
           'Managed entirely by the operator',
           'No vendor coordination on your side',
           'Quality controlled before delivery',
-        ] },
-        { eyebrow: 'What you experience', title: 'One accountable operational layer.', bullets: [
-          'One line of communication',
-          'One accountable team',
-          'One monthly operating layer',
-          'Quiet, organized execution',
-          'Technology that keeps moving without you managing it',
         ] },
       ],
       // — Section 08: Founder (was 07) —
@@ -656,7 +659,7 @@ window.AxiusDirectionJ = function () {
       heroSubL1: 'Nosotros operamos el lado tecnológico de tu negocio —',
       heroSubL3a: 'todo, por ',
       heroSubL3b: 'una sola cuota mensual.',
-      heroCta1: 'Agendar una llamada inicial',
+      heroCta1: 'Comenzar',
       heroCta2: 'Ver el catálogo',
       directLineTitle: 'Línea directa.',
       directLineAvailable: 'disponible',
@@ -730,6 +733,7 @@ window.AxiusDirectionJ = function () {
       pricingFounderTrackSubject: 'Axius — consulta Founder Track',
       pricingGetStarted: 'Empezar ahora',
       pricingBookCallSecondary: 'O agenda una llamada primero →',
+      pricingBookCustom: 'Agendar llamada →',
       pricingCheckoutSubject: (tier) => `Axius — iniciar suscripción ${tier}`,
       // Hero — stat row
       statActiveSystems: 'Sistemas activos',
@@ -803,8 +807,8 @@ window.AxiusDirectionJ = function () {
       sec05ColH:        'Interno',
       sec05ColA:        'Axius',
       sec06Eyebrow:     '06 · Precios',
-      sec06TitlePrefix: 'Tres tamaños de capa ',
-      sec06TitleItalic: 'operativa',
+      sec06TitlePrefix: 'Elige la capa que ',
+      sec06TitleItalic: 'encaja',
       sec06TitleSuffix: '.',
       // — Sección 07: El Modelo —
       sec07Eyebrow:     '07 · El modelo',
@@ -832,13 +836,6 @@ window.AxiusDirectionJ = function () {
           'Gestionados completamente por el operador',
           'Sin coordinación de proveedores de tu lado',
           'Calidad controlada antes de la entrega',
-        ] },
-        { eyebrow: 'Lo que experimentas', title: 'Una sola capa operativa responsable.', bullets: [
-          'Una sola línea de comunicación',
-          'Un solo equipo responsable',
-          'Una sola capa operativa mensual',
-          'Ejecución organizada y discreta',
-          'Tecnología que sigue moviéndose sin que tú la operes',
         ] },
       ],
       // — Sección 08: Fundador (era 07) —
@@ -2879,9 +2876,20 @@ window.AxiusDirectionJ = function () {
   // ─── HERO ──────────────────────────────────────────────────
   const Hero = ({ perso }) => {
     const [mouse, setMouse] = React.useState({ x: 0.5, y: 0.5 });
-    const [titleHover, setTitleHover] = React.useState(false);
-    const [eyebrowHover, setEyebrowHover] = React.useState(false);
-    const [practiceHover, setPracticeHover] = React.useState(false);
+    // `mouseReady` flips true only after a real mousemove fires inside
+    // the document. Prevents synthetic onMouseEnter from triggering
+    // immediately on mount when the Hero appears underneath the cursor
+    // (e.g. when the IndustryDispatch overlay unmounts after the
+    // visitor selects an industry — the cursor sits over the H1 and
+    // React fires onMouseEnter on first paint, incorrectly engaging
+    // the orange "Not your tech." sweep without an actual user hover).
+    const [mouseReady, setMouseReady] = React.useState(false);
+    const [titleHoverRaw, setTitleHover] = React.useState(false);
+    const [eyebrowHoverRaw, setEyebrowHover] = React.useState(false);
+    const [practiceHoverRaw, setPracticeHover] = React.useState(false);
+    const titleHover    = mouseReady && titleHoverRaw;
+    const eyebrowHover  = mouseReady && eyebrowHoverRaw;
+    const practiceHover = mouseReady && practiceHoverRaw;
     // (HOW WE WORK hover-reveal removed — Option 5 rebuild)
     // Industry-personalized badge above the eyebrow row
     const industryBadge = React.useMemo(() => {
@@ -2908,6 +2916,7 @@ window.AxiusDirectionJ = function () {
 
     React.useEffect(() => {
       const onMove = (e) => {
+        if (!mouseReady) setMouseReady(true);
         const r = heroRef.current && heroRef.current.getBoundingClientRect();
         if (!r) return;
         const x = (e.clientX - r.left) / r.width;
@@ -2916,7 +2925,7 @@ window.AxiusDirectionJ = function () {
       };
       window.addEventListener('mousemove', onMove);
       return () => window.removeEventListener('mousemove', onMove);
-    }, []);
+    }, [mouseReady]);
 
     // Orb leans gently toward the cursor — tranquil, not chasing
     const orbX = (mouse.x - 0.5) * 70;
@@ -3296,26 +3305,26 @@ window.AxiusDirectionJ = function () {
           </div>
         </div>
 
-        {/* 5 metric tiles — HoverCell pattern, cycling accents */}
+        {/* 5 metric tiles — white-box QuietCard treatment, cycling
+            accents.  Matches Method stages / How-it-Runs pillars /
+            Pricing tiers / Testimonials so the Before/After footer
+            reads as a peer to the other sections rather than a
+            divider-only row. */}
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: 0, borderTop: `1px solid ${C.line}`, borderBottom: `1px solid ${C.line}`,
+          gap: 16,
         }}>
-          {(ba.metrics || []).map((m, i, arr) => {
+          {(ba.metrics || []).map((m, i) => {
             const labelText = m.label && m.label[lang] !== undefined ? m.label[lang] : (m.label && m.label.en) || '';
             return (
-              <HoverCell key={i} accent={accents[i % accents.length]}
-                style={{
-                  padding: '32px 24px',
-                  borderRight: i < arr.length - 1 ? `1px solid ${C.line}` : 'none',
-                }}>
+              <QuietCard key={i} accent={accents[i % accents.length]} padding={24}>
                 <Eyebrow color={C.mute}>{labelText}</Eyebrow>
                 <div style={{
                   marginTop: 14,
                   fontFamily: DISPLAY, fontWeight: 600, fontSize: 36,
                   letterSpacing: '-0.04em', lineHeight: 1.05, color: C.ink,
                 }}>{m.value}</div>
-              </HoverCell>
+              </QuietCard>
             );
           })}
         </div>
@@ -4273,18 +4282,20 @@ window.AxiusDirectionJ = function () {
   };
 
   // ─── 06 · PRICING ──────────────────────────────────────────
-  // Middle tier (featured) gets a pulse animation each time the
-  // section re-enters the viewport — pops out for ~1.8s, returns
-  // to baseline so all 3 tiers read identical at rest.  Going up
-  // and back down re-arms the pulse.
+  // Sources AxiusPricingV5 (operator / team / department) — Operator
+  // and Team are paid monthly tiers with Stripe Payment Links;
+  // Department is a custom engagement that books a call instead of
+  // showing a price.  Middle tier (featured) pulses each time the
+  // section re-enters the viewport.
   const Pricing = () => {
     const accents = [C.mint, C.tangerine, C.lavender];
+    const tiers   = window.AxiusPricingV5 || [];
     const [headH, setHeadH] = React.useState(false);
     const [pulse, setPulse] = React.useState(false);
     const sectionRef = React.useRef(null);
     const featuredIndex = React.useMemo(
-      () => window.AxiusPricing.findIndex((p) => p.featured),
-      []
+      () => tiers.findIndex((p) => p.featured),
+      [tiers]
     );
     React.useEffect(() => {
       const node = sectionRef.current;
@@ -4335,7 +4346,7 @@ window.AxiusDirectionJ = function () {
           display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16,
           alignItems: 'stretch',
         }}>
-          {window.AxiusPricing.map((p, i) => (
+          {tiers.map((p, i) => (
             <PricingCard
               key={p.id}
               p={p}
@@ -4496,12 +4507,21 @@ window.AxiusDirectionJ = function () {
     const [h, setH] = React.useState(false);
     const on = pulse || h;
 
-    // Progress-bar percentages
-    // Capacity: points out of a 10pt ceiling (Operator 2, Team 5, Department 10)
-    const capacityPct = Math.min(100, Math.round((p.points / 10) * 100));
-    // Response: faster = fuller. 24h → 100%, 48h → 67%, 72h → 33%
-    const respHours = parseInt(String(p.response).replace(/[^0-9]/g, ''), 10) || 72;
-    const responsePct = Math.max(15, Math.min(100, Math.round(((96 - respHours) / 96) * 100)));
+    // V5 strings — pre-formatted price/setup blobs per language.
+    // Operator + Team carry monetary values; Department carries
+    // body copy in place of price and routes to cal.com.
+    const priceMonthly = lang === 'es' ? (p.priceMonthlyEs || p.priceMonthly) : p.priceMonthly;
+    const priceSetup   = lang === 'es' ? (p.priceSetupEs   || p.priceSetup)   : p.priceSetup;
+    const customBody   = lang === 'es' ? (p.bodyEs || p.body) : p.body;
+    const sub          = lang === 'es' ? (p.subEs || p.sub)   : p.sub;
+    const features     = lang === 'es' ? (p.featuresEs || p.features || []) : (p.features || []);
+    const isCustom     = !priceMonthly; // Department: priceMonthly === null
+
+    // Booking URL fallback — Department + secondary "book a call"
+    // link use the same cal.com discovery URL the rest of the site
+    // routes to.
+    const bookingUrl = (window.AxiusConfig && window.AxiusConfig.bookingUrl) ||
+                       'https://cal.com/andrestoro/discovery-call';
 
     return (
       <div
@@ -4539,56 +4559,68 @@ window.AxiusDirectionJ = function () {
           letterSpacing: '-0.034em', lineHeight: 0.95, color: C.ink,
         }}>{tierName(p.id)}</h3>
 
-        <p style={{margin: 0, fontSize: 14, color: C.dim, lineHeight: 1.55, minHeight: 60}}>{tr(p, 'sub')}</p>
+        <p style={{margin: 0, fontSize: 14, color: C.dim, lineHeight: 1.55, minHeight: 60}}>{sub}</p>
 
-        <div style={{paddingTop: 22, borderTop: `1px solid ${C.line}`, display: 'flex', alignItems: 'baseline', gap: 8}}>
-          <span style={{
-            fontFamily: DISPLAY, fontWeight: 600, fontSize: 52,
-            color: C.ink, letterSpacing: '-0.04em', lineHeight: 0.92,
-          }}>${p.price.toLocaleString()}</span>
-          <span style={{fontFamily: MONO, fontSize: 12, color: C.mute, letterSpacing: '0.08em'}}>{t('pricingMo')}</span>
-        </div>
-        <div style={{
-          fontFamily: MONO, fontSize: 10, color: C.mute,
-          letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: -10,
-        }}>{t('pricingSetupNote')(p.setup)}</div>
-
-        {/* Capacity + response progress bars — fill animates on pulse/hover.
-            The Capacity bar carries an (i) info icon next to its value
-            that explains what a point represents. */}
-        <div style={{
-          padding: '18px 0',
-          borderTop: `1px solid ${C.line}`, borderBottom: `1px solid ${C.line}`,
-          display: 'flex', flexDirection: 'column', gap: 14,
-        }}>
-          <PricingBar
-            label={t('pricingCapacity')}
-            value={`${p.points} pts`}
-            pct={capacityPct}
-            accent={accent}
-            on={on}
-            info={t('pricingCapacityInfo')(p.points)}
-            infoWorkloads={tr(p, 'workloads')}
-            infoWorkloadsLabel={t('pricingTypicalWorkloadsLabel')}/>
-          <PricingBar
-            label={t('pricingResponse')}
-            value={p.response}
-            pct={responsePct}
-            accent={accent}
-            on={on}/>
-          <div style={{paddingTop: 6}}>
-            <Eyebrow color={C.mute} style={{marginBottom: 4}}>{t('pricingCadence')}</Eyebrow>
-            <div style={{fontFamily: DISPLAY, fontSize: 14, color: C.ink, letterSpacing: '-0.005em'}}>{tr(p, 'cadence')}</div>
+        {/* Price block — Operator/Team show monthly + setup; Department
+            shows custom body copy in place of a price. */}
+        {!isCustom ? (
+          <div style={{paddingTop: 22, borderTop: `1px solid ${C.line}`}}>
+            <div style={{
+              fontFamily: DISPLAY, fontWeight: 600, fontSize: 44,
+              color: C.ink, letterSpacing: '-0.04em', lineHeight: 0.95,
+            }}>{priceMonthly}</div>
+            <div style={{
+              marginTop: 10,
+              fontFamily: MONO, fontSize: 11, color: C.mute,
+              letterSpacing: '0.08em',
+            }}>{priceSetup}</div>
           </div>
-        </div>
+        ) : (
+          <div style={{paddingTop: 22, borderTop: `1px solid ${C.line}`}}>
+            <div style={{
+              fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+              fontSize: 22, color: C.ink, letterSpacing: '-0.015em',
+              lineHeight: 1.25,
+            }}>{customBody || sub}</div>
+          </div>
+        )}
 
-        {/* Primary: direct subscribe via Stripe Payment Link.  Falls back
-            to the discovery-call mailto+Cal flow when no checkout URL is
-            configured.  Secondary: a quiet "Or book a call first" link
-            so cautious buyers still have an obvious off-ramp. */}
+        {/* Features list — replaces the legacy capacity/response bars.
+            Reads as a quiet bullet block, accent color on the marker. */}
+        <ul style={{
+          margin: 0, padding: '18px 0 4px',
+          borderTop: `1px solid ${C.line}`,
+          listStyle: 'none',
+          display: 'flex', flexDirection: 'column', gap: 10,
+          flex: 1,
+        }}>
+          {features.map((f, i) => (
+            <li key={i} style={{
+              display: 'flex', alignItems: 'baseline', gap: 10,
+              fontSize: 13, color: C.dim, lineHeight: 1.55,
+              letterSpacing: '-0.003em',
+            }}>
+              <span style={{
+                color: accent, fontFamily: MONO, fontWeight: 600,
+                fontSize: 11, flexShrink: 0,
+              }}>+</span>
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* CTA — Operator/Team route to their Stripe Payment Link;
+            Department routes to cal.com. */}
         {(() => {
-          const checkoutUrl = (window.AxiusConfig && window.AxiusConfig.checkoutUrls && window.AxiusConfig.checkoutUrls[p.id]) || '';
-          const onStart = () => {
+          const checkoutUrl = p.checkoutUrl ||
+            (window.AxiusConfig && window.AxiusConfig.checkoutUrls && window.AxiusConfig.checkoutUrls[p.id]) ||
+            '';
+          const primaryLabel = isCustom ? t('pricingBookCustom') : t('pricingGetStarted');
+          const onPrimary = () => {
+            if (isCustom) {
+              window.open(bookingUrl, '_blank', 'noopener');
+              return;
+            }
             if (checkoutUrl) {
               window.open(checkoutUrl, '_blank', 'noopener');
               return;
@@ -4598,23 +4630,25 @@ window.AxiusDirectionJ = function () {
           return (
             <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
               <QuietBtn primary accent={accent} size="md"
-                onClick={onStart}
+                onClick={onPrimary}
                 style={{justifyContent: 'center'}}>
-                {t('pricingGetStarted')}
+                {primaryLabel}
               </QuietBtn>
-              <button type="button"
-                onClick={() => openBooking(t('bookingTierSubject')(tierName(p.id)))}
-                style={{
-                  appearance: 'none', cursor: 'pointer',
-                  background: 'transparent', border: 'none', padding: '4px 0',
-                  fontFamily: MONO, fontSize: 10, fontWeight: 500,
-                  color: C.mute, letterSpacing: '0.18em', textTransform: 'uppercase',
-                  textAlign: 'center', transition: 'color .25s ease',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = C.mute; }}>
-                {t('pricingBookCallSecondary')}
-              </button>
+              {!isCustom && (
+                <button type="button"
+                  onClick={() => window.open(bookingUrl, '_blank', 'noopener')}
+                  style={{
+                    appearance: 'none', cursor: 'pointer',
+                    background: 'transparent', border: 'none', padding: '4px 0',
+                    fontFamily: MONO, fontSize: 10, fontWeight: 500,
+                    color: C.mute, letterSpacing: '0.18em', textTransform: 'uppercase',
+                    textAlign: 'center', transition: 'color .25s ease',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = C.mute; }}>
+                  {t('pricingBookCallSecondary')}
+                </button>
+              )}
             </div>
           );
         })()}
@@ -4646,7 +4680,7 @@ window.AxiusDirectionJ = function () {
         </div>
 
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16,
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
         }}>
           {pillars.map((p, i) => (
             <QuietCard key={i} accent={accents[i]} padding={28}
@@ -5028,8 +5062,10 @@ window.AxiusDirectionJ = function () {
   const FAQ = () => {
     const [open, setOpen] = React.useState(-1);
     // Option 5 rebuild: use AxiusFAQV5 (7 questions). The accordion
-    // container caps at ~700px tall so 5 questions are visible at once
-    // and the remaining 2 reveal via vertical scroll.
+    // container caps at ~380px tall so ~5 collapsed question rows
+    // (~76px each) are visible at rest; the remaining 2 reveal via
+    // vertical scroll.  When a row expands the panel scrolls inside
+    // the same container.
     const list = (window.AxiusFAQV5 && window.AxiusFAQV5.length > 0)
       ? window.AxiusFAQV5
       : window.AxiusFAQ;
@@ -5047,8 +5083,12 @@ window.AxiusDirectionJ = function () {
 
         <div className="ax-quietJ-scroll" style={{
           borderTop: `1px solid ${C.line}`,
-          maxHeight: 700, overflowY: 'auto',
+          // ~5 collapsed question rows visible at rest (row ≈ 61px ·
+          // 5 rows ≈ 305px). The remaining 2 reveal via vertical
+          // scroll; expanded rows scroll inside the same container.
+          maxHeight: 310, overflowY: 'auto',
           scrollbarGutter: 'stable',
+          scrollbarWidth: 'thin',
         }}>
           {list.map((f, i) => (
             <FAQRow key={i} f={f} i={i}
