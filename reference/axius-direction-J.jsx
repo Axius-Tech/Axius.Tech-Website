@@ -1092,8 +1092,10 @@ window.AxiusDirectionJ = function () {
         onMouseEnter={() => setH(true)}
         onMouseLeave={() => setH(false)}
         style={{
-          margin: 0, fontFamily: DISPLAY, fontWeight: 600,
-          fontSize: 72, letterSpacing: '-0.04em', lineHeight: 1.0,
+          margin: 0,
+          fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+          fontSize: 'clamp(36px, 5vw, 56px)',
+          letterSpacing: '-0.025em', lineHeight: 1.05,
           color: C.ink, cursor: 'default',
           ...style,
         }}>
@@ -3229,7 +3231,7 @@ window.AxiusDirectionJ = function () {
           <h2 style={{
             margin: 0,
             fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
-            fontSize: 'clamp(36px, 5vw, 64px)', lineHeight: 1.04,
+            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
             letterSpacing: '-0.025em', color: C.ink,
           }}>
             {t('sec01BAfterTitle')}
@@ -5178,7 +5180,6 @@ window.AxiusDirectionJ = function () {
         <HoverHead
           accent={C.tangerine}
           italicSweep
-          style={{fontSize: 128, letterSpacing: '-0.055em', lineHeight: 0.92}}
           prefix={t('ctaTitlePrefix')}
           italic={t('ctaTitleItalic')}
           suffix={t('ctaTitleSuffix')}/>
