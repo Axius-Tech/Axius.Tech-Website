@@ -5026,20 +5026,30 @@ window.AxiusDirectionJ = function () {
   // ─── 08 · FAQ ──────────────────────────────────────────────
   const FAQ = () => {
     const [open, setOpen] = React.useState(-1);
+    // Option 5 rebuild: use AxiusFAQV5 (7 questions). The accordion
+    // container caps at ~700px tall so 5 questions are visible at once
+    // and the remaining 2 reveal via vertical scroll.
+    const list = (window.AxiusFAQV5 && window.AxiusFAQV5.length > 0)
+      ? window.AxiusFAQV5
+      : window.AxiusFAQ;
     return (
-      <section id="faq" data-screen-label="09 Appendix" style={{
+      <section id="faq" data-screen-label="08 Questions" style={{
         padding: `96px ${pad}px`,
         borderTop: `1px solid ${C.line}`,
       }}>
-        <Eyebrow style={{marginBottom: 24}}>{t('sec09Eyebrow')}</Eyebrow>
+        <Eyebrow style={{marginBottom: 24}}>{t('sec08FAQEyebrow')}</Eyebrow>
         <HoverHead
           style={{maxWidth: 1000, marginBottom: 44}}
           prefix={t('sec09TitlePrefix')}
           italic={t('sec09TitleItalic')}
           suffix={t('sec09TitleSuffix')}/>
 
-        <div style={{borderTop: `1px solid ${C.line}`}}>
-          {window.AxiusFAQ.map((f, i) => (
+        <div className="ax-quietJ-scroll" style={{
+          borderTop: `1px solid ${C.line}`,
+          maxHeight: 700, overflowY: 'auto',
+          scrollbarGutter: 'stable',
+        }}>
+          {list.map((f, i) => (
             <FAQRow key={i} f={f} i={i}
               isOpen={open === i}
               onClick={() => setOpen(open === i ? -1 : i)}/>
@@ -5071,7 +5081,12 @@ window.AxiusDirectionJ = function () {
           all: 'unset', cursor: 'pointer', width: '100%',
           display: 'grid', gridTemplateColumns: '70px 1fr 40px',
           gap: 24, padding: '18px 24px', alignItems: 'baseline',
-        }}>
+          // Option 5 rebuild: restore the keyboard focus outline that
+          // `all: unset` blew away. Tangerine ring on focus-visible only.
+          outline: 'none',
+        }}
+        onFocus={(e) => { e.currentTarget.style.boxShadow = `inset 0 0 0 2px ${accent}66`; }}
+        onBlur={(e) => { e.currentTarget.style.boxShadow = 'none'; }}>
           <span style={{
             fontFamily: MONO, fontSize: 11, fontWeight: 500,
             color: isOpen ? accent : C.mute, letterSpacing: '0.18em',
@@ -5107,16 +5122,16 @@ window.AxiusDirectionJ = function () {
     );
   };
 
-  // ─── 10 · CTA ──────────────────────────────────────────────
+  // ─── 09 · CTA "Begin" ───────────────────────────────────────
   const CTA = () => (
-    <section data-screen-label="10 CTA" style={{
+    <section id="cta-begin" data-screen-label="09 Begin" style={{
       position: 'relative', overflow: 'hidden',
-      padding: `180px ${pad}px 80px`,
+      padding: `180px ${pad}px 100px`,
       borderTop: `1px solid ${C.line}`,
       background: C.bg, textAlign: 'center',
     }}>
       <div style={{position: 'relative', zIndex: 1}}>
-        <Eyebrow color={C.mute} style={{marginBottom: 32}}>{t('ctaEyebrow')}</Eyebrow>
+        <Eyebrow color={C.mute} style={{marginBottom: 32}}>{t('sec09CTAEyebrow')}</Eyebrow>
         <HoverHead
           accent={C.tangerine}
           italicSweep
@@ -5133,32 +5148,86 @@ window.AxiusDirectionJ = function () {
         </p>
 
         <div style={{display: 'flex', gap: 14, justifyContent: 'center', marginTop: 48}}>
-          <QuietBtn primary size="lg" onClick={() => openBooking(t('bookingSubject'))}>{t('ctaSchedule')}</QuietBtn>
+          <QuietBtn primary size="lg" onClick={() => openBooking(t('bookingSubject'))}>{t('ctaBeginButton')}</QuietBtn>
           <QuietBtn size="lg" multiColor onClick={() => openEmail(t('bookingSubject'))}>andres@axius.tech</QuietBtn>
-        </div>
-
-        <div style={{
-          marginTop: 132, paddingTop: 28,
-          borderTop: `1px solid ${C.line}`,
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          flexWrap: 'wrap', gap: 16,
-        }}>
-          <Wordmark size={16}/>
-          <div style={{
-            display: 'flex', gap: 24, alignItems: 'center',
-            fontFamily: MONO, fontSize: 10, color: C.mute,
-            letterSpacing: '0.18em', textTransform: 'uppercase',
-          }}>
-            <span>axius.tech</span>
-            <span style={{color: C.faint}}>·</span>
-            <span>{t('footerCity')}</span>
-            <span style={{color: C.faint}}>·</span>
-            <span>{t('footerCopy')}</span>
-          </div>
         </div>
       </div>
     </section>
   );
+
+  // ─── Footer — 3-col Practice / About / Legal + bottom row ─
+  // Replaces the inline CTA-footer strip. Uses Quiet 0.5 palette + the
+  // mono/serif/display type system. Same hovercard register, no surface.
+  const FooterJ = () => {
+    const renderCol = (heading, links) => (
+      <div>
+        <Eyebrow color={C.mute} style={{marginBottom: 16}}>{heading}</Eyebrow>
+        <ul style={{margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10}}>
+          {(links || []).map((lnk, i) => (
+            <li key={i}>
+              <a href={lnk.href}
+                 onClick={(e) => {
+                   if (lnk.href && lnk.href.startsWith('#')) {
+                     e.preventDefault();
+                     scrollToId(lnk.href.slice(1));
+                   }
+                 }}
+                 style={{
+                  fontFamily: DISPLAY, fontWeight: 500, fontSize: 15,
+                  color: C.ink, letterSpacing: '-0.005em',
+                  textDecoration: 'none',
+                  transition: 'color .25s ease',
+                 }}
+                 onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; }}
+                 onMouseLeave={(e) => { e.currentTarget.style.color = C.ink; }}>
+                {lnk.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+    return (
+      <footer data-screen-label="Footer" style={{
+        position: 'relative',
+        padding: `72px ${pad}px 48px`,
+        borderTop: `1px solid ${C.line}`,
+        background: C.bg,
+      }}>
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 64,
+          alignItems: 'start', marginBottom: 64,
+        }}>
+          {/* Brand mark + tagline */}
+          <div>
+            <Wordmark size={22}/>
+            <p style={{
+              margin: '18px 0 0', maxWidth: 320,
+              fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+              fontSize: 17, color: C.dim, lineHeight: 1.55,
+              letterSpacing: '-0.005em',
+            }}>An independent technology operations practice. Same hand on the work, month after month.</p>
+          </div>
+          {renderCol(t('footerColPractice'), t('footerPracticeLinks'))}
+          {renderCol(t('footerColAbout'),    t('footerAboutLinks'))}
+          {renderCol(t('footerColLegal'),    t('footerLegalLinks'))}
+        </div>
+        <div style={{
+          paddingTop: 24, borderTop: `1px solid ${C.line}`,
+          display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'center',
+          fontFamily: MONO, fontSize: 11, fontWeight: 500,
+          color: C.dim, letterSpacing: '0.14em', textTransform: 'uppercase',
+        }}>
+          <span>{t('footerBottom')}</span>
+          <span style={{display: 'inline-flex', gap: 14, alignItems: 'center'}}>
+            <span style={{color: C.mute}}>EN</span>
+            <span style={{color: C.faint}}>/</span>
+            <span style={{color: C.mute}}>ES</span>
+          </span>
+        </div>
+      </footer>
+    );
+  };
 
   // ─── FloatingDispatch — expandable operations event log,
   // styled like the Matrix EventLog but in Quiet 0.5's palette.
@@ -5860,6 +5929,7 @@ window.AxiusDirectionJ = function () {
       <Testimonials perso={perso}/>
       <FAQ/>
       <CTA/>
+      <FooterJ/>
       <FloatingDispatch/>
       <ChatBubbleJ/>
     </div>
