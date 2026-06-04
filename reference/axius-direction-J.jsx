@@ -462,7 +462,7 @@ window.AxiusDirectionJ = function () {
         'Every tool was bought with optimism. Most sit unused. Nothing compounds operationally.',
         'One accountable team managing the systems behind the business. One line of communication. One monthly bill. Documented, maintained, and operated continuously.',
       ],
-      sec03Eyebrow:     '03 · Method',
+      sec03Eyebrow:     '02 · THE METHOD',
       sec03TitlePrefix: 'Four ',
       sec03TitleItalic: 'stages',
       sec03TitleSuffix: <>.<br/>Each one named.<br/>Each one delivered.</>,
@@ -762,7 +762,7 @@ window.AxiusDirectionJ = function () {
         'Cada herramienta se compró con optimismo. La mayoría queda sin usar. Nada se acumula operativamente.',
         'Un equipo responsable gestionando los sistemas detrás del negocio. Una sola línea de comunicación. Una sola factura mensual. Documentado, mantenido y operado de forma continua.',
       ],
-      sec03Eyebrow:     '03 · Método',
+      sec03Eyebrow:     '02 · EL MÉTODO',
       sec03TitlePrefix: 'Cuatro ',
       sec03TitleItalic: 'etapas',
       sec03TitleSuffix: <>.<br/>Cada una nombrada.<br/>Cada una entregada.</>,
@@ -3184,72 +3184,138 @@ window.AxiusDirectionJ = function () {
     );
   };
 
-  // ─── COMMITMENTS — 5 cards, latent accents reveal on hover ─
-  const Commitments = () => {
-    // Per-tile accent for the latent stroke + numeral color.
-    // 03 is locked-highlighted in orange, 02 numeral is yellow.
+  // ─── 01 · BEFORE AND AFTER AXIUS (replaces Commitments) ────
+  // Editorial section that names the friction the visitor lives with
+  // today, then renders the after state. Italic display title; body
+  // copy and metric values stay non-italic for visual variety.
+  const Commitments = ({ perso }) => {
+    const challenges = window.AxiusChallengesV3 || [];
+    const ba = window.AxiusBeforeAndAfterV5 || {};
+    const [activeChallenge, setActiveChallenge] = React.useState(
+      (perso && perso.challenge) || challenges[0] && challenges[0].id || 'manual'
+    );
+    React.useEffect(() => {
+      if (perso && perso.challenge) setActiveChallenge(perso.challenge);
+    }, [perso && perso.challenge]);
+
+    const onPickChallenge = (id) => {
+      setActiveChallenge(id);
+      try { window.AxiusPersonalization && window.AxiusPersonalization.set({ challenge: id }); } catch (_) {}
+    };
+
+    const beforeBlob = (ba.frictionBefore && ba.frictionBefore[activeChallenge]) || {};
+    const beforeText = lang === 'es' ? (beforeBlob.es || beforeBlob.en || '') : (beforeBlob.en || '');
+
     const accents = [C.mint, C.amber, C.tangerine, C.lavender, C.sky];
-    const [headH, setHeadH] = React.useState(false);
-    const items = window.AxiusCommitments;
+
     return (
-      <section id="work" data-screen-label="01 Commitments" style={{
+      <section id="work" data-screen-label="01 Before and After" style={{
         padding: `108px ${pad}px`,
       }}>
-        <div
-          onMouseEnter={() => setHeadH(true)}
-          onMouseLeave={() => setHeadH(false)}
-          style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80,
-            alignItems: 'flex-end', marginBottom: 80,
+        {/* Header */}
+        <div style={{maxWidth: 1100, marginBottom: 64}}>
+          <Eyebrow style={{marginBottom: 28}}>{t('sec01BAfterEyebrow')}</Eyebrow>
+          <h2 style={{
+            margin: 0,
+            fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+            fontSize: 'clamp(36px, 5vw, 64px)', lineHeight: 1.04,
+            letterSpacing: '-0.025em', color: C.ink,
           }}>
-          <div>
-            <Eyebrow style={{marginBottom: 28}}>{t('sec01Eyebrow')}</Eyebrow>
-            <HoverHead
-              style={{whiteSpace: 'nowrap'}}
-              prefix={t('sec01TitlePrefix')}
-              italic={t('sec01TitleItalic')}
-              suffix={t('sec01TitleSuffix')}/>
+            {t('sec01BAfterTitle')}
+          </h2>
+        </div>
+
+        {/* Friction chips — single-select, mirrors the impact-toggle pattern */}
+        <div role="radiogroup" aria-label={t('sec01BAfterEyebrow')} style={{
+          display: 'flex', flexWrap: 'wrap', gap: 8,
+          marginBottom: 48,
+        }}>
+          {challenges.map((c) => {
+            const isOn = c.id === activeChallenge;
+            const label = lang === 'es' ? (c.labelEs || c.label) : c.label;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                role="radio"
+                aria-checked={isOn}
+                onClick={() => onPickChallenge(c.id)}
+                onMouseEnter={(e) => { if (!isOn) e.currentTarget.style.borderColor = C.tangerine; }}
+                onMouseLeave={(e) => { if (!isOn) e.currentTarget.style.borderColor = C.lineHi; }}
+                style={{
+                  appearance: 'none', cursor: 'pointer',
+                  background: isOn ? C.ink : 'transparent',
+                  color: isOn ? C.bg : C.ink,
+                  border: `1px solid ${isOn ? C.ink : C.lineHi}`,
+                  padding: '10px 16px',
+                  fontFamily: MONO, fontSize: 11, fontWeight: 500,
+                  letterSpacing: '0.18em', textTransform: 'uppercase',
+                  transition: 'all .25s ease',
+                }}>
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Before / After — 2-col grid (single column at narrow widths) */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64,
+          marginBottom: 64,
+        }}>
+          {/* BEFORE — editorial poem */}
+          <div style={{borderTop: `1px solid ${C.line}`, paddingTop: 28}}>
+            <Eyebrow color={C.mute} style={{marginBottom: 18}}>BEFORE</Eyebrow>
+            <div style={{
+              fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+              fontSize: 26, lineHeight: 1.5, color: C.ink,
+              letterSpacing: '-0.015em',
+              whiteSpace: 'pre-line',
+            }}>
+              {beforeText}
+            </div>
+          </div>
+          {/* AFTER — concise positive resolution */}
+          <div style={{borderTop: `1px solid ${C.tangerine}`, paddingTop: 28}}>
+            <Eyebrow color={C.tangerine} style={{marginBottom: 18}}>AFTER</Eyebrow>
+            <div style={{
+              fontFamily: DISPLAY, fontWeight: 500,
+              fontSize: 26, lineHeight: 1.5, color: C.ink,
+              letterSpacing: '-0.015em',
+            }}>
+              {t('sec01BAfterRight1')}
+            </div>
+            <div style={{
+              marginTop: 18,
+              fontFamily: DISPLAY, fontWeight: 400,
+              fontSize: 18, lineHeight: 1.55, color: C.dim,
+              letterSpacing: '-0.005em',
+            }}>
+              {t('sec01BAfterRight2')}
+            </div>
           </div>
         </div>
 
+        {/* 5 metric tiles — HoverCell pattern, cycling accents */}
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16,
+          display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: 0, borderTop: `1px solid ${C.line}`, borderBottom: `1px solid ${C.line}`,
         }}>
-          {items.map((c, i) => {
-            // Hover-only: no locked tile.  Every commitment reveals
-            // its accent strip + border tint only on hover, matching
-            // the rest of the tiles.
-            const numeralColor = C.ink;
-            const titleColor = C.ink;
+          {(ba.metrics || []).map((m, i, arr) => {
+            const labelText = m.label && m.label[lang] !== undefined ? m.label[lang] : (m.label && m.label.en) || '';
             return (
-              <QuietCard key={c.n}
-                accent={accents[i]} padding={28}
-                style={{minHeight: 360, display: 'flex', flexDirection: 'column', gap: 18}}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                  <span style={{
-                    fontFamily: DISPLAY, fontWeight: 500, fontSize: 36,
-                    letterSpacing: '-0.04em', lineHeight: 1, color: numeralColor,
-                    transition: 'color .35s ease',
-                  }}>{c.n}</span>
-                  {/* coloured dot removed per spec */}
-                </div>
-                <h3 style={{
-                  margin: 0, fontFamily: DISPLAY, fontWeight: 500, fontSize: 19,
-                  letterSpacing: '-0.02em', lineHeight: 1.25, color: titleColor,
-                  transition: 'color .35s ease',
-                }}>{tr(c, 'title')}</h3>
-                <p style={{
-                  margin: 0, fontSize: 13, color: C.dim, lineHeight: 1.65, flex: 1,
-                  letterSpacing: '-0.003em', whiteSpace: 'pre-line',
-                }}>{tr(c, 'body')}</p>
-                <div style={{paddingTop: 14, borderTop: `1px solid ${C.line}`}}>
-                  <Eyebrow color={C.mute} style={{marginBottom: 4}}>{tr(c.metric, 'label')}</Eyebrow>
-                  <div style={{
-                    fontFamily: DISPLAY, fontWeight: 500, fontSize: 19, color: C.ink,
-                    letterSpacing: '-0.018em',
-                  }}>{tr(c.metric, 'value')}</div>
-                </div>
-              </QuietCard>
+              <HoverCell key={i} accent={accents[i % accents.length]}
+                style={{
+                  padding: '32px 24px',
+                  borderRight: i < arr.length - 1 ? `1px solid ${C.line}` : 'none',
+                }}>
+                <Eyebrow color={C.mute}>{labelText}</Eyebrow>
+                <div style={{
+                  marginTop: 14,
+                  fontFamily: DISPLAY, fontWeight: 600, fontSize: 36,
+                  letterSpacing: '-0.04em', lineHeight: 1.05, color: C.ink,
+                }}>{m.value}</div>
+              </HoverCell>
             );
           })}
         </div>
@@ -3622,16 +3688,55 @@ window.AxiusDirectionJ = function () {
     return ranked[0][0];
   };
 
-  const Catalog = () => {
+  const Catalog = ({ perso }) => {
     const accents = [C.tangerine, C.mint, C.amber, C.lavender, C.sky, C.pink, C.mint, C.tangerine, C.lavender];
     const [active, setActive] = React.useState(0);
     const [recoText, setRecoText] = React.useState('');
     const [recoFor, setRecoFor]   = React.useState(null);
     const [capacityHover, setCapacityHover] = React.useState(false);
+    const [viewAll, setViewAll] = React.useState(false);
     const cat = window.AxiusCatalog[active];
     const activeAccent = accents[active % accents.length];
     const total = window.AxiusCatalog.reduce((s, c) => s + c.count, 0);
     const examples = t('sec04CapacityExamples');
+
+    // Per-industry filtering via AxiusCatalogTags. If perso.industry is
+    // set, restrict the catalog to categories tagged for that industry
+    // (or 'all'). The 'View full catalog' link resets to all categories.
+    const filteredCatalog = React.useMemo(() => {
+      if (viewAll || !perso || !perso.industry || perso.industry === 'other') return window.AxiusCatalog;
+      const tags = window.AxiusCatalogTags || {};
+      return window.AxiusCatalog.filter((c) => {
+        const list = tags[c.id];
+        if (!list || !list.length) return true; // untagged → always show
+        return list.includes('all') || list.includes(perso.industry);
+      });
+    }, [perso && perso.industry, viewAll]);
+
+    // Reset active when filteredCatalog shrinks
+    React.useEffect(() => {
+      if (active >= filteredCatalog.length) setActive(0);
+    }, [filteredCatalog.length]);
+
+    // Dynamic title: industry-personalized when an industry is selected
+    const industryLabelLc = React.useMemo(() => {
+      if (!perso || !perso.industry || perso.industry === 'other') return null;
+      const ind = (window.AxiusIndustriesV3 || []).find(x => x.id === perso.industry);
+      if (!ind) return null;
+      const lbl = lang === 'es' ? (ind.labelEs || ind.label) : ind.label;
+      return lbl.toLowerCase();
+    }, [perso && perso.industry, lang]);
+
+    const dynamicTitle = industryLabelLc
+      ? t('sec03MostRecTitleTemplate').replace('{industry}', industryLabelLc + ' operators')
+      : t('sec03MostRecTitleDefault');
+
+    // IMPACT toggle — single-select chips above the catalog grid
+    const outcomes = window.AxiusOutcomesV3 || [];
+    const activeOutcome = (perso && perso.outcome) || null;
+    const setOutcome = (id) => {
+      try { window.AxiusPersonalization && window.AxiusPersonalization.set({ outcome: id }); } catch (_) {}
+    };
 
     const runRecommend = () => {
       const id = recommendCategory(recoText);
@@ -3644,7 +3749,7 @@ window.AxiusDirectionJ = function () {
     };
 
     return (
-      <section id="catalog" data-screen-label="04 Catalog" style={{
+      <section id="catalog" data-screen-label="04 Most Recommended" style={{
         padding: `108px ${pad}px`,
         borderTop: `1px solid ${C.line}`,
       }}>
@@ -3653,12 +3758,12 @@ window.AxiusDirectionJ = function () {
           alignItems: 'flex-end', marginBottom: 48,
         }}>
           <div>
-            <Eyebrow style={{marginBottom: 28}}>{t('sec04Eyebrow')}</Eyebrow>
-            <HoverHead
-              accent={C.tangerine}
-              prefix={t('sec04TitlePrefix')}
-              italic={t('sec04TitleItalic')}
-              suffix={t('sec04TitleSuffix')}/>
+            <Eyebrow style={{marginBottom: 28}}>{t('sec03MostRecEyebrow')}</Eyebrow>
+            <h2 style={{
+              margin: 0, fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+              fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
+              letterSpacing: '-0.025em', color: C.ink, maxWidth: 920,
+            }}>{dynamicTitle}</h2>
           </div>
           <div style={{textAlign: 'right'}}>
             <div style={{
@@ -3798,6 +3903,44 @@ window.AxiusDirectionJ = function () {
             }}>{t('sec04RecommendButton')} →</button>
         </div>
 
+        {/* IMPACT toggle — mirrors the friction-chip pattern from BeforeAndAfter */}
+        <div role="radiogroup" aria-label={t('sec03ImpactLabel')} style={{
+          display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+          marginBottom: 28,
+        }}>
+          <span style={{
+            fontFamily: MONO, fontSize: 11, fontWeight: 500,
+            color: C.mute, letterSpacing: '0.18em', textTransform: 'uppercase',
+            marginRight: 8,
+          }}>{t('sec03ImpactLabel')}</span>
+          {outcomes.map((o) => {
+            const isOn = o.id === activeOutcome;
+            const label = lang === 'es' ? (o.labelEs || o.label) : o.label;
+            return (
+              <button
+                key={o.id}
+                type="button"
+                role="radio"
+                aria-checked={isOn}
+                onClick={() => setOutcome(o.id)}
+                onMouseEnter={(e) => { if (!isOn) e.currentTarget.style.borderColor = C.tangerine; }}
+                onMouseLeave={(e) => { if (!isOn) e.currentTarget.style.borderColor = C.lineHi; }}
+                style={{
+                  appearance: 'none', cursor: 'pointer',
+                  background: isOn ? C.ink : 'transparent',
+                  color: isOn ? C.bg : C.ink,
+                  border: `1px solid ${isOn ? C.ink : C.lineHi}`,
+                  padding: '8px 14px',
+                  fontFamily: MONO, fontSize: 11, fontWeight: 500,
+                  letterSpacing: '0.18em', textTransform: 'uppercase',
+                  transition: 'all .25s ease',
+                }}>
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Categories left, samples right — same card style, stacked vertically.
             Categories column scrolls inside the same height as the samples panel
             so the section stays as compact as Commitments / Method / Mess. */}
@@ -3810,10 +3953,31 @@ window.AxiusDirectionJ = function () {
             maxHeight: 520, overflowY: 'auto',
             paddingRight: 8,
           }}>
-            {window.AxiusCatalog.map((c, i) => (
-              <CatalogCard key={c.id} c={c} accent={accents[i]} isActive={active === i}
-                onClick={() => { setActive(i); setRecoFor(null); }} index={i}/>
-            ))}
+            {filteredCatalog.map((c, idx) => {
+              // Compute the index back to the original catalog so accents stay stable
+              const origIdx = window.AxiusCatalog.findIndex(x => x.id === c.id);
+              return (
+                <CatalogCard key={c.id} c={c} accent={accents[origIdx % accents.length]}
+                  isActive={active === origIdx}
+                  onClick={() => { setActive(origIdx); setRecoFor(null); }} index={origIdx}/>
+              );
+            })}
+            {/* View full catalog / Show less */}
+            {perso && perso.industry && perso.industry !== 'other' && (
+              <button
+                type="button"
+                onClick={() => setViewAll(v => !v)}
+                style={{
+                  appearance: 'none', cursor: 'pointer',
+                  background: 'transparent', border: 'none',
+                  padding: '12px 0', textAlign: 'left',
+                  fontFamily: MONO, fontSize: 11, fontWeight: 500,
+                  color: C.tangerine,
+                  letterSpacing: '0.18em', textTransform: 'uppercase',
+                }}>
+                {viewAll ? t('sec03ViewLess') : t('sec03ViewAll')}
+              </button>
+            )}
           </div>
 
           {/* sample entries for active category — scrollable */}
@@ -4691,6 +4855,149 @@ window.AxiusDirectionJ = function () {
     );
   };
 
+  // ─── 07 · TESTIMONIALS / CLIENT STORIES ───────────────────
+  // 3 fabricated case studies from AxiusFabricated.caseStudies, gated
+  // by axiusFabricationLive(). All cards use a TEMPORARY founder
+  // photo (data-replace-before-launch attr makes them grep-able).
+  const Testimonials = ({ perso }) => {
+    const liveFn = window.axiusFabricationLive || (() => true);
+    const isLive = liveFn();
+    const cases = (window.AxiusFabricated && window.AxiusFabricated.caseStudies) || [];
+    const founderPhoto = (window.AxiusFounder && window.AxiusFounder.photo) || '/assets/andres-toro.jpg';
+    const accents = [C.mint, C.tangerine, C.lavender];
+
+    if (!isLive || !cases.length) {
+      const nextQuarter = (() => {
+        const d = new Date();
+        const m = d.getMonth();
+        const quarter = Math.floor(m / 3) + 1;
+        const nextQ = quarter === 4 ? 1 : quarter + 1;
+        const yr = quarter === 4 ? d.getFullYear() + 1 : d.getFullYear();
+        return `Q${nextQ} · ${yr}`;
+      })();
+      return (
+        <section id="testimonials" data-screen-label="07 Client Stories" style={{
+          padding: `108px ${pad}px`,
+          borderTop: `1px solid ${C.line}`,
+        }}>
+          <Eyebrow style={{marginBottom: 28}}>{t('sec07TestimonialsEyebrow')}</Eyebrow>
+          <h2 style={{
+            margin: '0 0 36px',
+            fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
+            letterSpacing: '-0.025em', color: C.ink,
+          }}>{t('sec07TestimonialsTitle')}</h2>
+          <p style={{
+            margin: 0, maxWidth: 560,
+            fontFamily: DISPLAY, fontWeight: 400, fontSize: 17,
+            color: C.dim, lineHeight: 1.6,
+          }}>{t('sec07TestimonialsEmpty').replace('{next}', nextQuarter)}</p>
+        </section>
+      );
+    }
+
+    return (
+      <section id="testimonials" data-screen-label="07 Client Stories" style={{
+        padding: `108px ${pad}px`,
+        borderTop: `1px solid ${C.line}`,
+      }}>
+        <div style={{maxWidth: 1100, marginBottom: 64}}>
+          <Eyebrow style={{marginBottom: 28}}>{t('sec07TestimonialsEyebrow')}</Eyebrow>
+          <h2 style={{
+            margin: 0,
+            fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
+            letterSpacing: '-0.025em', color: C.ink,
+          }}>{t('sec07TestimonialsTitle')}</h2>
+        </div>
+
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+        }}>
+          {cases.map((cs, i) => {
+            const accent = accents[i % accents.length];
+            const body   = lang === 'es' ? (cs.bodyEs    || cs.body)    : cs.body;
+            const sub    = lang === 'es' ? (cs.subtitleEs|| cs.subtitle): cs.subtitle;
+            const outcome= lang === 'es' ? (cs.outcomeEs || cs.outcome) : cs.outcome;
+            const firstSentence = (body || '').split(/(?<=[.!?])\s+/)[0];
+            // hasStars: spec says show stars if case study has a star rating
+            // — none of the fabricated cases declare stars, so all show "Review pending".
+            const hasStars = !!cs.stars;
+            return (
+              <HoverCell key={cs.id} accent={accent}
+                style={{
+                  background: C.surface,
+                  border: `1px solid ${C.line}`,
+                  padding: '28px 28px 24px',
+                  display: 'flex', flexDirection: 'column', gap: 18,
+                  minHeight: 460,
+                }}>
+                {/* Temporary founder photo placeholder — grep "founder-photo-temp" before launch */}
+                <div
+                  data-replace-before-launch="founder-photo-temp"
+                  style={{
+                    width: 64, height: 64,
+                    border: `1px solid ${C.line}`,
+                    background: C.panel, overflow: 'hidden',
+                  }}>
+                  <img src={founderPhoto} alt={cs.company} style={{
+                    width: '100%', height: '100%', objectFit: 'cover',
+                    objectPosition: '50% 30%',
+                    filter: 'grayscale(1) contrast(1.04)',
+                    display: 'block',
+                  }}/>
+                </div>
+
+                {/* Stars or "Review pending" */}
+                {hasStars ? (
+                  <div style={{display: 'inline-flex', gap: 2, color: C.tangerine, fontSize: 14}}>
+                    {'★★★★★'}
+                  </div>
+                ) : (
+                  <div style={{
+                    fontFamily: SERIF, fontStyle: 'italic',
+                    fontSize: 12, color: C.mute,
+                  }}>{t('sec07ReviewPending')}</div>
+                )}
+
+                {/* Company name */}
+                <div>
+                  <h3 style={{
+                    margin: 0, fontFamily: DISPLAY, fontWeight: 600,
+                    fontSize: 22, color: C.ink,
+                    letterSpacing: '-0.02em', lineHeight: 1.2,
+                  }}>{cs.company}</h3>
+                  <div style={{
+                    marginTop: 6,
+                    fontFamily: MONO, fontSize: 10, fontWeight: 500,
+                    color: C.mute, letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                  }}>{sub}</div>
+                </div>
+
+                {/* First-sentence quote (italic) */}
+                <p style={{
+                  margin: 0, flex: 1,
+                  fontFamily: SERIF, fontStyle: 'italic', fontSize: 16,
+                  color: C.ink, lineHeight: 1.55,
+                  letterSpacing: '-0.005em',
+                }}>"{firstSentence}"</p>
+
+                {/* Outcome metric */}
+                <div style={{
+                  paddingTop: 14, borderTop: `1px solid ${C.line}`,
+                  fontFamily: DISPLAY, fontWeight: 600, fontSize: 17,
+                  color: C.tangerine,
+                  letterSpacing: '-0.012em',
+                }}>{outcome}</div>
+              </HoverCell>
+            );
+          })}
+        </div>
+      </section>
+    );
+  };
+
   // ─── 08 · FAQ ──────────────────────────────────────────────
   const FAQ = () => {
     const [open, setOpen] = React.useState(-1);
@@ -5519,14 +5826,13 @@ window.AxiusDirectionJ = function () {
     }}>
       <Nav/>
       <Hero perso={perso}/>
-      <Commitments/>
-      <Mess/>
+      <Commitments perso={perso}/>
       <Method/>
-      <Catalog/>
-      <Comparison/>
+      <Catalog perso={perso}/>
       <Pricing/>
       <Model/>
       <Founder/>
+      <Testimonials perso={perso}/>
       <FAQ/>
       <CTA/>
       <FloatingDispatch/>
