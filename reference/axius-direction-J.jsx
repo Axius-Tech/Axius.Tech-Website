@@ -5469,12 +5469,10 @@ window.AxiusDirectionJ = function () {
 
   // Entry-stage machine: 'video' → 'industry' → 'site'.  Runs every
   // page load per spec — no sessionStorage gate.  Tests can bypass via
-  // `?skipEntry=1` query param OR by pre-setting the sessionStorage
-  // flag with addInitScript (used by the e2e suite).
+  // `?skipEntry=1` query param (used by the e2e suite).
   const initialEntry = (() => {
     try {
       if (typeof location !== 'undefined' && /[?&]skipEntry=1/.test(location.search)) return 'site';
-      if (sessionStorage.getItem('axius:v5-video-seen') === '1') return 'site';
     } catch (_) {}
     return 'video';
   })();
