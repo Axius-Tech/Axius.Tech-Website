@@ -152,6 +152,19 @@ function jEyebrow(text, copper, style) {
     text);
 }
 
+// EyebrowJ — typed component variant matching E05's <Eyebrow>.
+// Used for ALL numbered section eyebrows ("00 Dispatch · 3 Questions",
+// "01 Before · After", ...). JetBrains Mono 11px / 0.18em / uppercase.
+function EyebrowJ({ children, color, style }) {
+  return React.createElement('div', {
+    style: Object.assign({
+      fontFamily: J_MONO, fontSize: 11, fontWeight: 500,
+      letterSpacing: '0.18em', textTransform: 'uppercase',
+      color: color || J_MUTE,
+    }, style || {}),
+  }, children);
+}
+
 // ════════════════════════════════════════════════════════════════════════
 // PREMIUM PRIMITIVES — ported from Option 1 (E05)
 // ════════════════════════════════════════════════════════════════════════
@@ -1142,10 +1155,8 @@ function DispatchJ({ perso }) {
         style: { display: 'flex', justifyContent: 'space-between',
                  alignItems: 'baseline', marginBottom: 24, flexWrap: 'wrap',
                  gap: 12 } },
-        React.createElement('div', {
-          style: { fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
-                   color: J_MUTE, textTransform: 'uppercase', fontWeight: 500 } },
-          lang === 'es' ? 'DISPATCH · 3 PREGUNTAS' : 'DISPATCH · 3 QUESTIONS'),
+        React.createElement(EyebrowJ, null,
+          lang === 'es' ? '00 DISPATCH · 3 PREGUNTAS' : '00 DISPATCH · 3 QUESTIONS'),
         React.createElement('button', {
           type: 'button',
           className: 'axius-j-btn',
@@ -1245,7 +1256,8 @@ function BeforeAndAfterJ({ perso }) {
     style: { padding: '108px 32px', borderTop: J_LINE_LO,
              background: J_CANVAS, color: J_INK } },
     React.createElement('div', { style: { maxWidth: 1180, margin: '0 auto' } },
-      jEyebrow(lang === 'es' ? (eyebrow.es || 'ANTES Y DESPUÉS DE AXIUS') : (eyebrow.en || 'BEFORE AND AFTER AXIUS')),
+      React.createElement(EyebrowJ, { style: { marginBottom: 20 } },
+        lang === 'es' ? '01 ANTES · DESPUÉS' : '01 BEFORE · AFTER'),
       React.createElement('h2', {
         style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                  fontSize: 56, lineHeight: 1.05,
@@ -1346,7 +1358,8 @@ function MethodJ({ perso }) {
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
   const stages = window.AxiusMethodV3 || [];
   return jSection('method', [
-    jEyebrow(lang === 'es' ? 'EL MÉTODO AXIUS' : 'THE AXIUS METHOD'),
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+      lang === 'es' ? '02 EL MÉTODO' : '02 THE METHOD'),
     React.createElement('h2', { key: 'h2',
       style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                fontSize: 48, lineHeight: 1.05,
@@ -1396,7 +1409,8 @@ function MostRequestedJ({ perso }) {
   };
 
   return jSection('most-requested', [
-    jEyebrow(lang === 'es' ? 'LO MÁS PEDIDO' : 'MOST REQUESTED'),
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+      lang === 'es' ? '03 LO MÁS PEDIDO' : '03 MOST REQUESTED'),
     React.createElement('h2', { key: 'h2',
       style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                fontSize: 48, lineHeight: 1.05,
@@ -1470,7 +1484,8 @@ function CatalogJ({ perso }) {
     style: { padding: '108px 32px', borderTop: J_LINE_LO,
              background: J_CANVAS, color: J_INK } },
     React.createElement('div', { style: { maxWidth: 1180, margin: '0 auto' } },
-      jEyebrow(lang === 'es' ? 'CATÁLOGO DE CAPACIDADES' : 'CAPABILITIES CATALOG'),
+      React.createElement(EyebrowJ, { style: { marginBottom: 20 } },
+        lang === 'es' ? '04 CATÁLOGO' : '04 CATALOG'),
       React.createElement('h2', {
         style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                  fontSize: 48, lineHeight: 1.05,
@@ -1553,7 +1568,8 @@ function HowItRunsJ({ perso }) {
   const lang = (window.AxiusConfig && window.AxiusConfig.lang) || 'en';
   const pillars = window.AxiusModelV3 || [];
   return jSection('how-it-runs', [
-    jEyebrow(lang === 'es' ? 'CÓMO OPERA' : 'HOW IT RUNS'),
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+      lang === 'es' ? '05 CÓMO OPERA' : '05 HOW IT RUNS'),
     React.createElement('h2', { key: 'h2',
       style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                fontSize: 48, lineHeight: 1.05,
@@ -1596,7 +1612,8 @@ function PricingJ({ perso }) {
                      || 'mailto:andres@axius.tech?subject=Axius Department engagement';
 
   return jSection('pricing', [
-    jEyebrow(lang === 'es' ? 'PRECIOS' : 'PRICING'),
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+      lang === 'es' ? '06 COMPROMISO' : '06 ENGAGEMENT'),
     React.createElement('h2', { key: 'h2',
       style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                fontSize: 48, lineHeight: 1.05,
@@ -1709,7 +1726,8 @@ function TestimonialsJ({ perso }) {
   const gbp = window.AxiusGBP || {};
 
   return jSection('testimonials', [
-    jEyebrow(lang === 'es' ? 'RESULTADOS OPERATIVOS' : 'OPERATIONAL RESULTS'),
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+      lang === 'es' ? '07 RESULTADOS' : '07 RESULTS'),
     React.createElement('h2', { key: 'h2',
       style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                fontSize: 48, lineHeight: 1.05,
@@ -1788,7 +1806,8 @@ function OperatorJ({ perso }) {
   const fallbackCaption = (f.name || 'Andrés Toro') + ' · ' +
     (lang === 'es' ? 'foto no disponible' : 'photo unavailable');
   return jSection('founder', [
-    jEyebrow(lang === 'es' ? 'OPERADOR' : 'OPERATOR'),
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+      lang === 'es' ? '08 EL OPERADOR' : '08 THE OPERATOR'),
     React.createElement('div', { key: 'grid',
       'data-axius-j-grid': '2col',
       style: { display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 56,
@@ -1849,7 +1868,8 @@ function QuestionsJ({ perso }) {
   const [open, setOpen] = React.useState(0);
 
   return jSection('questions', [
-    jEyebrow(lang === 'es' ? 'PREGUNTAS' : 'QUESTIONS'),
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 20 } },
+      lang === 'es' ? '09 APÉNDICE' : '09 APPENDIX'),
     React.createElement('h2', { key: 'h2',
       style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                fontSize: 48, lineHeight: 1.05,
@@ -1914,6 +1934,8 @@ function CTABeginJ({ perso }) {
     : ['Bottlenecks identified', 'Opportunities prioritized',
        'Immediate recommendations', 'Roadmap included'];
   return jSection('cta-begin', [
+    React.createElement(EyebrowJ, { key: 'eyb', style: { marginBottom: 24 } },
+      lang === 'es' ? '10 EMPEZAR' : '10 BEGIN'),
     React.createElement('h2', { key: 'h2',
       style: { fontFamily: J_SERIF, fontStyle: 'italic', fontWeight: 500,
                fontSize: 80, lineHeight: 1.02,

@@ -70,7 +70,7 @@ test.describe('Option 5 at /v5', () => {
       try { sessionStorage.setItem('axius:v5-video-seen', '1'); } catch (_) {}
     });
     await page.reload();
-    await expect(page.locator('text=BEFORE AND AFTER AXIUS').first()).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('text=01 BEFORE').first()).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('#before-and-after')).toBeAttached();
   });
 
