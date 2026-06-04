@@ -573,6 +573,76 @@ window.AxiusDirectionJ = function () {
       vennPeople:       'PEOPLE',
       vennProcess:      'PROCESS',
       vennTechnology:   'TECHNOLOGY',
+      // ─── Option 5 rebuild — additive copy ────────────────────
+      navBegin:         'Begin →',
+      navLinksV5:       ['The Shift', 'Method', 'Catalog', 'Pricing', 'Operator'],
+      // Hero — industry badge above the practice line
+      industryBadgePrefix: 'AXIUS — TECHNOLOGY OPERATING PARTNER FOR',
+      industryBadgeOther:  'AXIUS — TECHNOLOGY OPERATING PARTNER FOR INDEPENDENT OPERATORS',
+      // Operator card — new compact fields
+      opCardCurrentlyIn: 'CURRENTLY IN',
+      opCardCurrentlyInValue: 'MEDELLÍN, COLOMBIA',
+      opCardHQIn: 'HEADQUARTERS IN',
+      opCardHQInValue: 'ALTAMONTE SPRINGS, FL',
+      opCardCall: 'Call',
+      opCardMsg: 'Message',
+      // Entry experience — video + dispatch
+      videoSkip: 'SKIP →',
+      videoLoading: 'AXIUS · LOADING',
+      dispatchEyebrow: '00 · DISPATCH',
+      dispatchTitle:   'What kind of business are you running?',
+      dispatchSkip:    'Skip — show me everything →',
+      dispatchOtherPlaceholder: 'Tell us — one word',
+      dispatchOtherSubmit: 'Submit →',
+      // Section renumbers / replacements
+      sec01BAfterEyebrow:   '01 · BEFORE AND AFTER AXIUS',
+      sec01BAfterTitle:     'You started a business. Not a technology department.',
+      sec01BAfterRight1:    'One operator. One layer. Documented systems that compound monthly.',
+      sec01BAfterRight2:    'Same hand on the work, month after month.',
+      sec02MethodEyebrow:   '02 · THE METHOD',
+      sec03MostRecEyebrow:  '03 · MOST RECOMMENDED',
+      sec03MostRecTitleDefault: 'Nine categories. One operating layer.',
+      sec03MostRecTitleTemplate: 'The systems most {industry} ask us to run.',
+      sec03ImpactLabel:     'IMPACT',
+      sec03ViewAll:         'View full catalog →',
+      sec03ViewLess:        '← Show less',
+      sec04PricingEyebrow:  '04 · PRICING',
+      sec05ModelEyebrow:    '05 · HOW IT RUNS',
+      sec05ModelTitle:      'How it runs.',
+      sec06OperatorEyebrow: '06 · OPERATOR',
+      sec06FactStrip:       'BASED · Altamonte Springs, FL · in Medellín now    ·    AVAILABLE · US business hours    ·    LANGUAGES · EN · ES',
+      sec07TestimonialsEyebrow: '07 · CLIENT STORIES',
+      sec07TestimonialsTitle: 'Operational results.',
+      sec07TestimonialsEmpty: 'Case studies publish quarterly — next set drops {next}.',
+      sec07ReviewPending:   'Review pending',
+      sec08FAQEyebrow:      '08 · QUESTIONS',
+      sec09CTAEyebrow:      '09 · BEGIN',
+      ctaBeginButton:       'Begin →',
+      // Footer columns
+      footerColPractice:    'Practice',
+      footerColAbout:       'About',
+      footerColLegal:       'Legal',
+      footerPracticeLinks:  [
+        { label: 'Catalog',  href: '#catalog'  },
+        { label: 'Method',   href: '#method'   },
+        { label: 'Pricing',  href: '#pricing'  },
+        { label: 'Founder',  href: '#founder'  },
+      ],
+      footerAboutLinks:     [
+        { label: 'Operator', href: '#founder'  },
+        { label: 'Begin',    href: '#cta-begin'},
+        { label: 'Contact',  href: 'mailto:andres@axius.tech' },
+      ],
+      footerLegalLinks:     [
+        { label: 'Privacy',  href: '/v5/privacy.html' },
+        { label: 'Terms',    href: '/v5/terms.html'   },
+      ],
+      footerBottom:         '© 2026 Axius · andres@axius.tech · Made with intent in Medellín',
+      // Chat bubble
+      chatTooltip:          'Andrés Toro — Operator',
+      chatHeader:           'OPERATOR · ONLINE',
+      chatCloseLabel:       'Close chat',
+      chatOpenLabel:        'Open chat',
     },
     es: {
       navLinks: ['Trabajo', 'Método', 'Catálogo', 'Precios', 'Fundador'],
@@ -797,6 +867,70 @@ window.AxiusDirectionJ = function () {
       vennPeople:       'PERSONAS',
       vennProcess:      'PROCESO',
       vennTechnology:   'TECNOLOGÍA',
+      // ─── Option 5 rebuild — copy adicional ────────────────────
+      navBegin:         'Empezar →',
+      navLinksV5:       ['El Giro', 'Método', 'Catálogo', 'Precios', 'Operador'],
+      industryBadgePrefix: 'AXIUS — PARTNER DE OPERACIONES TECNOLÓGICAS PARA',
+      industryBadgeOther:  'AXIUS — PARTNER DE OPERACIONES TECNOLÓGICAS PARA OPERADORES INDEPENDIENTES',
+      opCardCurrentlyIn: 'ACTUALMENTE EN',
+      opCardCurrentlyInValue: 'MEDELLÍN, COLOMBIA',
+      opCardHQIn: 'SEDE EN',
+      opCardHQInValue: 'ALTAMONTE SPRINGS, FL',
+      opCardCall: 'Llamar',
+      opCardMsg: 'Mensaje',
+      videoSkip: 'SALTAR →',
+      videoLoading: 'AXIUS · CARGANDO',
+      dispatchEyebrow: '00 · DESPACHO',
+      dispatchTitle:   '¿Qué tipo de negocio operas?',
+      dispatchSkip:    'Saltar — muéstrame todo →',
+      dispatchOtherPlaceholder: 'Cuéntanos — una palabra',
+      dispatchOtherSubmit: 'Enviar →',
+      sec01BAfterEyebrow:   '01 · ANTES Y DESPUÉS DE AXIUS',
+      sec01BAfterTitle:     'Empezaste un negocio. No un departamento de tecnología.',
+      sec01BAfterRight1:    'Un operador. Una capa. Sistemas documentados que componen cada mes.',
+      sec01BAfterRight2:    'La misma mano en el trabajo, mes tras mes.',
+      sec02MethodEyebrow:   '02 · EL MÉTODO',
+      sec03MostRecEyebrow:  '03 · MÁS RECOMENDADO',
+      sec03MostRecTitleDefault: 'Nueve categorías. Una sola capa operativa.',
+      sec03MostRecTitleTemplate: 'Los sistemas que más nos piden los operadores de {industry}.',
+      sec03ImpactLabel:     'IMPACTO',
+      sec03ViewAll:         'Ver catálogo completo →',
+      sec03ViewLess:        '← Mostrar menos',
+      sec04PricingEyebrow:  '04 · PRECIOS',
+      sec05ModelEyebrow:    '05 · CÓMO OPERA',
+      sec05ModelTitle:      'Cómo opera.',
+      sec06OperatorEyebrow: '06 · OPERADOR',
+      sec06FactStrip:       'BASE · Altamonte Springs, FL · en Medellín ahora    ·    DISPONIBLE · Horario de EE.UU.    ·    IDIOMAS · EN · ES',
+      sec07TestimonialsEyebrow: '07 · HISTORIAS DE CLIENTES',
+      sec07TestimonialsTitle: 'Resultados operativos.',
+      sec07TestimonialsEmpty: 'Los casos de estudio se publican trimestralmente — próxima entrega {next}.',
+      sec07ReviewPending:   'Reseña pendiente',
+      sec08FAQEyebrow:      '08 · PREGUNTAS',
+      sec09CTAEyebrow:      '09 · EMPEZAR',
+      ctaBeginButton:       'Empezar →',
+      footerColPractice:    'Práctica',
+      footerColAbout:       'Acerca de',
+      footerColLegal:       'Legal',
+      footerPracticeLinks:  [
+        { label: 'Catálogo', href: '#catalog'  },
+        { label: 'Método',   href: '#method'   },
+        { label: 'Precios',  href: '#pricing'  },
+        { label: 'Fundador', href: '#founder'  },
+      ],
+      footerAboutLinks:     [
+        { label: 'Operador', href: '#founder'  },
+        { label: 'Empezar',  href: '#cta-begin'},
+        { label: 'Contacto', href: 'mailto:andres@axius.tech' },
+      ],
+      footerLegalLinks:     [
+        { label: 'Privacidad',href: '/v5/privacy.html' },
+        { label: 'Términos', href: '/v5/terms.html'   },
+      ],
+      footerBottom:         '© 2026 Axius · andres@axius.tech · Hecho con intención en Medellín',
+      chatTooltip:          'Andrés Toro — Operador',
+      chatHeader:           'OPERADOR · EN LÍNEA',
+      chatCloseLabel:       'Cerrar chat',
+      chatOpenLabel:        'Abrir chat',
     },
   };
   const t = (key) => {
@@ -1129,7 +1263,10 @@ window.AxiusDirectionJ = function () {
         <Wordmark size={18}/>
 
         <div style={{display: 'flex', justifyContent: 'center', gap: 32}}>
-          {t('navLinks').map((label, i) => {
+          {t('navLinksV5').map((label, i) => {
+            // V5 nav: The Shift / Method / Catalog / Pricing / Operator
+            // Targets: 01 Before-and-After → #work, 02 Method → #method,
+            // 03 Catalog → #catalog, 04 Pricing → #pricing, 06 Operator → #founder.
             const id = ['work', 'method', 'catalog', 'pricing', 'founder'][i];
             return (
               <QuietLink key={id}
@@ -1178,7 +1315,7 @@ window.AxiusDirectionJ = function () {
               );
             })}
           </span>
-          <QuietBtn primary size="sm" onClick={() => openBooking(t('bookingSubject'))}>{t('navBookCall')}</QuietBtn>
+          <QuietBtn primary size="sm" onClick={() => openBooking(t('bookingSubject'))}>{t('navBegin')}</QuietBtn>
         </div>
       </nav>
     </>
@@ -2427,26 +2564,17 @@ window.AxiusDirectionJ = function () {
   // for the conversation surface so Ring Andrés / AI twin etc. all
   // still work from this layout.
   const OperatorCard = () => {
-    const [mode, setMode] = React.useState('card');
     const photo = (window.AxiusFounder && window.AxiusFounder.photo) || 'andres-toro.jpg';
-    // External "open the hero chat" trigger — any component on the
-    // page (e.g. the Founder "Talk to me" button) can dispatch this
-    // event and the OperatorCard flips into chat mode.
-    React.useEffect(() => {
-      const handler = () => setMode('chat');
-      window.addEventListener('axius:openHeroChat', handler);
-      return () => window.removeEventListener('axius:openHeroChat', handler);
-    }, []);
+    // Option 5 rebuild: the inline chat surface is gone — clicking
+    // "Message" dispatches a custom event that the floating chat bubble
+    // listens for. The card itself never flips into chat mode anymore.
     const onMessage = () => {
-      const cfg = window.AxiusConfig || {};
-      const behavior = cfg.ringBehavior || 'inChat';
-      const wa = cfg.whatsappNumber || '';
-      if (behavior === 'whatsapp' && wa) {
-        const intro = `Hi Andrés — I'm on axius.tech and would like to message you directly.`;
-        window.open(`https://wa.me/${wa}?text=${encodeURIComponent(intro)}`, '_blank', 'noopener');
-        return;
-      }
-      setMode('chat');
+      window.dispatchEvent(new CustomEvent('axius:openChat'));
+    };
+    const onCall = () => {
+      const url = (window.AxiusConfig && window.AxiusConfig.bookingUrl) || '';
+      if (url) window.open(url, '_blank', 'noopener');
+      else openBooking(t('bookingSubject'));
     };
     return (
       <div style={{
@@ -2456,135 +2584,121 @@ window.AxiusDirectionJ = function () {
         width: '100%',
         display: 'flex', flexDirection: 'column',
         overflow: 'hidden',
-        // Fixed height — was minHeight, which let the card grow as
-        // chat messages piled up.  Locking the box means the message
-        // list scrolls internally (flex:1 + overflowY:auto inside) and
-        // the surrounding hero layout stays stable.
+        // Slightly taller — the simplified card has only two info rows
+        // and two CTAs, but we want it to retain visual weight beside
+        // the H1. 440 still works.
         height: 440,
       }}>
-        {mode === 'chat' ? (
-          <AskAndres key={lang} onBack={() => setMode('card')} autofocus operatorChrome/>
-        ) : (
-          <>
-            {/* Header: OPERATOR (tangerine) · AI ONLINE (mint pulse).
-                Pulse refers to the AI standby, not the operator's
-                real-time availability — the surface stays useful at
-                every hour without over-promising on the human. */}
-            <div style={{
-              padding: '14px 22px',
-              borderBottom: `1px solid ${C.line}`,
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        {/* Header: OPERATOR (tangerine) · ONLINE (mint pulse). Pulse is
+            the AI standby — visitors can chat any time. */}
+        <div style={{
+          padding: '14px 22px',
+          borderBottom: `1px solid ${C.line}`,
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        }}>
+          <Eyebrow color={C.tangerine}>{t('opCardOperator')}</Eyebrow>
+          <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
+            <span aria-hidden style={{
+              display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+              background: C.mint,
+              animation: 'axJPulse 2.4s ease-out infinite',
+            }}/>
+            <Eyebrow color={C.dim}>ONLINE</Eyebrow>
+          </div>
+        </div>
+
+        {/* Identity row — photo + name + role */}
+        <div style={{
+          padding: '22px 22px',
+          display: 'grid', gridTemplateColumns: '108px 1fr', gap: 22,
+          alignItems: 'center',
+        }}>
+          <div
+            onMouseEnter={(e) => { const img = e.currentTarget.firstChild; if (img) img.style.filter = 'grayscale(0) saturate(1.05) contrast(1.02)'; }}
+            onMouseLeave={(e) => { const img = e.currentTarget.firstChild; if (img) img.style.filter = 'grayscale(1) contrast(1.04)'; }}
+            style={{
+              width: 108, height: 108,
+              border: `1px solid ${C.line}`,
+              background: C.panel,
+              overflow: 'hidden',
+              cursor: 'default',
             }}>
-              <Eyebrow color={C.tangerine}>{t('opCardOperator')}</Eyebrow>
-              <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
-                <span aria-hidden style={{
-                  display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
-                  background: C.mint,
-                  animation: 'axJPulse 2.4s ease-out infinite',
-                }}/>
-                <Eyebrow color={C.dim}>{t('opCardOnline')}</Eyebrow>
-              </div>
-            </div>
-
-            {/* Identity row */}
+            <img src={photo} alt="Andrés Toro" style={{
+              width: '100%', height: '100%', objectFit: 'cover',
+              objectPosition: '50% 30%',
+              filter: 'grayscale(1) contrast(1.04)',
+              display: 'block',
+              transition: 'filter 1.4s cubic-bezier(.2,.8,.2,1)',
+            }}/>
+          </div>
+          <div>
             <div style={{
-              padding: '22px 22px',
-              display: 'grid', gridTemplateColumns: '108px 1fr', gap: 22,
-              alignItems: 'center',
-            }}>
-              <div
-                onMouseEnter={(e) => { const img = e.currentTarget.firstChild; if (img) img.style.filter = 'grayscale(0) saturate(1.05) contrast(1.02)'; }}
-                onMouseLeave={(e) => { const img = e.currentTarget.firstChild; if (img) img.style.filter = 'grayscale(1) contrast(1.04)'; }}
-                style={{
-                  width: 108, height: 108,
-                  border: `1px solid ${C.line}`,
-                  background: C.panel,
-                  overflow: 'hidden',
-                  cursor: 'default',
-                }}>
-                <img src={photo} alt="Andrés Toro" style={{
-                  width: '100%', height: '100%', objectFit: 'cover',
-                  objectPosition: '50% 30%',
-                  filter: 'grayscale(1) contrast(1.04)',
-                  display: 'block',
-                  transition: 'filter 1.4s cubic-bezier(.2,.8,.2,1)',
-                }}/>
-              </div>
-              <div>
-                <div style={{
-                  fontFamily: DISPLAY, fontWeight: 600, fontSize: 32,
-                  letterSpacing: '-0.025em', color: C.ink, lineHeight: 1.05,
-                }}>Andrés Toro</div>
-                <div style={{
-                  marginTop: 10,
-                  fontFamily: MONO, fontSize: 11, fontWeight: 500,
-                  color: C.mute, letterSpacing: '0.18em', textTransform: 'uppercase',
-                }}>{t('opCardRole')}</div>
-              </div>
-            </div>
+              fontFamily: DISPLAY, fontWeight: 600, fontSize: 28,
+              letterSpacing: '-0.025em', color: C.ink, lineHeight: 1.05,
+            }}>Andrés Toro</div>
+            <div style={{
+              marginTop: 10,
+              fontFamily: MONO, fontSize: 11, fontWeight: 500,
+              color: C.mute, letterSpacing: '0.18em', textTransform: 'uppercase',
+            }}>Founder · Operator</div>
+          </div>
+        </div>
 
-            <div style={{height: 1, background: C.line}}/>
+        <div style={{height: 1, background: C.line}}/>
 
-            {/* Email — relabelled from "Direct line" so the surface
-                doesn't read as a real-time hotline. */}
-            <div style={{padding: '20px 22px 8px'}}>
-              <Eyebrow color={C.mute}>{t('opCardEmail')}</Eyebrow>
-              <a href="mailto:andres@axius.tech" style={{
-                display: 'inline-block', marginTop: 8,
-                fontFamily: MONO, fontSize: 18, color: C.ink,
-                letterSpacing: '-0.005em', textDecoration: 'none',
-                transition: 'color .25s ease',
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = C.tangerine}
-              onMouseLeave={(e) => e.currentTarget.style.color = C.ink}>
-                andres@axius.tech
-              </a>
-            </div>
+        {/* Currently in — Medellín */}
+        <div style={{padding: '18px 22px 6px'}}>
+          <Eyebrow color={C.mute}>{t('opCardCurrentlyIn')}</Eyebrow>
+          <div style={{
+            marginTop: 6,
+            fontFamily: MONO, fontSize: 14, color: C.ink,
+            letterSpacing: '0.04em', fontWeight: 500,
+          }}>{t('opCardCurrentlyInValue')}</div>
+        </div>
 
-            {/* Hours */}
-            <div style={{padding: '12px 22px 20px'}}>
-              <Eyebrow color={C.mute}>{t('opCardHours')}</Eyebrow>
-              <div style={{
-                marginTop: 8,
-                fontFamily: MONO, fontSize: 20, color: C.ink,
-                letterSpacing: '-0.005em', fontVariantNumeric: 'tabular-nums',
-              }}>{t('opCardHoursValue')}</div>
-            </div>
+        {/* HQ in — Altamonte Springs */}
+        <div style={{padding: '8px 22px 18px'}}>
+          <Eyebrow color={C.mute}>{t('opCardHQIn')}</Eyebrow>
+          <div style={{
+            marginTop: 6,
+            fontFamily: MONO, fontSize: 14, color: C.ink,
+            letterSpacing: '0.04em', fontWeight: 500,
+          }}>{t('opCardHQInValue')}</div>
+        </div>
 
-            <div style={{height: 1, background: C.line}}/>
+        <div style={{height: 1, background: C.line, marginTop: 'auto'}}/>
 
-            {/* CTAs — message directly (chat) + leave a note (mailto) */}
-            <div style={{padding: '18px 22px', display: 'flex', gap: 10, flexWrap: 'wrap'}}>
-              <button type="button" onClick={onMessage} style={{
-                appearance: 'none', cursor: 'pointer',
-                background: C.ink, color: C.bg, border: `1px solid ${C.ink}`,
-                padding: '12px 18px',
-                fontFamily: MONO, fontSize: 11, fontWeight: 500,
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                display: 'inline-flex', alignItems: 'center', gap: 10,
-                transition: 'all .25s ease',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = C.ink; e.currentTarget.style.borderColor = C.ink; }}>
-                {t('opCardMessage')}
-                <span style={{fontFamily: SERIF, fontStyle: 'italic', fontSize: 14}}>→</span>
-              </button>
-              <a href={`mailto:${EMAIL}`} style={{
-                appearance: 'none', cursor: 'pointer',
-                background: 'transparent', color: C.ink, border: `1px solid ${C.lineHi}`,
-                padding: '12px 18px',
-                fontFamily: MONO, fontSize: 11, fontWeight: 500,
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                textDecoration: 'none',
-                transition: 'all .25s ease',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = C.ink; e.currentTarget.style.borderColor = C.lineHi; }}>
-                {t('opCardLeaveNote')}
-              </a>
-            </div>
-          </>
-        )}
+        {/* CTAs — Message (opens chat bubble) + Call (booking URL) */}
+        <div style={{padding: '18px 22px', display: 'flex', gap: 10, flexWrap: 'wrap'}}>
+          <button type="button" onClick={onMessage} style={{
+            appearance: 'none', cursor: 'pointer',
+            background: C.ink, color: C.bg, border: `1px solid ${C.ink}`,
+            padding: '12px 20px', flex: 1,
+            fontFamily: MONO, fontSize: 11, fontWeight: 500,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+            transition: 'all .25s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = C.ink; e.currentTarget.style.borderColor = C.ink; }}>
+            {t('opCardMsg')}
+            <span style={{fontFamily: SERIF, fontStyle: 'italic', fontSize: 14}}>→</span>
+          </button>
+          <button type="button" onClick={onCall} style={{
+            appearance: 'none', cursor: 'pointer',
+            background: 'transparent', color: C.ink, border: `1px solid ${C.lineHi}`,
+            padding: '12px 20px', flex: 1,
+            fontFamily: MONO, fontSize: 11, fontWeight: 500,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+            transition: 'all .25s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = C.ink; e.currentTarget.style.borderColor = C.lineHi; }}>
+            {t('opCardCall')}
+            <span style={{fontFamily: SERIF, fontStyle: 'italic', fontSize: 14}}>→</span>
+          </button>
+        </div>
       </div>
     );
   };
@@ -2763,12 +2877,25 @@ window.AxiusDirectionJ = function () {
   };
 
   // ─── HERO ──────────────────────────────────────────────────
-  const Hero = () => {
+  const Hero = ({ perso }) => {
     const [mouse, setMouse] = React.useState({ x: 0.5, y: 0.5 });
     const [titleHover, setTitleHover] = React.useState(false);
     const [eyebrowHover, setEyebrowHover] = React.useState(false);
     const [practiceHover, setPracticeHover] = React.useState(false);
-    const [howWeWorkHover, setHowWeWorkHover] = React.useState(false);
+    // (HOW WE WORK hover-reveal removed — Option 5 rebuild)
+    // Industry-personalized badge above the eyebrow row
+    const industryBadge = React.useMemo(() => {
+      if (!perso || !perso.industry) return null;
+      if (perso.industry === 'other') {
+        const free = (perso.industryOther || '').trim();
+        if (free) return `${t('industryBadgePrefix')} ${free.toUpperCase()}`;
+        return t('industryBadgeOther');
+      }
+      const ind = (window.AxiusIndustriesV3 || []).find(x => x.id === perso.industry);
+      if (!ind) return null;
+      const label = lang === 'es' ? (ind.labelEs || ind.label) : ind.label;
+      return `${t('industryBadgePrefix')} ${label.toUpperCase()}`;
+    }, [perso, lang]);
     // Per-element hover state for the editorial collage — each
     // artifact peeks a small amount by default and slides out to its
     // full extension only when hovered individually.
@@ -2827,6 +2954,21 @@ window.AxiusDirectionJ = function () {
         }}/>
 
         <div style={{position: 'relative', zIndex: 1}}>
+        {/* Industry-personalized badge — renders only when the visitor
+            has selected an industry in the Dispatch entry. Sits above
+            the practice line so the page literally addresses the
+            visitor before any other framing. */}
+        {industryBadge && (
+          <div style={{
+            marginBottom: 18,
+            fontFamily: MONO, fontSize: 11, fontWeight: 600,
+            color: C.tangerine,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            animation: 'axJFadeUp .55s cubic-bezier(.2,.8,.2,1)',
+          }}>
+            {industryBadge}
+          </div>
+        )}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
           marginBottom: 56,
@@ -2992,7 +3134,10 @@ window.AxiusDirectionJ = function () {
             )}
           </div>
 
-          {/* Subhead + HOW WE WORK list + CTAs ─── row 2, col 1 (under H1) */}
+          {/* Subhead + CTAs ─── row 2, col 1 (under H1).
+              Option 5 rebuild: dropped "HOW WE WORK" hover-reveal and
+              the 4-cell stat row. Subhead marginTop tightened to 24
+              for closer rhythm to Options 2/3. */}
           <div style={{gridColumn: 1, gridRow: 2}}>
             <p style={{
               margin: 0, maxWidth: 540,
@@ -3004,77 +3149,11 @@ window.AxiusDirectionJ = function () {
               {t('heroSubL3a')}<span style={{color: C.ink}}>{t('heroSubL3b')}</span>
             </p>
 
-            {/* HOW WE WORK — eyebrow is always visible; the 3 bullets reveal on hover */}
-            <div
-              onMouseEnter={() => setHowWeWorkHover(true)}
-              onMouseLeave={() => setHowWeWorkHover(false)}
-              style={{
-                marginTop: 32,
-                cursor: 'default',
-              }}>
-              <Eyebrow color={howWeWorkHover ? C.tangerine : C.mute} style={{
-                transition: 'color .3s ease',
-                display: 'inline-block',
-              }}>{t('howWeWorkLabel')}</Eyebrow>
-              <div style={{
-                overflow: 'hidden',
-                maxHeight: howWeWorkHover ? 140 : 0,
-                opacity: howWeWorkHover ? 1 : 0,
-                marginTop: howWeWorkHover ? 14 : 0,
-                transition: 'max-height .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease, margin-top .35s ease',
-              }}>
-                {t('howWeWorkBullets').map((label, i) => (
-                  <div key={i} style={{
-                    display: 'flex', alignItems: 'baseline', gap: 16,
-                    fontFamily: MONO, fontSize: 12, fontWeight: 500,
-                    letterSpacing: '0.18em', textTransform: 'uppercase',
-                    color: C.ink, padding: '3px 0',
-                  }}>
-                    <span style={{color: C.tangerine, fontWeight: 600}}>+</span>
-                    <span>{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{display: 'flex', gap: 12, marginTop: 32}}>
+            <div style={{display: 'flex', gap: 12, marginTop: 24}}>
               <QuietBtn primary size="lg" onClick={() => openBooking(t('bookingSubject'))}>{t('heroCta1')}</QuietBtn>
               <QuietBtn size="lg" multiColor onClick={() => scrollToId('catalog')}>{t('heroCta2')}</QuietBtn>
             </div>
           </div>
-        </div>
-
-        {/* subtle stat row — eyebrow (uppercase) · value · subtitle (mixed case) */}
-        <div style={{
-          marginTop: 72,
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: 0, borderTop: `1px solid ${C.line}`, borderBottom: `1px solid ${C.line}`,
-        }}>
-          {[
-            { v: <CountUp to={129}/>,  k: t('statActiveSystems'),  sub: t('statLast90'),     accent: C.tangerine },
-            { v: '< 24h',              k: t('statResponseWindow'), sub: t('statTier3'),      accent: C.mint      },
-            { v: t('statStartsValue'), k: t('statStartsAt'),       sub: t('statSetupApplies'),accent: C.amber     },
-            { v: t('statLimited'),     k: t('statIntakeStatus'),   sub: t('statQ2_2026'),    accent: C.lavender  },
-          ].map((s, i, arr) => (
-            <HoverCell key={i} accent={s.accent}
-              style={{
-                padding: '32px 28px',
-                borderRight: i < arr.length - 1 ? `1px solid ${C.line}` : 'none',
-              }}>
-              <Eyebrow color={C.mute}>{s.k}</Eyebrow>
-              <div style={{
-                marginTop: 14,
-                fontFamily: DISPLAY, fontWeight: 600, fontSize: 56,
-                letterSpacing: '-0.045em', lineHeight: 1, color: C.ink,
-              }}>{s.v}</div>
-              <div style={{
-                marginTop: 12,
-                fontFamily: MONO, fontWeight: 500, fontSize: 10,
-                color: C.mute, letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-              }}>{s.sub}</div>
-            </HoverCell>
-          ))}
         </div>
       </div>
     </header>
@@ -4971,6 +5050,467 @@ window.AxiusDirectionJ = function () {
     );
   };
 
+  // ════════════════════════════════════════════════════════════════
+  // OPTION 5 REBUILD — entry experience + perso subscription
+  // ════════════════════════════════════════════════════════════════
+
+  // Live personalization state (industry / challenge / outcome).
+  // Subscribes to AxiusPersonalization so any update (Dispatch answer,
+  // impact toggle, friction chip) ripples through Hero/Catalog/etc.
+  const [perso, setPerso] = React.useState(
+    (window.AxiusPersonalization && window.AxiusPersonalization.get()) ||
+    { industry: null, challenge: null, outcome: null, industryOther: null, skipped: false }
+  );
+  React.useEffect(() => {
+    if (!window.AxiusPersonalization) return;
+    return window.AxiusPersonalization.subscribe(setPerso);
+  }, []);
+
+  // Entry-stage machine: 'video' → 'industry' → 'site'.  Runs every
+  // page load per spec — no sessionStorage gate.  Tests can bypass via
+  // `?skipEntry=1` query param OR by pre-setting the sessionStorage
+  // flag with addInitScript (used by the e2e suite).
+  const initialEntry = (() => {
+    try {
+      if (typeof location !== 'undefined' && /[?&]skipEntry=1/.test(location.search)) return 'site';
+      if (sessionStorage.getItem('axius:v5-video-seen') === '1') return 'site';
+    } catch (_) {}
+    return 'video';
+  })();
+  const [entryStage, setEntryStage] = React.useState(initialEntry);
+
+  // ─── VideoIntroJ — typographic intro, ~12s total ───────────
+  // Half-duration version of AxiusVideoIntroV5: keeps the opening
+  // 3 headline frames + a few industry mentions, then resolves
+  // into the sign-off. Skippable via top-right SKIP or ESC.
+  const VideoIntroJ = ({ onDone }) => {
+    const frames = (window.AxiusVideoIntroV5 && window.AxiusVideoIntroV5.frames) || [];
+    // Halve the durations: every original atMs becomes atMs/2.
+    const compressed = frames.map(f => ({ ...f, atMs: Math.round(f.atMs / 2) }));
+    const totalMs = compressed.length ? compressed[compressed.length - 1].atMs + 1800 : 12000;
+    const [now, setNow] = React.useState(0);
+
+    React.useEffect(() => {
+      let raf;
+      const start = performance.now();
+      const tick = (t) => {
+        const elapsed = t - start;
+        setNow(elapsed);
+        if (elapsed < totalMs) raf = requestAnimationFrame(tick);
+        else onDone();
+      };
+      raf = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(raf);
+    }, [totalMs, onDone]);
+
+    React.useEffect(() => {
+      const onKey = (e) => { if (e.key === 'Escape') onDone(); };
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+    }, [onDone]);
+
+    // Determine the active frame
+    const active = compressed.reduce((acc, f) => (now >= f.atMs ? f : acc), compressed[0]);
+    const label  = active ? (lang === 'es' ? active.es : active.en) : 'Axius';
+
+    return (
+      <div role="dialog" aria-label={lang === 'es' ? 'Intro de Axius' : 'Axius intro'} style={{
+        position: 'fixed', inset: 0, zIndex: 200,
+        background: C.bg, color: C.ink,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        overflow: 'hidden',
+      }}>
+        {/* Breathing warm-light orb — same as hero so the transition feels continuous */}
+        <div aria-hidden style={{
+          position: 'absolute', top: '50%', left: '50%',
+          width: 720, height: 720, borderRadius: '50%',
+          background: `radial-gradient(closest-side, rgba(255,91,42,0.22), rgba(255,91,42,0) 70%)`,
+          animation: 'axJGlow 9s ease-in-out infinite',
+          transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none',
+        }}/>
+        {/* Paper-grain texture */}
+        <svg aria-hidden width="0" height="0" style={{position: 'absolute'}}>
+          <filter id="axJGrainIntro">
+            <feTurbulence type="fractalNoise" baseFrequency="0.92" numOctaves="2" stitchTiles="stitch"/>
+            <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0"/>
+          </filter>
+        </svg>
+        <div aria-hidden style={{
+          position: 'absolute', inset: 0,
+          filter: 'url(#axJGrainIntro)',
+          opacity: 0.7, pointerEvents: 'none',
+          mixBlendMode: 'multiply',
+        }}/>
+
+        {/* SKIP button — top right */}
+        <button
+          type="button"
+          aria-label={t('videoSkip')}
+          onClick={onDone}
+          style={{
+            position: 'absolute', top: 28, right: 28,
+            appearance: 'none', cursor: 'pointer',
+            background: 'transparent', border: `1px solid ${C.lineHi}`,
+            padding: '10px 16px',
+            fontFamily: MONO, fontSize: 11, fontWeight: 500,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: C.dim,
+            transition: 'all .25s ease', zIndex: 1,
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = C.dim;       e.currentTarget.style.borderColor = C.lineHi; }}>
+          {t('videoSkip')}
+        </button>
+
+        {/* AXIUS · LOADING — top left */}
+        <div style={{
+          position: 'absolute', top: 28, left: 28,
+          fontFamily: MONO, fontSize: 11, fontWeight: 500,
+          letterSpacing: '0.18em', textTransform: 'uppercase',
+          color: C.dim, zIndex: 1,
+        }}>
+          {t('videoLoading')}
+        </div>
+
+        {/* Active frame label */}
+        <div key={(active && active.atMs) || 0} style={{
+          position: 'relative', zIndex: 1,
+          maxWidth: 980, padding: '0 32px', textAlign: 'center',
+          fontFamily: DISPLAY, fontWeight: 600,
+          fontSize: 'clamp(40px, 8vw, 96px)',
+          lineHeight: 1.02, letterSpacing: '-0.045em',
+          color: C.ink,
+          animation: 'axJFadeUp .5s cubic-bezier(.2,.8,.2,1)',
+        }}>
+          {label}
+        </div>
+
+        {/* Progress hairline at the bottom */}
+        <div aria-hidden style={{
+          position: 'absolute', left: 0, right: 0, bottom: 0,
+          height: 2, background: C.line, zIndex: 1,
+        }}>
+          <div style={{
+            height: '100%',
+            width: `${Math.min(100, (now / totalMs) * 100)}%`,
+            background: C.tangerine,
+            transition: 'width .08s linear',
+          }}/>
+        </div>
+      </div>
+    );
+  };
+
+  // ─── IndustryDispatchJ — single-question entry screen ─────
+  // ONLY the industry question (no friction / impact follow-ups).
+  // Quiet 0.5 visual style — cream canvas, italic display title,
+  // mono eyebrows, tangerine accents on hover.
+  const IndustryDispatchJ = ({ onDone, onSkip }) => {
+    const inds = window.AxiusIndustriesV3 || [];
+    const [otherOpen, setOtherOpen] = React.useState(false);
+    const [otherText, setOtherText] = React.useState('');
+
+    const commit = (id, freeText) => {
+      try {
+        if (window.AxiusPersonalization) {
+          window.AxiusPersonalization.set({
+            industry: id,
+            industryOther: freeText || null,
+          });
+        }
+      } catch (_) {}
+      onDone();
+    };
+
+    return (
+      <section role="region" aria-label={t('dispatchEyebrow')} style={{
+        position: 'relative', overflow: 'hidden',
+        padding: `120px ${pad}px`,
+        minHeight: '100vh',
+        background: C.bg, color: C.ink,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      }}>
+        {/* Same warm-light orb so the transition into the site feels continuous */}
+        <div aria-hidden style={{
+          position: 'absolute', top: '35%', right: '8%',
+          width: 460, height: 460, borderRadius: '50%',
+          background: `radial-gradient(closest-side, rgba(255,91,42,0.18), rgba(255,91,42,0) 70%)`,
+          animation: 'axJGlow 9s ease-in-out infinite',
+          pointerEvents: 'none', zIndex: 0,
+        }}/>
+        <svg aria-hidden width="0" height="0" style={{position: 'absolute'}}>
+          <filter id="axJGrainDispatch">
+            <feTurbulence type="fractalNoise" baseFrequency="0.92" numOctaves="2" stitchTiles="stitch"/>
+            <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0"/>
+          </filter>
+        </svg>
+        <div aria-hidden style={{
+          position: 'absolute', inset: 0,
+          filter: 'url(#axJGrainDispatch)',
+          opacity: 0.65, pointerEvents: 'none', zIndex: 0,
+          mixBlendMode: 'multiply',
+        }}/>
+
+        {/* Skip — top right */}
+        <button
+          type="button"
+          onClick={onSkip}
+          style={{
+            position: 'absolute', top: 28, right: 28,
+            appearance: 'none', cursor: 'pointer',
+            background: 'transparent', border: 'none', padding: '8px 12px',
+            fontFamily: MONO, fontSize: 11, fontWeight: 500,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: C.dim,
+            transition: 'color .25s ease', zIndex: 2,
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = C.dim; }}>
+          {t('dispatchSkip')}
+        </button>
+
+        <div style={{position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', width: '100%'}}>
+          <Eyebrow color={C.tangerine} style={{marginBottom: 32}}>{t('dispatchEyebrow')}</Eyebrow>
+          <h2 style={{
+            margin: '0 0 56px',
+            fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+            fontSize: 'clamp(40px, 6vw, 60px)',
+            letterSpacing: '-0.025em', lineHeight: 1.05,
+            color: C.ink, maxWidth: 920,
+          }}>
+            {t('dispatchTitle')}
+          </h2>
+
+          <div role="radiogroup" aria-label={t('dispatchEyebrow')} style={{
+            display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: 12, marginBottom: 24,
+          }}>
+            {inds.map((ind, i) => {
+              const label = lang === 'es' ? (ind.labelEs || ind.label) : ind.label;
+              const isOther = ind.id === 'other';
+              const accents = [C.mint, C.amber, C.tangerine, C.lavender, C.sky, C.pink];
+              const accent = accents[i % accents.length];
+              return (
+                <button
+                  key={ind.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={false}
+                  onClick={() => {
+                    if (isOther) { setOtherOpen(true); return; }
+                    commit(ind.id, null);
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = accent;
+                    e.currentTarget.style.color = accent;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = C.lineHi;
+                    e.currentTarget.style.color = C.ink;
+                  }}
+                  style={{
+                    appearance: 'none', cursor: 'pointer',
+                    background: C.surface,
+                    border: `1px solid ${C.lineHi}`,
+                    padding: '22px 16px',
+                    fontFamily: DISPLAY, fontWeight: 500, fontSize: 16,
+                    color: C.ink, letterSpacing: '-0.012em',
+                    transition: 'all .25s ease',
+                    textAlign: 'left',
+                  }}>
+                  <span style={{
+                    display: 'block',
+                    fontFamily: MONO, fontSize: 10, fontWeight: 500,
+                    color: C.mute, letterSpacing: '0.18em',
+                    textTransform: 'uppercase', marginBottom: 12,
+                  }}>{String(i + 1).padStart(2, '0')}</span>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          {otherOpen && (
+            <div style={{
+              marginTop: 8, display: 'flex', gap: 10, alignItems: 'center',
+              animation: 'axJFadeUp .35s cubic-bezier(.2,.8,.2,1)',
+            }}>
+              <input
+                autoFocus
+                type="text"
+                value={otherText}
+                onChange={(e) => setOtherText(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && otherText.trim()) commit('other', otherText.trim()); }}
+                placeholder={t('dispatchOtherPlaceholder')}
+                style={{
+                  flex: 1, maxWidth: 480,
+                  appearance: 'none', background: C.surface,
+                  border: `1px solid ${C.lineHi}`,
+                  padding: '14px 16px',
+                  fontFamily: DISPLAY, fontSize: 16, color: C.ink,
+                  outline: 'none',
+                  letterSpacing: '-0.005em',
+                }}
+              />
+              <button
+                type="button"
+                disabled={!otherText.trim()}
+                onClick={() => commit('other', otherText.trim())}
+                style={{
+                  appearance: 'none',
+                  cursor: otherText.trim() ? 'pointer' : 'not-allowed',
+                  background: otherText.trim() ? C.ink : C.ghost,
+                  color: otherText.trim() ? C.bg : C.mute,
+                  border: `1px solid ${otherText.trim() ? C.ink : C.lineHi}`,
+                  padding: '14px 20px',
+                  fontFamily: MONO, fontSize: 11, fontWeight: 500,
+                  letterSpacing: '0.18em', textTransform: 'uppercase',
+                  transition: 'all .25s ease',
+                }}>
+                {t('dispatchOtherSubmit')}
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  };
+
+  // ─── ChatBubbleJ — floating chat bottom-right ────────────
+  // Replaces the inline DirectLine/AskAndres surface from E05. Closed
+  // by default; opens on click or on the 'axius:openChat' event.
+  // Reuses the existing AskAndres component for the panel body.
+  const ChatBubbleJ = () => {
+    const [open, setOpen] = React.useState(false);
+    React.useEffect(() => {
+      const onOpen = () => setOpen(true);
+      window.addEventListener('axius:openChat', onOpen);
+      window.addEventListener('axius:openHeroChat', onOpen); // legacy compatibility
+      return () => {
+        window.removeEventListener('axius:openChat', onOpen);
+        window.removeEventListener('axius:openHeroChat', onOpen);
+      };
+    }, []);
+    React.useEffect(() => {
+      if (!open) return;
+      const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+    }, [open]);
+
+    if (open) {
+      return (
+        <div
+          data-axius-j-chat-open="1"
+          style={{
+            position: 'fixed', bottom: 24, right: 24, zIndex: 90,
+            width: 'min(380px, calc(100vw - 32px))',
+            height: 'min(600px, calc(100vh - 48px))',
+            background: C.surface,
+            border: `1px solid ${C.lineHi}`,
+            boxShadow: '0 24px 60px -20px rgba(10,9,7,0.25)',
+            display: 'flex', flexDirection: 'column',
+            overflow: 'hidden',
+          }}>
+          {/* Header */}
+          <div style={{
+            padding: '14px 18px',
+            borderBottom: `1px solid ${C.line}`,
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            background: C.panel,
+          }}>
+            <div style={{display: 'inline-flex', alignItems: 'center', gap: 10}}>
+              <span aria-hidden style={{
+                display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+                background: C.mint,
+                animation: 'axJPulse 2.4s ease-out infinite',
+              }}/>
+              <Eyebrow color={C.tangerine}>{t('chatHeader')}</Eyebrow>
+            </div>
+            <button
+              type="button"
+              aria-label={t('chatCloseLabel')}
+              onClick={() => setOpen(false)}
+              style={{
+                appearance: 'none', cursor: 'pointer',
+                background: 'transparent', border: 'none', padding: 4,
+                fontFamily: MONO, fontSize: 18, color: C.dim,
+                transition: 'color .2s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = C.dim; }}>
+              ×
+            </button>
+          </div>
+          {/* Body — reuse the existing AskAndres surface. */}
+          <div style={{flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden'}}>
+            <AskAndres key={lang} autofocus operatorChrome onBack={() => setOpen(false)}/>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <button
+        type="button"
+        data-axius-j-chat-closed="1"
+        aria-label={t('chatOpenLabel')}
+        title={t('chatTooltip')}
+        onClick={() => setOpen(true)}
+        style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 90,
+          appearance: 'none', cursor: 'pointer',
+          width: 64, height: 64, borderRadius: '50%',
+          background: C.tangerine, color: C.surface,
+          border: 'none',
+          boxShadow: '0 16px 40px -10px rgba(255,91,42,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease',
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.06)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}>
+        {/* Mint pulse dot top-right */}
+        <span aria-hidden style={{
+          position: 'absolute', top: 8, right: 8,
+          width: 10, height: 10, borderRadius: '50%',
+          background: C.mint,
+          animation: 'axJPulse 2.4s ease-out infinite',
+        }}/>
+        {/* Chat icon — speech bubble */}
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      </button>
+    );
+  };
+
+  // ─── Render ─────────────────────────────────────────────────
+  // Entry stages: video → industry dispatch → full site.  The chat
+  // bubble is always mounted regardless of stage so the visitor can
+  // chat at any moment.
+  if (entryStage === 'video') {
+    return (
+      <div style={{ background: C.bg, color: C.ink, fontFamily: DISPLAY, minHeight: '100vh' }}>
+        <VideoIntroJ onDone={() => setEntryStage('industry')}/>
+        <ChatBubbleJ/>
+      </div>
+    );
+  }
+  if (entryStage === 'industry') {
+    return (
+      <div style={{ background: C.bg, color: C.ink, fontFamily: DISPLAY, minHeight: '100vh' }}>
+        <IndustryDispatchJ
+          onDone={() => setEntryStage('site')}
+          onSkip={() => {
+            try { window.AxiusPersonalization && window.AxiusPersonalization.skip(); } catch (_) {}
+            setEntryStage('site');
+          }}/>
+        <ChatBubbleJ/>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       background: C.bg, color: C.ink,
@@ -4978,7 +5518,7 @@ window.AxiusDirectionJ = function () {
       minHeight: '100vh',
     }}>
       <Nav/>
-      <Hero/>
+      <Hero perso={perso}/>
       <Commitments/>
       <Mess/>
       <Method/>
@@ -4990,6 +5530,7 @@ window.AxiusDirectionJ = function () {
       <FAQ/>
       <CTA/>
       <FloatingDispatch/>
+      <ChatBubbleJ/>
     </div>
   );
 };
