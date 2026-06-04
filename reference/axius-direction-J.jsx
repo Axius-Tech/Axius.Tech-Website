@@ -568,10 +568,13 @@ function HeroJ({ perso }) {
   const cfg = window.AxiusConfig || {};
   const bookingHref = cfg.bookingUrl || 'mailto:andres@axius.tech';
   const heroBadge = window.AxiusHeroBadgeV5 || {};
+  const heroEy = window.AxiusHeroEyebrowsV5 || {};
 
   const [mouse, setMouse] = React.useState({ x: 0.5, y: 0.5 });
   const [titleHover, setTitleHover] = React.useState(false);
   const [howWeWorkHover, setHowWeWorkHover] = React.useState(false);
+  const [practiceHover, setPracticeHover] = React.useState(false);
+  const [pillHover, setPillHover] = React.useState(false);
   const heroRef = React.useRef(null);
   const rafMouse = React.useRef(null);
 
@@ -598,8 +601,13 @@ function HeroJ({ perso }) {
   const orbX = (mouse.x - 0.5) * 70;
   const orbY = (mouse.y - 0.5) * 50;
 
-  const kickerEN = 'AXIUS — TECHNOLOGY OPERATING PARTNER · ONLY ACCEPTING 3 NEW CLIENTS / MONTH';
-  const kickerES = 'AXIUS — PARTNER OPERATIVO DE TECNOLOGÍA · SOLO 3 NUEVOS CLIENTES / MES';
+  const practiceLine = (heroEy.practiceLine && (lang === 'es' ? heroEy.practiceLine.es : heroEy.practiceLine.en))
+    || (lang === 'es' ? 'Axius — Una práctica independiente de operaciones tecnológicas'
+                      : 'Axius — An independent technology operations practice');
+  const acceptingPre = (heroEy.acceptingPre && (lang === 'es' ? heroEy.acceptingPre.es : heroEy.acceptingPre.en))
+    || (lang === 'es' ? 'SOLO ACEPTANDO' : 'ONLY ACCEPTING');
+  const acceptingAccent = (heroEy.acceptingAccent && (lang === 'es' ? heroEy.acceptingAccent.es : heroEy.acceptingAccent.en))
+    || (lang === 'es' ? '3 CLIENTES NUEVOS / MES' : '3 NEW CLIENTS / MONTH');
 
   const heroLine1 = lang === 'es' ? 'Dirige' : 'Run';
   const heroLine2 = lang === 'es' ? 'tu negocio.' : 'your business.';
@@ -671,12 +679,61 @@ function HeroJ({ perso }) {
     // Content
     React.createElement('div', { style: { position: 'relative', zIndex: 1,
       maxWidth: 1180, margin: '0 auto' } },
-      // Kicker row
+      // ─── Row 1: practice line (LEFT) · ONLY ACCEPTING pill (RIGHT) ───
+      // Hover on either eyebrow OR the H1 synchronises all three
+      // micro-interactions, exactly as in E05.
       React.createElement('div', {
-        style: { fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
-                 color: J_MUTE, marginBottom: 40, textTransform: 'uppercase',
-                 fontWeight: 500 } },
-        lang === 'es' ? kickerES : kickerEN),
+        style: { display: 'flex', justifyContent: 'space-between',
+                 alignItems: 'baseline', gap: 24, marginBottom: 48,
+                 flexWrap: 'wrap' } },
+        React.createElement('div', {
+          onMouseEnter: () => setPracticeHover(true),
+          onMouseLeave: () => setPracticeHover(false),
+          style: { cursor: 'default' } },
+          React.createElement('span', { style: {
+            fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
+            textTransform: 'uppercase', fontWeight: 500,
+            color: practiceHover ? J_TANGER : J_MUTE,
+            transition: 'color .35s cubic-bezier(.2,.8,.2,1)',
+          } }, practiceLine)),
+        React.createElement('div', {
+          onMouseEnter: () => setPillHover(true),
+          onMouseLeave: () => setPillHover(false),
+          style: { cursor: 'default', position: 'relative',
+                   display: 'inline-block' } },
+          React.createElement('div', { style: {
+            fontFamily: J_MONO, fontSize: 11, fontWeight: 500,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+          } },
+            React.createElement('span', { style: {
+              color: (titleHover || pillHover) ? J_INK : J_MUTE,
+              transition: 'color .35s cubic-bezier(.2,.8,.2,1)',
+            } }, acceptingPre),
+            React.createElement('span', { style: { color: J_FAINT, margin: '0 0.5em' } }, '·'),
+            React.createElement('span', { style: {
+              position: 'relative', display: 'inline-block',
+              color: (titleHover || pillHover) ? J_TANGER : J_MUTE,
+              transition: 'color .35s cubic-bezier(.2,.8,.2,1)',
+            } },
+              acceptingAccent,
+              React.createElement('span', { 'aria-hidden': true, style: {
+                position: 'absolute', left: 0, right: 0, bottom: -4, height: 1,
+                background: J_TANGER,
+                transformOrigin: 'right',
+                transform: 'scaleX(' + ((titleHover || pillHover) ? 1 : 0) + ')',
+                transition: 'transform .4s cubic-bezier(.2,.8,.2,1)',
+              } }),
+            ),
+          ),
+        ),
+      ),
+      // ─── Row 2: 2-col hero — H1+sub+CTAs LEFT, OperatorCardJ RIGHT ───
+      React.createElement('div', {
+        'data-axius-j-grid': '2col',
+        style: { display: 'grid', gridTemplateColumns: '1.55fr 1fr',
+                 columnGap: 80, rowGap: 32, alignItems: 'start' } },
+      React.createElement('div', { key: 'left',
+        style: { minWidth: 0 } },
       // Industry badge (above H1, when personalized)
       badgeText && React.createElement('div', {
         style: { display: 'inline-flex', alignItems: 'center', gap: 10,
@@ -695,8 +752,8 @@ function HeroJ({ perso }) {
         onMouseEnter: () => setTitleHover(true),
         onMouseLeave: () => setTitleHover(false),
         style: { margin: 0, fontFamily: J_SERIF, fontStyle: 'italic',
-                 fontWeight: 500, fontSize: 104, lineHeight: 1.0,
-                 letterSpacing: '-0.045em', color: J_INK, maxWidth: 980,
+                 fontWeight: 500, fontSize: 88, lineHeight: 1.0,
+                 letterSpacing: '-0.045em', color: J_INK,
                  cursor: 'default' } },
         React.createElement('span', { style: {
           display: 'inline-block',
@@ -790,6 +847,212 @@ function HeroJ({ perso }) {
           React.createElement('span', { style: { fontFamily: J_MONO,
                                                     color: J_TANGER, fontSize: 13 } }, '→')),
       ),
+      ), // end LEFT column wrapper
+      // RIGHT column — Operator Card (E05's "DIRECT LINE TO OPERATOR")
+      React.createElement('div', { key: 'right', style: { minWidth: 0 } },
+        React.createElement(OperatorCardJ, { lang }),
+      ),
+      ), // end 2-col grid wrapper
+    ),
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// OperatorCardJ — hero right-column card with photo + identity + CTAs.
+// Ported VIBE from E05's OperatorCard: chrome eyebrow "DIRECT LINE TO
+// OPERATOR" (tangerine) + mint AI-ONLINE dot, desaturated photo that
+// blooms to colour on hover, "Andrés Toro" name, role line, email line,
+// "Message directly" primary button (dispatches axius:openHeroChat) and
+// "Leave a note" mailto secondary.
+// ════════════════════════════════════════════════════════════════════════
+function OperatorCardJ({ lang }) {
+  const f = window.AxiusFounder || {};
+  const cfg = window.AxiusConfig || {};
+  const photo = f.photo || '/assets/andres-toro.jpg';
+  const email = f.email || 'andres@axius.tech';
+  const [photoHover, setPhotoHover] = React.useState(false);
+
+  const eyebrowOp = 'DIRECT LINE TO OPERATOR';
+  const eyebrowOpEs = 'CONTACTO DIRECTO CON EL OPERADOR';
+  const eyebrowAi = lang === 'es' ? 'IA EN LÍNEA' : 'AI ONLINE';
+  const roleLine = lang === 'es'
+    ? 'Operador · Altamonte Springs, FL · ahora en Medellín'
+    : 'Operator · Altamonte Springs, FL · in Medellín now';
+  const labelEmail = lang === 'es' ? 'CORREO DIRECTO' : 'DIRECT EMAIL';
+  const labelHours = lang === 'es' ? 'HORARIO' : 'HOURS';
+  const hoursVal = lang === 'es' ? 'Lun–Vie · 9:00–18:00 EST' : 'Mon–Fri · 9am–6pm EST';
+  const ctaMsg = lang === 'es' ? 'CONVERSAR AHORA' : 'MESSAGE DIRECTLY';
+  const ctaNote = lang === 'es' ? 'DEJAR UNA NOTA' : 'LEAVE A NOTE';
+
+  const onMessage = () => {
+    const behavior = cfg.ringBehavior || 'inChat';
+    const wa = cfg.whatsappNumber || '';
+    if (behavior === 'whatsapp' && wa) {
+      const intro = lang === 'es'
+        ? "Hola Andrés — estoy en axius.tech y me gustaría escribirte directo."
+        : "Hi Andrés — I'm on axius.tech and would like to message you directly.";
+      window.open('https://wa.me/' + wa + '?text=' + encodeURIComponent(intro),
+        '_blank', 'noopener');
+      return;
+    }
+    try { window.dispatchEvent(new CustomEvent('axius:openHeroChat')); } catch (_) {}
+    // Soft fallback — scroll to dispatch if the diagnostic hasn't been
+    // answered yet (this is what unlocks ChatBubbleJ in Option 5).
+    const P = window.AxiusPersonalization;
+    if (!P || !P.hasAnswered || !P.hasAnswered()) {
+      const ds = document.getElementById('dispatch');
+      if (ds) ds.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  return React.createElement('div', {
+    'data-axius-j-operator-card': true,
+    style: {
+      position: 'relative', background: J_CANVAS,
+      border: J_LINE, width: '100%',
+      display: 'flex', flexDirection: 'column',
+      overflow: 'hidden',
+    } },
+    React.createElement('div', { style: {
+      padding: '14px 22px', borderBottom: J_LINE_LO,
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    } },
+      React.createElement('span', { style: {
+        fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
+        textTransform: 'uppercase', fontWeight: 500, color: J_TANGER,
+      } }, lang === 'es' ? eyebrowOpEs : eyebrowOp),
+      React.createElement('span', { style: {
+        display: 'inline-flex', alignItems: 'center', gap: 8,
+      } },
+        React.createElement('span', { 'aria-hidden': true, style: {
+          display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+          background: J_MINT,
+          boxShadow: '0 0 0 3px rgba(122,146,114,0.18)',
+          animation: 'axJMintPulse 2.4s ease-out infinite',
+        } }),
+        React.createElement('span', { style: {
+          fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
+          textTransform: 'uppercase', fontWeight: 500, color: J_MUTE,
+        } }, eyebrowAi),
+      ),
+    ),
+    React.createElement('div', { style: {
+      padding: '22px 22px',
+      display: 'grid', gridTemplateColumns: '108px 1fr', gap: 22,
+      alignItems: 'center',
+    } },
+      React.createElement('div', {
+        onMouseEnter: () => setPhotoHover(true),
+        onMouseLeave: () => setPhotoHover(false),
+        style: {
+          width: 108, height: 108, border: J_LINE_LO,
+          background: J_CANVAS_LO, overflow: 'hidden', cursor: 'default',
+        } },
+        React.createElement('img', {
+          src: photo, alt: 'Andrés Toro',
+          style: {
+            width: '100%', height: '100%', objectFit: 'cover',
+            objectPosition: '50% 30%',
+            filter: photoHover
+              ? 'grayscale(0) saturate(1.05) contrast(1.02)'
+              : 'grayscale(1) contrast(1.04)',
+            display: 'block',
+            transition: 'filter 1.4s cubic-bezier(.2,.8,.2,1)',
+          } }),
+      ),
+      React.createElement('div', null,
+        React.createElement('div', { style: {
+          fontFamily: J_SERIF, fontWeight: 600, fontSize: 28,
+          letterSpacing: '-0.025em', color: J_INK, lineHeight: 1.05,
+        } }, f.name || 'Andrés Toro'),
+        React.createElement('div', { style: {
+          marginTop: 10,
+          fontFamily: J_MONO, fontSize: 11, fontWeight: 500,
+          color: J_MUTE, letterSpacing: '0.18em', textTransform: 'uppercase',
+        } }, roleLine),
+      ),
+    ),
+    React.createElement('div', { style: { height: 1, background: 'rgba(10,9,7,0.08)' } }),
+    React.createElement('div', { style: { padding: '18px 22px 6px' } },
+      React.createElement('div', { style: {
+        fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
+        textTransform: 'uppercase', fontWeight: 500, color: J_MUTE,
+      } }, labelEmail),
+      React.createElement('a', {
+        href: 'mailto:' + email,
+        className: 'axius-j-link',
+        style: {
+          display: 'inline-block', marginTop: 6,
+          fontFamily: J_MONO, fontSize: 16, color: J_INK,
+          letterSpacing: '-0.005em', textDecoration: 'none',
+          transition: 'color .25s ease',
+        },
+        onMouseEnter: (e) => { e.currentTarget.style.color = J_TANGER; },
+        onMouseLeave: (e) => { e.currentTarget.style.color = J_INK; },
+      }, email),
+    ),
+    React.createElement('div', { style: { padding: '10px 22px 18px' } },
+      React.createElement('div', { style: {
+        fontFamily: J_MONO, fontSize: 11, letterSpacing: '0.18em',
+        textTransform: 'uppercase', fontWeight: 500, color: J_MUTE,
+      } }, labelHours),
+      React.createElement('div', { style: {
+        marginTop: 6, fontFamily: J_MONO, fontSize: 16, color: J_INK,
+        letterSpacing: '-0.005em', fontVariantNumeric: 'tabular-nums',
+      } }, hoursVal),
+    ),
+    React.createElement('div', { style: { height: 1, background: 'rgba(10,9,7,0.08)' } }),
+    React.createElement('div', { style: {
+      padding: '16px 22px', display: 'flex', gap: 10, flexWrap: 'wrap',
+    } },
+      React.createElement('button', {
+        type: 'button', onClick: onMessage,
+        className: 'axius-j-btn',
+        style: {
+          appearance: 'none', cursor: 'pointer',
+          background: J_INK, color: J_CANVAS, border: '1px solid ' + J_INK,
+          padding: '11px 18px',
+          fontFamily: J_MONO, fontSize: 11, fontWeight: 500,
+          letterSpacing: '0.18em', textTransform: 'uppercase',
+          display: 'inline-flex', alignItems: 'center', gap: 10,
+          transition: 'all .25s ease',
+        },
+        onMouseEnter: (e) => {
+          e.currentTarget.style.background = J_TANGER;
+          e.currentTarget.style.borderColor = J_TANGER;
+        },
+        onMouseLeave: (e) => {
+          e.currentTarget.style.background = J_INK;
+          e.currentTarget.style.borderColor = J_INK;
+        },
+      },
+        ctaMsg,
+        React.createElement('span', { style: { fontFamily: J_SERIF,
+                                                fontStyle: 'italic',
+                                                fontSize: 14 } }, '→'),
+      ),
+      React.createElement('a', {
+        href: 'mailto:' + email,
+        className: 'axius-j-link',
+        style: {
+          appearance: 'none', cursor: 'pointer',
+          background: 'transparent', color: J_INK,
+          border: '1px solid rgba(10,9,7,0.20)',
+          padding: '11px 18px',
+          fontFamily: J_MONO, fontSize: 11, fontWeight: 500,
+          letterSpacing: '0.18em', textTransform: 'uppercase',
+          textDecoration: 'none',
+          transition: 'all .25s ease',
+        },
+        onMouseEnter: (e) => {
+          e.currentTarget.style.color = J_TANGER;
+          e.currentTarget.style.borderColor = J_TANGER;
+        },
+        onMouseLeave: (e) => {
+          e.currentTarget.style.color = J_INK;
+          e.currentTarget.style.borderColor = 'rgba(10,9,7,0.20)';
+        },
+      }, ctaNote),
     ),
   );
 }
