@@ -4682,149 +4682,162 @@ window.AxiusDirectionJ = function () {
     );
   };
 
-  // ─── 08 · FOUNDER — three editorial frames (Operator · In studio
-  // · On the go) sitting in a row, with a serif pull-quote overlaid
-  // on the bottom-right of the rightmost frame. Bio + facts flow
-  // below in plain page style — no big surface card.
+  // ─── 06 · OPERATOR — carousel + concise text (Option 5 rebuild) ─
+  // Three founder photos in a fading carousel (Operator / In studio /
+  // On the go), auto-advancing every ~5s with manual dot controls.
+  // Pause on hover. Concise quote + single-line fact strip + LinkedIn
+  // pill + "Talk to me →" CTA. No long-form bio block.
   const Founder = () => {
-    const [headH, setHeadH] = React.useState(false);
-
-    // Three frames — same source photo, different crops + filters.
-    // Idle is desaturated; hover brings each frame into full colour
-    // (and tints its eyebrow caption tangerine), matching the prior
-    // single-photo hover behaviour but spread across three frames.
     const captions = t('sec08FigCaptions');
     const founderPhoto = (window.AxiusFounder && window.AxiusFounder.photo) || '/assets/andres-toro.jpg';
     const frames = [
-      { fig: 'Fig. 01', caption: captions[0], crop: '50% 30%',
-        photo:  founderPhoto,
-        idle:   'grayscale(1) contrast(1.02)',
-        active: 'grayscale(0) saturate(1.05) contrast(1.02)' },
-      { fig: 'Fig. 02', caption: captions[1], crop: '50% 45%',
-        photo:  '/assets/andres-toro-studio.jpg',
-        idle:   'grayscale(0.92) sepia(0.18) contrast(1.06)',
-        active: 'grayscale(0) saturate(1.05) contrast(1.02)' },
-      { fig: 'Fig. 03', caption: captions[2], crop: '50% 35%',
-        photo:  '/assets/andres-toro-on-the-go.jpg',
-        idle:   'grayscale(0.95) sepia(0.06) contrast(1.06) brightness(0.98)',
-        active: 'grayscale(0) saturate(1.06) contrast(1.02)' },
+      { caption: captions[0], crop: '50% 30%', photo: founderPhoto },
+      { caption: captions[1], crop: '50% 45%', photo: '/assets/andres-toro-studio.jpg' },
+      { caption: captions[2], crop: '50% 35%', photo: '/assets/andres-toro-on-the-go.jpg' },
     ];
+    const [active, setActive] = React.useState(0);
+    const [paused, setPaused] = React.useState(false);
+
+    React.useEffect(() => {
+      if (paused) return;
+      const id = setInterval(() => setActive(a => (a + 1) % frames.length), 5000);
+      return () => clearInterval(id);
+    }, [paused, frames.length]);
+
+    const quote   = tr(window.AxiusFounder, 'quote') || '';
+    const factStrip = t('sec06FactStrip');
 
     return (
-      <section id="founder" data-screen-label="08 The Operator" style={{
+      <section id="founder" data-screen-label="06 The Operator" style={{
         padding: `108px ${pad}px`,
         borderTop: `1px solid ${C.line}`,
       }}>
-        {/* Header row — matches sections 01–05 */}
+        <div style={{maxWidth: 1100, marginBottom: 64}}>
+          <Eyebrow style={{marginBottom: 28}}>{t('sec06OperatorEyebrow')}</Eyebrow>
+          <h2 style={{
+            margin: 0, fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+            fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.05,
+            letterSpacing: '-0.025em', color: C.ink,
+          }}>{t('sec08TitlePrefix')}{t('sec08TitleItalic')}{t('sec08TitleSuffix')}</h2>
+        </div>
+
+        {/* Carousel — fading image swap with dot controls */}
         <div
-          onMouseEnter={() => setHeadH(true)}
-          onMouseLeave={() => setHeadH(false)}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
           style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80,
-            alignItems: 'flex-end', marginBottom: 80,
+            position: 'relative',
+            aspectRatio: '16 / 9',
+            maxHeight: 540,
+            border: `1px solid ${C.line}`,
+            background: C.panel,
+            overflow: 'hidden',
           }}>
-          <div>
-            <Eyebrow style={{marginBottom: 28}}>{t('sec08Eyebrow')}</Eyebrow>
-            <HoverHead
-              style={{whiteSpace: 'nowrap'}}
-              prefix={t('sec08TitlePrefix')}
-              italic={t('sec08TitleItalic')}
-              suffix={t('sec08TitleSuffix')}/>
+          {frames.map((f, i) => (
+            <img
+              key={i}
+              src={f.photo}
+              alt={`Andrés Toro · ${f.caption}`}
+              style={{
+                position: 'absolute', inset: 0,
+                width: '100%', height: '100%', objectFit: 'cover',
+                objectPosition: f.crop,
+                filter: 'grayscale(0.04) saturate(1.05) contrast(1.02)',
+                opacity: active === i ? 1 : 0,
+                transition: 'opacity 1.2s cubic-bezier(.2,.8,.2,1)',
+                display: 'block',
+              }}/>
+          ))}
+          {/* Gradient + caption */}
+          <div aria-hidden style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: 'linear-gradient(180deg, rgba(247,246,242,0) 55%, rgba(247,246,242,0.78) 100%)',
+          }}/>
+          <div style={{
+            position: 'absolute', bottom: 24, left: 28,
+            fontFamily: MONO, fontSize: 11, fontWeight: 500,
+            color: C.tangerine, letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+          }}>{frames[active].caption}</div>
+          {/* Dots */}
+          <div style={{
+            position: 'absolute', bottom: 24, right: 28,
+            display: 'inline-flex', gap: 10,
+          }}>
+            {frames.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Frame ${i + 1}`}
+                onClick={() => setActive(i)}
+                style={{
+                  appearance: 'none', cursor: 'pointer',
+                  width: 10, height: 10, borderRadius: '50%',
+                  background: active === i ? C.tangerine : 'rgba(10,9,7,0.18)',
+                  border: 'none', padding: 0,
+                  transition: 'background .25s ease',
+                }}/>
+            ))}
           </div>
         </div>
 
-        {/* Three-image strip — each frame desaturates by default and
-            blooms into colour on hover (eyebrow caption flips to
-            tangerine), matching the prior single-photo treatment. */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
-        }}>
-          {frames.map((f, i) => <FounderFrame key={i} f={f} C={C}/>)}
-        </div>
+        {/* Concise quote */}
+        <p style={{
+          margin: '40px 0 0', maxWidth: 880,
+          fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400,
+          fontSize: 'clamp(20px, 2.4vw, 28px)',
+          color: C.ink, lineHeight: 1.4,
+          letterSpacing: '-0.012em',
+        }}>{quote}</p>
 
-        {/* Bio (left, scrolling) and CTAs (right, fixed) share a single
-            row below the images.  The bio is the new long-form 5-para
-            version; the scroll panel deliberately ends at "Axius was
-            built to solve that." so the third paragraph reads as a
-            natural landing line — the rest is revealed when the visitor
-            scrolls within the panel.  Right column CTAs stay anchored
-            in place while the bio scrolls. */}
+        {/* Fact strip — single line */}
+        <div style={{
+          marginTop: 32, paddingTop: 24,
+          borderTop: `1px solid ${C.line}`,
+          fontFamily: MONO, fontSize: 11, fontWeight: 500,
+          color: C.dim, letterSpacing: '0.14em',
+          textTransform: 'uppercase',
+          lineHeight: 1.7,
+        }}>{factStrip}</div>
+
+        {/* CTA row — LinkedIn pill + Talk-to-me */}
         <div style={{
           marginTop: 28,
-          display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 80,
-          alignItems: 'start',
+          display: 'inline-flex', flexWrap: 'wrap', gap: 12, alignItems: 'center',
         }}>
-          <div style={{position: 'relative', maxWidth: 560}}>
-            <div className="ax-quietJ-scroll" style={{
-              maxHeight: 188, overflowY: 'auto', paddingRight: 14,
-              scrollbarGutter: 'stable',
-            }}>
-              {String(tr(window.AxiusFounder, 'bio') || '')
-                .split(/\n\n+/)
-                .map((para, i) => (
-                  <p key={i} style={{
-                    margin: i === 0 ? '0 0 14px' : '14px 0',
-                    fontSize: 18, color: C.dim, lineHeight: 1.55,
-                    letterSpacing: '-0.003em',
-                  }}>{para}</p>
-                ))}
-            </div>
-            {/* Soft fade hint at the bottom of the scroll panel so the
-                visitor sees there's more below "Axius was built to
-                solve that." — the visible area ends right at that line. */}
-            <div aria-hidden style={{
-              position: 'absolute', left: 0, right: 14, bottom: 0,
-              height: 42, pointerEvents: 'none',
-              background: `linear-gradient(180deg, ${C.bg}00, ${C.bg} 88%)`,
-            }}/>
-          </div>
-          {/* Right column — LinkedIn pill + Talk-to-me CTA, anchored
-              to the TOP of the row so the buttons sit right under the
-              image strip, in line with where the bio description
-              begins.  Clicking Talk-to-me smooth-scrolls back to the
-              hero and fires the openHeroChat event. */}
-          <div style={{
-            justifySelf: 'end', alignSelf: 'start',
-            display: 'flex', alignItems: 'center', gap: 12,
-            flexWrap: 'wrap',
-          }}>
-            {window.AxiusConfig && window.AxiusConfig.linkedinUrl && (
-              <a href={window.AxiusConfig.linkedinUrl} target="_blank" rel="noopener noreferrer" style={{
-                appearance: 'none', cursor: 'pointer',
-                background: 'transparent', color: C.ink, border: `1px solid ${C.lineHi}`,
-                padding: '13px 18px',
-                fontFamily: MONO, fontSize: 11, fontWeight: 500,
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                textDecoration: 'none',
-                display: 'inline-flex', alignItems: 'center', gap: 10,
-                transition: 'all .25s ease',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = C.ink; e.currentTarget.style.borderColor = C.lineHi; }}>
-                {t('sec08VerifyLinkedin')}
-                <span aria-hidden>↗</span>
-              </a>
-            )}
-            <button type="button"
-              onClick={() => {
-                scrollToId('hero');
-                setTimeout(() => window.dispatchEvent(new CustomEvent('axius:openHeroChat')), 650);
-              }}
-              style={{
-                appearance: 'none', cursor: 'pointer',
-                background: C.ink, color: C.bg, border: `1px solid ${C.ink}`,
-                padding: '13px 22px',
-                fontFamily: MONO, fontSize: 11, fontWeight: 500,
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                display: 'inline-flex', alignItems: 'center', gap: 10,
-                transition: 'all .25s ease',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = C.ink; e.currentTarget.style.borderColor = C.ink; }}>
-              {t('sec08TalkToMe')}
-              <span style={{fontFamily: SERIF, fontStyle: 'italic', fontSize: 14}}>→</span>
-            </button>
-          </div>
+          {window.AxiusConfig && window.AxiusConfig.linkedinUrl && (
+            <a href={window.AxiusConfig.linkedinUrl} target="_blank" rel="noopener noreferrer" style={{
+              appearance: 'none', cursor: 'pointer',
+              background: 'transparent', color: C.ink, border: `1px solid ${C.lineHi}`,
+              padding: '13px 18px',
+              fontFamily: MONO, fontSize: 11, fontWeight: 500,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              transition: 'all .25s ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = C.ink; e.currentTarget.style.borderColor = C.lineHi; }}>
+              {t('sec08VerifyLinkedin')}
+              <span aria-hidden>↗</span>
+            </a>
+          )}
+          <button type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('axius:openChat'))}
+            style={{
+              appearance: 'none', cursor: 'pointer',
+              background: C.ink, color: C.bg, border: `1px solid ${C.ink}`,
+              padding: '13px 22px',
+              fontFamily: MONO, fontSize: 11, fontWeight: 500,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              transition: 'all .25s ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = C.tangerine; e.currentTarget.style.borderColor = C.tangerine; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = C.ink; e.currentTarget.style.borderColor = C.ink; }}>
+            {t('sec08TalkToMe')}
+            <span style={{fontFamily: SERIF, fontStyle: 'italic', fontSize: 14}}>→</span>
+          </button>
         </div>
       </section>
     );
