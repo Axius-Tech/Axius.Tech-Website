@@ -5844,9 +5844,10 @@ window.AxiusDirectionJ = function () {
               ×
             </button>
           </div>
-          {/* Body — reuse the existing AskAndres surface. */}
+          {/* Body — reuse the existing AskAndres surface.
+              No onBack: the bubble's × close button is the dismissal. */}
           <div style={{flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden'}}>
-            <AskAndres key={lang} autofocus operatorChrome onBack={() => setOpen(false)}/>
+            <AskAndres key={lang} autofocus operatorChrome/>
           </div>
         </div>
       );
