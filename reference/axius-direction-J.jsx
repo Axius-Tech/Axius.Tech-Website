@@ -3082,7 +3082,7 @@ window.AxiusDirectionJ = function () {
             style={{
               gridColumn: 1, gridRow: 1,
               margin: 0, fontFamily: DISPLAY, fontWeight: 600,
-              fontSize: 104, lineHeight: 1.0, letterSpacing: '-0.045em',
+              fontSize: 'clamp(56px, 7.2vw, 96px)', lineHeight: 1.02, letterSpacing: '-0.042em',
               color: C.ink,
               fontFeatureSettings: '"ss03", "calt", "kern"',
               cursor: 'default',
@@ -5217,7 +5217,7 @@ window.AxiusDirectionJ = function () {
         <HoverHead
           accent={C.tangerine}
           italicSweep
-          style={{fontSize: 'clamp(56px, 6.4vw, 80px)', letterSpacing: '-0.045em', lineHeight: 0.98}}
+          style={{fontSize: 'clamp(48px, 5.6vw, 72px)', letterSpacing: '-0.04em', lineHeight: 1.0}}
           prefix={t('ctaTitlePrefix')}
           italic={t('ctaTitleItalic')}
           suffix={t('ctaTitleSuffix')}/>
