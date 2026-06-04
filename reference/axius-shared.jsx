@@ -1150,3 +1150,198 @@ window.AxiusJsonLdV4 = {
     'https://cal.com/andrestoro/discovery-call',
   ],
 };
+
+// ════════════════════════════════════════════════════════════════════════
+// OPTION 5 — FINAL VARIANT (served at /v5)
+// ════════════════════════════════════════════════════════════════════════
+// Restores Option 1 (E05) premium micro-interactions on top of Option 3
+// architecture + Option 4 commercial polish.
+
+window.AxiusVideoIntroV5 = {
+  // Editorial typographic motion: 20-30s sequence, skippable
+  durationSec: 24,
+  frames: [
+    { atMs: 0,    en: 'Run',                       es: 'Tú llevas' },
+    { atMs: 1200, en: 'your business.',            es: 'tu negocio.' },
+    { atMs: 2400, en: 'Not your tech.',            es: 'No tu tech.' },
+    { atMs: 5500, en: 'For real-estate operators —', es: 'Para operadores inmobiliarios —' },
+    { atMs: 8000, en: 'For agency founders —',     es: 'Para fundadores de agencia —' },
+    { atMs: 10500, en: 'For wellness operators —', es: 'Para operadores de bienestar —' },
+    { atMs: 13000, en: 'For hospitality operators —', es: 'Para operadores de hostelería —' },
+    { atMs: 15500, en: 'For ecommerce operators —', es: 'Para operadores de ecommerce —' },
+    { atMs: 18000, en: 'For healthcare operators —', es: 'Para operadores de salud —' },
+    { atMs: 21000, en: 'Run by Andrés Toro · Medellín · Florida', es: 'Operado por Andrés Toro · Medellín · Florida' },
+  ],
+};
+
+// Hero badge per industry — surfaced ABOVE the H1 when personalized
+window.AxiusHeroBadgeV5 = {
+  realestate:   { en: 'FOR REAL ESTATE OPERATORS',         es: 'PARA OPERADORES INMOBILIARIOS' },
+  healthcare:   { en: 'FOR HEALTHCARE OPERATORS',          es: 'PARA OPERADORES DE SALUD' },
+  professional: { en: 'FOR PROFESSIONAL SERVICES',         es: 'PARA SERVICIOS PROFESIONALES' },
+  ecommerce:    { en: 'FOR ECOMMERCE OPERATORS',           es: 'PARA OPERADORES DE ECOMMERCE' },
+  education:    { en: 'FOR EDUCATION OPERATORS',           es: 'PARA OPERADORES DE EDUCACIÓN' },
+  other:        { en: 'FOR INDEPENDENT OPERATORS',         es: 'PARA OPERADORES INDEPENDIENTES' },
+};
+
+// 'Most Requested' cross-category top 6 workflows
+window.AxiusMostRequestedV5 = [
+  { n: '001', category: 'sales',    name: 'Missed-call recovery',         metric: '11 leads recovered / mo avg' },
+  { n: '017', category: 'cx',       name: 'AI FAQ chatbot',               metric: '60-80% support deflection' },
+  { n: '035', category: 'ops',      name: 'Cross-tool sync',              metric: 'CRM ↔ accounting ↔ projects' },
+  { n: '050', category: 'ai',       name: 'Knowledge-base agent',         metric: 'RAG over your docs' },
+  { n: '064', category: 'data',     name: 'Dashboard automation',         metric: 'Revenue · ops · sales' },
+  { n: '107', category: 'grow',     name: 'Email marketing automation',   metric: 'Transactional + segmented' },
+];
+
+// Per-workflow operational metrics (fabricated, gated by axiusFabricationLive)
+// Used inside Catalog rows to give each capability a numeric handle
+window.AxiusWorkflowMetricsV5 = {
+  '001': '4h → 3m response',     '002': '47% reactivation rate',  '003': '3× faster qualification',
+  '017': '~70% deflection',      '018': '8h SLA → <1h',           '019': '5 inboxes → 1',
+  '034': '45min → 8min onboard', '035': 'eliminates 12 manual hops','037': '$1.4k/mo SaaS savings',
+  '050': '90s answer vs 12min search', '052': '2.3× pipeline accuracy', '064': 'live ops board',
+  '077': '4-week prod ship',     '107': '38% open rate avg',       '120': 'sub-day audio output',
+};
+
+// FAQ — refreshed for Option 5 positioning
+window.AxiusFAQV5 = [
+  { q: 'Is this an agency, or a contractor, or what exactly?',
+    a: 'Neither. Axius is a small operating practice — one accountable operator (Andrés) running your technology layer, with a vetted specialist bench underneath when work needs depth. Same hand on your stack month after month.',
+    qEs: '¿Esto es una agencia, un contratista, o qué exactamente?',
+    aEs: 'Ninguno. Axius es una práctica operativa pequeña — un operador responsable (Andrés) llevando tu capa de tecnología, con un banco de especialistas verificados debajo cuando el trabajo necesita profundidad. La misma mano en tu stack mes a mes.' },
+  { q: 'What if I already have a developer / agency / contractor?',
+    a: 'We work alongside them where it makes sense. Axius is the layer that coordinates, documents, and ensures things compound — not necessarily a replacement. Most clients keep specialists on contract and use Axius for ownership.',
+    qEs: '¿Qué pasa si ya tengo un desarrollador / agencia / contratista?',
+    aEs: 'Trabajamos en paralelo con ellos donde tiene sentido. Axius es la capa que coordina, documenta y asegura que las cosas compongan — no necesariamente un reemplazo. La mayoría de clientes mantienen especialistas y usan Axius para propiedad operativa.' },
+  { q: 'How do you handle confidentiality?',
+    a: 'NDA on every engagement, before access. We use access-scoped credentials with rotation. Everything lives in your accounts, not ours — Axius operates inside your stack, not in a black box.',
+    qEs: '¿Cómo manejan la confidencialidad?',
+    aEs: 'NDA en cada engagement, antes del acceso. Usamos credenciales con scope limitado y rotación. Todo vive en tus cuentas, no en las nuestras — Axius opera dentro de tu stack, no en una caja negra.' },
+  { q: 'What does the first 30 days actually look like?',
+    a: 'Week 1: discovery + audit of current stack. Week 2: roadmap + priorities + first win identified. Week 3-4: first system stood up + monitored + documented. You get a written ops report monthly thereafter.',
+    qEs: '¿Cómo se ven realmente los primeros 30 días?',
+    aEs: 'Semana 1: descubrimiento + auditoría del stack actual. Semana 2: roadmap + prioridades + primera win identificada. Semana 3-4: primer sistema implementado + monitoreado + documentado. Recibes un reporte operativo escrito mensual a partir de ahí.' },
+  { q: 'Can I pause or cancel?',
+    a: 'Pause anytime after 90 days. Cancel with 30 days notice. We give you full documentation of every system on the way out — nothing locks you in.',
+    qEs: '¿Puedo pausar o cancelar?',
+    aEs: 'Pausa en cualquier momento después de 90 días. Cancelar con 30 días de aviso. Te entregamos documentación completa de cada sistema al salir — nada te ata.' },
+  { q: 'Where are you based?',
+    a: 'Medellín, Colombia. Remote-first. US business hours by default. Available in EN and ES.',
+    qEs: '¿Dónde están ubicados?',
+    aEs: 'Medellín, Colombia. Trabajamos 100% remoto. Horario laboral de EE.UU. por defecto. Disponibles en EN y ES.' },
+  { q: 'What is the Founder Track?',
+    a: 'For founders running multiple businesses or building a portfolio — one Axius operator across all of them, shared monthly fee, with continuity. Reach out for details.',
+    qEs: '¿Qué es el Founder Track?',
+    aEs: 'Para fundadores que operan múltiples negocios o construyen un portafolio — un solo operador de Axius en todos, cuota mensual compartida, con continuidad. Contáctanos para detalles.' },
+];
+
+// Nav links for the new Option 5 top bar
+window.AxiusNavV5 = [
+  { labelEn: 'Catalog',     labelEs: 'Catálogo',     href: '#catalog' },
+  { labelEn: 'How it Runs', labelEs: 'Cómo Opera',   href: '#how-it-runs' },
+  { labelEn: 'Pricing',     labelEs: 'Precios',      href: '#pricing' },
+  { labelEn: 'Founder',     labelEs: 'Fundador',     href: '#founder' },
+];
+
+// Updated pricing for V5 (setup fee restored, Founder Track badge added)
+window.AxiusPricingV5 = [
+  { id: 'operator', name: 'Operator',
+    sub:   'Technology ownership for a few critical systems.',
+    subEs: 'Propiedad tecnológica para algunos sistemas críticos.',
+    priceMonthly:   '$2,500/mo',
+    priceMonthlyEs: '$2,500/mes',
+    priceSetup:     '+ $1,250 setup',
+    priceSetupEs:   '+ $1,250 configuración',
+    founderTrackBadge: { en: 'FOUNDER TRACK', es: 'FOUNDER TRACK' },
+    founderTrackNote: { en: 'For founders running multiple businesses — one operator across all of them.',
+                         es: 'Para fundadores que operan múltiples negocios — un solo operador para todos.' },
+    checkoutUrl: 'https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01',
+    featured: false,
+    features: [
+      'One critical system, owned end to end',
+      'Email + Slack · same-day response on issues',
+      'Monthly operations report',
+      'Pause anytime after 90 days',
+    ],
+    featuresEs: [
+      'Un sistema crítico, propiedad de punta a punta',
+      'Email + Slack · respuesta el mismo día',
+      'Reporte operativo mensual',
+      'Pausa en cualquier momento después de 90 días',
+    ],
+  },
+  { id: 'team', name: 'Team',
+    sub:   'Continuous operational improvement.',
+    subEs: 'Mejora operativa continua.',
+    priceMonthly:   '$5,000/mo',
+    priceMonthlyEs: '$5,000/mes',
+    priceSetup:     '+ $2,500 setup',
+    priceSetupEs:   '+ $2,500 configuración',
+    checkoutUrl: 'https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02',
+    featured: true,
+    features: [
+      'Multiple coordinated systems',
+      'Biweekly ops call · <24h response window',
+      'Monthly written report + quarterly strategy',
+      'First-month outcome guarantee',
+    ],
+    featuresEs: [
+      'Múltiples sistemas coordinados',
+      'Llamada operativa quincenal · respuesta <24h',
+      'Reporte mensual + estrategia trimestral',
+      'Garantía de resultado el primer mes',
+    ],
+  },
+  { id: 'department', name: 'Department',
+    sub:   'Custom Engagement',
+    subEs: 'Engagement Personalizado',
+    body:   'Technology leadership. Operational ownership. Dedicated capacity.',
+    bodyEs: 'Liderazgo tecnológico. Propiedad operativa. Capacidad dedicada.',
+    priceMonthly:   null,
+    priceMonthlyEs: null,
+    priceSetup:     null,
+    priceSetupEs:   null,
+    checkoutUrl: null,
+    featured: false,
+    features: [
+      'Named operator dedicated to your business',
+      '24/7 access · same-hour response on critical',
+      'Quarterly executive review + roadmap',
+      'Full system documentation + risk register',
+    ],
+    featuresEs: [
+      'Operador asignado dedicado a tu negocio',
+      'Acceso 24/7 · respuesta en la hora en críticos',
+      'Revisión ejecutiva trimestral + roadmap',
+      'Documentación completa del sistema + registro de riesgos',
+    ],
+  },
+];
+
+// "Before and after Axius" — the replacement for What Changes
+// (uses AxiusBeforeAfterV3 for the lists, adds metrics + intro copy)
+window.AxiusBeforeAndAfterV5 = {
+  eyebrow:   { en: 'BEFORE AND AFTER AXIUS', es: 'ANTES Y DESPUÉS DE AXIUS' },
+  title:     { en: 'You started a business. Not a technology department.',
+               es: 'Empezaste un negocio. No un departamento de tecnología.' },
+  // Conditional "before" copy keyed by friction id (V3 challenge id)
+  frictionBefore: {
+    manual:    { en: "Twelve manual hops between tools, every week.", es: "Doce saltos manuales entre herramientas, cada semana." },
+    sales:     { en: "Leads slipping through, follow-up depending on memory.", es: "Leads escapándose, seguimiento dependiendo de la memoria." },
+    support:   { en: "Five inboxes, no triage, customers waiting hours.", es: "Cinco inboxes, sin triage, clientes esperando horas." },
+    ops:       { en: "Three contractors, eight tools, nobody owning the stack.", es: "Tres contratistas, ocho herramientas, nadie dueño del stack." },
+    reporting: { en: "Reports take days. By the time they're done they're stale.", es: "Los reportes toman días. Para cuando están listos, ya están desactualizados." },
+    scaling:   { en: "Growing means hiring. Hiring means hiring problems.", es: "Crecer significa contratar. Contratar significa contratar problemas." },
+  },
+  afterUniversal: {
+    en: 'One accountable operator running the layer, every month, with documented systems.',
+    es: 'Un operador responsable llevando la capa, cada mes, con sistemas documentados.',
+  },
+  metrics: [  // Fabricated, gated by axiusFabricationLive
+    { label: 'FASTER EXECUTION',  value: '10×' },
+    { label: 'OPERATIONAL COST',  value: '3× LOWER' },
+    { label: 'RESPONSE SPEED',    value: 'IMMEDIATE AI' },
+    { label: 'VISIBILITY',        value: 'FULL REPORTING' },
+  ],
+};
