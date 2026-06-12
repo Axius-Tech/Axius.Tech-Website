@@ -180,12 +180,19 @@ a { color: inherit; }
   transition: opacity 1.15s ease, transform 1.15s ease;
 }
 .open > h1, .open .floor { position: relative; z-index: 2; }
+/* smooth post-veil reveal: soft rise + de-blur, no mask snap */
+.js .soft {
+  opacity: 0; transform: translateY(14px); filter: blur(10px);
+  transition: opacity 1.25s ease, transform 1.25s var(--ease), filter 1.25s ease;
+}
+.js .soft.on { opacity: 1; transform: none; filter: blur(0); }
+.js .soft.d1 { transition-delay: .18s; }
 .open h1 {
   margin: 0; cursor: default;
-  font-family: var(--serif); font-variation-settings: "opsz" 144;
-  font-weight: 500;
-  font-size: clamp(68px, 10.5vw, 152px);
-  line-height: .98; letter-spacing: -.03em;
+  font-family: var(--sans);
+  font-variation-settings: "wght" 615;
+  font-size: clamp(64px, 10vw, 144px);
+  line-height: .98; letter-spacing: -.042em;
 }
 .open h1 .l1 {
   display: inline-block; transform-origin: 0 60%;
@@ -224,11 +231,15 @@ a { color: inherit; }
   width: 46px; height: 46px; border: 1px solid var(--ink-24); border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden; flex-shrink: 0;
-  transition: border-color .5s var(--ease);
 }
-.scrollcue .ring span {
-  font-family: var(--sans); font-size: 15px; color: var(--green);
-  animation: cueDrop 1.9s var(--ease) infinite;
+.scrollcue .ring svg { position: absolute; width: 16px; height: 16px; color: var(--green); }
+.scrollcue .ring .ico-arrow { animation: cueDrop 1.9s var(--ease) infinite; }
+.scrollcue .ring .ico-hand { opacity: 0; }
+.scrollcue.welcome .ring .ico-arrow { opacity: 0; animation: none; }
+.scrollcue.welcome .ring .ico-hand {
+  opacity: 1;
+  animation: cueWave 1.6s ease-in-out infinite;
+  transform-origin: 50% 80%;
 }
 @keyframes cueDrop {
   0% { transform: translateY(-26px); opacity: 0; }
@@ -236,17 +247,11 @@ a { color: inherit; }
   70% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(26px); opacity: 0; }
 }
-/* once scrolling starts: arrow becomes a wave, scroll becomes welcome */
-.scrollcue.welcome .ring { border-color: var(--green); }
-.scrollcue.welcome .ring span {
-  animation: cueWave 1.6s ease-in-out infinite;
-  transform-origin: 70% 70%; font-size: 17px;
-}
 @keyframes cueWave {
   0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(20deg); }
-  50% { transform: rotate(-8deg); }
-  75% { transform: rotate(14deg); }
+  25% { transform: rotate(16deg); }
+  50% { transform: rotate(-6deg); }
+  75% { transform: rotate(10deg); }
 }
 
 /* ── marquee ──────────────────────────────────────────────── */
@@ -366,7 +371,21 @@ section { border-top: 1px solid var(--rule); }
 }
 .step .art .a { font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--on-green-40); }
 
-/* ── IV · the terms ───────────────────────────────────────── */
+/* ── IV · the model ───────────────────────────────────────── */
+.model { background: var(--ivory-2); padding: clamp(120px, 15vh, 190px) 0; }
+.mgrid { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 64px); }
+.mcol { border-top: 1px solid var(--ink); padding-top: 24px; }
+.mcol .mk {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+}
+.mcol h3 { margin: 12px 0 0; font-family: var(--sans); font-weight: 600; font-size: 21px; letter-spacing: -.02em; line-height: 1.25; }
+.mcol ul { margin: 20px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; }
+.mcol li { font-size: 14.5px; color: var(--ink-70); padding-left: 20px; position: relative; line-height: 1.5; }
+.mcol li::before { content: "+"; position: absolute; left: 0; font-family: var(--mono); color: var(--green); }
+@media (max-width: 1024px) { .mgrid { grid-template-columns: 1fr; } }
+
+/* ── V · the terms ────────────────────────────────────────── */
 .terms { padding: clamp(120px, 15vh, 190px) 0; border-top: none; }
 .terms .intro { margin: 22px 0 0; max-width: 540px; font-size: 17px; line-height: 1.7; color: var(--ink-55); }
 .tgrid { margin-top: 64px; display: grid; grid-template-columns: 1fr 1.12fr 1fr; gap: 22px; align-items: stretch; }
@@ -504,6 +523,20 @@ section { border-top: 1px solid var(--rule); }
 }
 .car img.cur { opacity: 1; transform: scale(1.07); }
 .car:hover img { filter: grayscale(1) contrast(1.05); }
+/* color lens — a circle around the cursor stays in color while the
+   rest of the frame goes B&W on hover */
+.car .lens {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0; transition: opacity .3s var(--ease);
+  clip-path: circle(0px at 50% 50%);
+}
+.car:hover .lens { opacity: 1; }
+.car .lens img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  opacity: 1 !important; transform: scale(1.07) !important;
+  filter: none !important; transition: none !important;
+}
 /* identity under the carousel */
 .carid { margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .carid .cn2 { font-family: var(--serif); font-variation-settings: "opsz" 144; font-weight: 500; font-size: 24px; letter-spacing: -.01em; }
@@ -721,12 +754,18 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
       <span class="sb">Based out of Altamonte Springs, Florida</span>
     </span>
   </div>
-  <h1 data-stagger class="rv-h" id="h1">
-    <span class="ln"><span><span class="l1">Run your business.</span></span></span>
-    <span class="ln"><span><span class="it">Not your tech.</span></span></span>
+  <h1 class="soft" id="h1">
+    <span class="l1">Run your business.</span><br>
+    <span class="it">Not your tech.</span>
   </h1>
-  <div class="floor fd">
-    <span class="scrollcue" id="cue"><span class="ring"><span id="cueglyph">↓</span></span> <span id="cuetext">Scroll</span></span>
+  <div class="floor soft d1">
+    <span class="scrollcue" id="cue">
+      <span class="ring" aria-hidden="true">
+        <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+        <svg class="ico-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+      </span>
+      <span id="cuetext">Scroll</span>
+    </span>
     <div class="cell">
       <span class="label">The proposition</span>
       <p>One operator takes ownership of every system in your business and runs it like a department.</p>
@@ -743,6 +782,8 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
   <div class="track">
     <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Operations <b>·</b></span>
     <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Operations <b>·</b></span>
+    <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Operations <b>·</b></span>
+    <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Operations <b>·</b></span>
   </div>
 </div>
 
@@ -750,7 +791,7 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
 <section class="manifesto" data-theme="green" id="why" style="border-top:none">
   <div class="wrap">
     <span class="label"><span class="n">I</span> · Why we exist</span>
-    <p class="mtext" id="mtext">Every company is now a technology company. Nobody asked if you wanted one. The tools multiplied. The logins multiplied. Running the business quietly became running the machine. We exist so you can stop.</p>
+    <p class="mtext" id="mtext">You started a business. It came with a second job nobody mentioned: the website, the CRM, the logins, the automation that breaks quietly at 2 a.m. That job now has an owner. And it isn't you.</p>
     <div class="mfoot fd">
       <span>Axius · Technology operations</span>
       <span>For owners who refuse to be the entire tech department</span>
@@ -920,10 +961,56 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
   </div>
 </section>
 
-<!-- ════ IV · THE TERMS ════ -->
-<section class="terms" id="terms">
+<!-- ════ IV · THE MODEL ════ -->
+<section class="model" id="model">
   <div class="wrap">
-    <span class="label"><span class="n">IV</span> · The terms</span>
+    <span class="label"><span class="n">IV</span> · The model</span>
+    <h2 class="h2" data-stagger>
+      <span class="ln"><span>Three roles.</span></span>
+      <span class="ln"><span><em>One accountable layer.</em></span></span>
+    </h2>
+    <div class="mgrid fd">
+      <div class="mcol">
+        <div class="mk">Operator</div>
+        <h3>Owns direction and accountability.</h3>
+        <ul>
+          <li>Single point of contact</li>
+          <li>Sets operational direction</li>
+          <li>Owns outcomes and execution</li>
+          <li>Accountable when systems change</li>
+          <li>Same hand on your systems</li>
+        </ul>
+      </div>
+      <div class="mcol">
+        <div class="mk">AI systems</div>
+        <h3>Increase speed and continuity.</h3>
+        <ul>
+          <li>Maintain workflow context</li>
+          <li>Handle repetitive operational work</li>
+          <li>Improve response times</li>
+          <li>Monitor systems quietly in the background</li>
+          <li>Keep documentation current</li>
+        </ul>
+      </div>
+      <div class="mcol">
+        <div class="mk">Specialists</div>
+        <h3>Integrated when depth is needed.</h3>
+        <ul>
+          <li>Vetted specialists across the work</li>
+          <li>Engineering, automation, design, infrastructure</li>
+          <li>Managed entirely by the operator</li>
+          <li>No vendor coordination on your side</li>
+          <li>Quality controlled before delivery</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ V · THE TERMS ════ -->
+<section class="terms" id="terms" style="border-top:none">
+  <div class="wrap">
+    <span class="label"><span class="n">V</span> · The terms</span>
     <h2 class="h2" data-stagger>
       <span class="ln"><span>No hourly billing.</span></span>
       <span class="ln"><span><em>One monthly figure.</em></span></span>
@@ -1004,7 +1091,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
     <div class="psticky">
       <div class="wrap" style="width:100%">
         <div class="phead">
-          <span class="label"><span class="n">V</span> · In practice</span>
+          <span class="label"><span class="n">VI</span> · In practice</span>
           <div class="fivestar">
             <div class="stars">★★★★★</div>
             <div class="sl">Five-star operations, on record</div>
@@ -1052,7 +1139,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
 <!-- ════ VI · THE OPERATOR ════ -->
 <section class="operator" id="operator" style="border-top:none">
   <div class="wrap">
-    <span class="label"><span class="n">VI</span> · The operator</span>
+    <span class="label"><span class="n">VII</span> · The operator</span>
     <h2 class="h2" data-stagger>
       <span class="ln"><span>One operator.</span></span>
       <span class="ln"><span><em>Every system.</em></span></span>
@@ -1077,11 +1164,11 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
       </div>
 
       <div class="body">
-        <p class="fd">Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business, so the founder can stop being IT.</p>
+        <p class="fd">“Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business, so the founder can stop being IT.”</p>
         <p class="dim fd fd-1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator takes ownership of the entire technical layer of your business and runs it the way a department would, with the overhead of none.</p>
         <p class="dim fd fd-2">You get one line to message. One monthly figure. One person whose name is on the work. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
         <div class="fd fd-2" style="margin-top:34px">
-          <a class="pill-ink" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Contact me <span>→</span></a>
+          <a class="pill-ink" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Take the trade · 30 min <span>→</span></a>
         </div>
         <div class="facts fd fd-3">
           <div><div class="fv serif"><span data-count="118">0</span></div><div class="fk">Named workflows</div></div>
@@ -1096,7 +1183,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
 <!-- ════ VII · BEGIN ════ -->
 <section class="invite" data-theme="green" id="begin">
   <div class="wrap in">
-    <span class="label"><span class="n">VII</span> · Begin</span>
+    <span class="label"><span class="n">VIII</span> · Begin</span>
     <h2 data-stagger class="rv-h">
       <span class="ln"><span>Thirty minutes.</span></span>
       <span class="ln"><span>A one-page audit either way.</span></span>
@@ -1170,20 +1257,17 @@ const openH1 = document.getElementById('h1');
 setTimeout(() => {
   veil.classList.add('lift');
   setTimeout(() => veil.remove(), 1100);
-  setTimeout(() => openH1.classList.add('on'), 240);
-  setTimeout(() => document.querySelector('.open .floor').classList.add('on'), 700);
-  setTimeout(() => openH1.querySelectorAll('.ln').forEach(l => l.style.overflow = 'visible'), 2400);
+  setTimeout(() => openH1.classList.add('on'), 300);
+  setTimeout(() => document.querySelector('.open .floor').classList.add('on'), 380);
 }, 1450);
 
 /* ── scroll cue → wave + welcome once scrolling starts ─────── */
 const cue = document.getElementById('cue');
-const cueGlyph = document.getElementById('cueglyph');
 const cueText = document.getElementById('cuetext');
 addEventListener('scroll', () => {
   const w = scrollY > 60;
   if (w !== cue.classList.contains('welcome')) {
     cue.classList.toggle('welcome', w);
-    cueGlyph.textContent = w ? '👋' : '↓';
     cueText.textContent = w ? 'Welcome' : 'Scroll';
   }
 }, { passive: true });
@@ -1206,8 +1290,11 @@ addEventListener('scroll', () => {
     { color: '#0E241B', w: 230, h: 150 },
     { color: '#A8B5A0', w: 160, h: 210 },
   ];
+  const h1El = document.getElementById('h1');
   let lastX = -1, lastY = -1, acc = 0, idx = 0, live = 0;
   hero.addEventListener('mousemove', (e) => {
+    // only above the title — below it the trail fights the text/CTAs
+    if (h1El && e.clientY > h1El.getBoundingClientRect().top - 10) return;
     const r = hero.getBoundingClientRect();
     const x = e.clientX - r.left, y = e.clientY - r.top;
     if (lastX < 0) { lastX = x; lastY = y; return; }
@@ -1315,6 +1402,21 @@ if (ptall && ptrack) {
   onScroll();
 }
 
+/* ── pricing bars: replay the fill animation on hover ──────── */
+document.querySelectorAll('.tcard').forEach(card => {
+  const fills = card.querySelectorAll('.btrack i');
+  if (!fills.length) return;
+  card.addEventListener('mouseenter', () => {
+    fills.forEach(f => {
+      f.style.transition = 'none';
+      f.style.width = '0px';
+      void f.offsetWidth;
+      f.style.transition = '';
+      f.style.width = '';
+    });
+  });
+});
+
 /* ── operator carousel: advance when the zoom completes ────── */
 const car = document.getElementById('car');
 if (car) {
@@ -1322,6 +1424,25 @@ if (car) {
   const cap = document.getElementById('carcap');
   const dots = document.getElementById('cardots');
   let curI = 0, timer = null;
+
+  // color lens — a circle of color around the cursor while the
+  // rest of the frame sits in B&W (mirrors the logo-hover cursor)
+  const lens = document.createElement('div');
+  lens.className = 'lens';
+  const lensImg = document.createElement('img');
+  lensImg.alt = '';
+  lens.appendChild(lensImg);
+  car.appendChild(lens);
+  const syncLens = (i) => {
+    lensImg.src = imgs[i].src;
+    lensImg.style.objectPosition = imgs[i].style.objectPosition;
+  };
+  car.addEventListener('mousemove', (e) => {
+    const r = car.getBoundingClientRect();
+    lens.style.clipPath = `circle(30px at ${e.clientX - r.left}px ${e.clientY - r.top}px)`;
+    if (cur) cur.style.opacity = '0';
+  });
+
   imgs.forEach((_, i) => {
     const b = document.createElement('button');
     b.setAttribute('role', 'tab');
@@ -1336,11 +1457,13 @@ if (car) {
     imgs.forEach((img, j) => img.classList.toggle('cur', j === i));
     dotEls.forEach((d, j) => d.classList.toggle('cur', j === i));
     cap.textContent = imgs[i].dataset.cap;
+    syncLens(i);
   };
+  syncLens(0);
   // zoom transform runs 5s linear; hand off to the next frame right as it lands
   const restart = () => { clearInterval(timer); timer = setInterval(() => show((curI + 1) % imgs.length), 5050); };
   car.addEventListener('mouseenter', () => clearInterval(timer));
-  car.addEventListener('mouseleave', restart);
+  car.addEventListener('mouseleave', () => { restart(); if (cur) cur.style.opacity = ''; });
   restart();
 }
 
