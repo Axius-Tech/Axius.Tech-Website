@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Axius — A private technology operations practice</title>
-<meta name="description" content="One operator takes ownership of every system in your business and runs it like a department. One line to message. One monthly figure. One person whose name is on it. From $2,500/month.">
+<meta name="description" content="One operator takes ownership of every system in your business and runs it like a department. One line to message. One monthly figure. One name accountable for all of it. From $2,500/month.">
 <meta name="theme-color" content="#F4F1EA">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Axius">
@@ -190,7 +190,7 @@ a { color: inherit; }
 .open h1 {
   margin: 0; cursor: default;
   font-family: var(--sans);
-  font-variation-settings: "wght" 615;
+  font-variation-settings: "wght" 580;
   font-size: clamp(64px, 10vw, 144px);
   line-height: .98; letter-spacing: -.042em;
 }
@@ -233,25 +233,13 @@ a { color: inherit; }
   position: relative; overflow: hidden; flex-shrink: 0;
 }
 .scrollcue .ring svg { position: absolute; width: 16px; height: 16px; color: var(--green); }
-.scrollcue .ring .ico-arrow { animation: cueDrop 1.9s var(--ease) infinite; }
-.scrollcue .ring .ico-hand { opacity: 0; }
-.scrollcue.welcome .ring .ico-arrow { opacity: 0; animation: none; }
-.scrollcue.welcome .ring .ico-hand {
-  opacity: 1;
-  animation: cueWave 1.6s ease-in-out infinite;
-  transform-origin: 50% 80%;
-}
+.scrollcue .ring .ico-arrow { animation: cueDrop 1.9s var(--ease) infinite; transition: transform .5s var(--ease), opacity .5s var(--ease); }
+.scrollcue.welcome .ring .ico-arrow { animation: none; transform: translateY(0); opacity: 1; }
 @keyframes cueDrop {
   0% { transform: translateY(-26px); opacity: 0; }
   35% { transform: translateY(0); opacity: 1; }
   70% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(26px); opacity: 0; }
-}
-@keyframes cueWave {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(16deg); }
-  50% { transform: rotate(-6deg); }
-  75% { transform: rotate(10deg); }
 }
 
 /* ── marquee ──────────────────────────────────────────────── */
@@ -371,21 +359,7 @@ section { border-top: 1px solid var(--rule); }
 }
 .step .art .a { font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--on-green-40); }
 
-/* ── IV · the model ───────────────────────────────────────── */
-.model { background: var(--ivory-2); padding: clamp(120px, 15vh, 190px) 0; }
-.mgrid { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 64px); }
-.mcol { border-top: 1px solid var(--ink); padding-top: 24px; }
-.mcol .mk {
-  font-family: var(--mono); font-size: 10px; font-weight: 500;
-  letter-spacing: .22em; text-transform: uppercase; color: var(--green);
-}
-.mcol h3 { margin: 12px 0 0; font-family: var(--sans); font-weight: 600; font-size: 21px; letter-spacing: -.02em; line-height: 1.25; }
-.mcol ul { margin: 20px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; }
-.mcol li { font-size: 14.5px; color: var(--ink-70); padding-left: 20px; position: relative; line-height: 1.5; }
-.mcol li::before { content: "+"; position: absolute; left: 0; font-family: var(--mono); color: var(--green); }
-@media (max-width: 1024px) { .mgrid { grid-template-columns: 1fr; } }
-
-/* ── V · the terms ────────────────────────────────────────── */
+/* ── IV · the terms ───────────────────────────────────────── */
 .terms { padding: clamp(120px, 15vh, 190px) 0; border-top: none; }
 .terms .intro { margin: 22px 0 0; max-width: 540px; font-size: 17px; line-height: 1.7; color: var(--ink-55); }
 .tgrid { margin-top: 64px; display: grid; grid-template-columns: 1fr 1.12fr 1fr; gap: 22px; align-items: stretch; }
@@ -412,7 +386,7 @@ section { border-top: 1px solid var(--rule); }
   background: var(--green);
   transition: width 1.1s var(--ease) .25s;
 }
-.on .bars .btrack i, .tcard:hover .bars .btrack i { width: var(--w); }
+.on .bars .btrack i { width: var(--w); }
 .bars .bv { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-55); white-space: nowrap; }
 .tcard.feat .bars .bk { color: var(--on-green-40); }
 .tcard.feat .bars .btrack { background: var(--green-rule); }
@@ -523,20 +497,6 @@ section { border-top: 1px solid var(--rule); }
 }
 .car img.cur { opacity: 1; transform: scale(1.07); }
 .car:hover img { filter: grayscale(1) contrast(1.05); }
-/* color lens — a circle around the cursor stays in color while the
-   rest of the frame goes B&W on hover */
-.car .lens {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  opacity: 0; transition: opacity .3s var(--ease);
-  clip-path: circle(0px at 50% 50%);
-}
-.car:hover .lens { opacity: 1; }
-.car .lens img {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; display: block;
-  opacity: 1 !important; transform: scale(1.07) !important;
-  filter: none !important; transition: none !important;
-}
 /* identity under the carousel */
 .carid { margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .carid .cn2 { font-family: var(--serif); font-variation-settings: "opsz" 144; font-weight: 500; font-size: 24px; letter-spacing: -.01em; }
@@ -762,7 +722,6 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
     <span class="scrollcue" id="cue">
       <span class="ring" aria-hidden="true">
         <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
-        <svg class="ico-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
       </span>
       <span id="cuetext">Scroll</span>
     </span>
@@ -772,7 +731,7 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
     </div>
     <div class="cell">
       <span class="label">The figure</span>
-      <p>From $2,500 per month. One line to message. One person whose name is on it.</p>
+      <p>From $2,500 per month. One line to message. One name accountable for all of it.</p>
     </div>
   </div>
 </section>
@@ -791,10 +750,10 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
 <section class="manifesto" data-theme="green" id="why" style="border-top:none">
   <div class="wrap">
     <span class="label"><span class="n">I</span> · Why we exist</span>
-    <p class="mtext" id="mtext">You started a business. It came with a second job nobody mentioned: the website, the CRM, the logins, the automation that breaks quietly at 2 a.m. That job now has an owner. And it isn't you.</p>
+    <p class="mtext" id="mtext">Every business is now a technology business, whether you chose that or not. Websites, CRMs, automations, AI: none of it runs itself. Axius gives that job one owner. A single operator, amplified by AI systems and backed by vetted specialists, accountable for the entire technical layer of your business.</p>
     <div class="mfoot fd">
       <span>Axius · Technology operations</span>
-      <span>For owners who refuse to be the entire tech department</span>
+      <span>For owners who refuse to be the bottleneck</span>
     </div>
   </div>
 </section>
@@ -888,12 +847,12 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
         </span>
       </div>
       <div class="toc-row">
-        <span class="no">No. 08</span><span class="nm">Content Production</span>
+        <span class="no">No. 08</span><span class="nm">Finance &amp; Back Office</span>
         <span class="meta"><span class="ct">12 workflows</span>
           <span class="xtra">
-            <span class="xl">Video repurposing <span class="im">one shoot, ten assets</span></span>
-            <span class="xl">AI voice generation <span class="im">sub-day audio</span></span>
-            <span class="xl">Multi-channel media ops <span class="im">publish everywhere at once</span></span>
+            <span class="xl">Invoice chase automation <span class="im">paid 12 days sooner</span></span>
+            <span class="xl">Payment reconciliation <span class="im">books close in a day</span></span>
+            <span class="xl">Quote-to-invoice flow <span class="im">zero re-typing</span></span>
           </span>
         </span>
       </div>
@@ -961,67 +920,21 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
   </div>
 </section>
 
-<!-- ════ IV · THE MODEL ════ -->
-<section class="model" id="model">
+<!-- ════ IV · THE TERMS ════ -->
+<section class="terms" id="terms">
   <div class="wrap">
-    <span class="label"><span class="n">IV</span> · The model</span>
-    <h2 class="h2" data-stagger>
-      <span class="ln"><span>Three roles.</span></span>
-      <span class="ln"><span><em>One accountable layer.</em></span></span>
-    </h2>
-    <div class="mgrid fd">
-      <div class="mcol">
-        <div class="mk">Operator</div>
-        <h3>Owns direction and accountability.</h3>
-        <ul>
-          <li>Single point of contact</li>
-          <li>Sets operational direction</li>
-          <li>Owns outcomes and execution</li>
-          <li>Accountable when systems change</li>
-          <li>Same hand on your systems</li>
-        </ul>
-      </div>
-      <div class="mcol">
-        <div class="mk">AI systems</div>
-        <h3>Increase speed and continuity.</h3>
-        <ul>
-          <li>Maintain workflow context</li>
-          <li>Handle repetitive operational work</li>
-          <li>Improve response times</li>
-          <li>Monitor systems quietly in the background</li>
-          <li>Keep documentation current</li>
-        </ul>
-      </div>
-      <div class="mcol">
-        <div class="mk">Specialists</div>
-        <h3>Integrated when depth is needed.</h3>
-        <ul>
-          <li>Vetted specialists across the work</li>
-          <li>Engineering, automation, design, infrastructure</li>
-          <li>Managed entirely by the operator</li>
-          <li>No vendor coordination on your side</li>
-          <li>Quality controlled before delivery</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════ V · THE TERMS ════ -->
-<section class="terms" id="terms" style="border-top:none">
-  <div class="wrap">
-    <span class="label"><span class="n">V</span> · The terms</span>
+    <span class="label"><span class="n">IV</span> · The terms</span>
     <h2 class="h2" data-stagger>
       <span class="ln"><span>No hourly billing.</span></span>
       <span class="ln"><span><em>One monthly figure.</em></span></span>
     </h2>
-    <p class="intro fd">Two standing engagements and one by arrangement. Month-to-month after ninety days. Setup stated up front.</p>
+    <p class="intro fd">Two standing engagements and one by arrangement. Every tier keeps building month after month; none of them is a setup that fades into maintenance. Month-to-month after ninety days. Setup stated up front.</p>
 
     <div class="tgrid fd">
       <div class="tcard">
         <span class="tn">Tier 01</span>
         <h3>Operator</h3>
-        <p class="tfor">Technology ownership for a few critical systems.</p>
+        <p class="tfor">A standing operator on your side. Your most critical systems, run and improved every month.</p>
         <div class="price"><span class="p serif">$2,500</span><span class="pu">/ month</span></div>
         <div class="setup">+ $1,250 one-time setup</div>
         <div class="bars">
@@ -1030,9 +943,9 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
         </div>
         <ul>
           <li>Your most critical systems, owned end to end</li>
+          <li>New builds and fixes shipped every month</li>
           <li>Direct line to the operator, no queue</li>
           <li>Monthly operations report, in writing</li>
-          <li>Quarterly roadmap review</li>
         </ul>
         <a class="lnk" href="https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01" target="_blank" rel="noopener">Begin with Operator</a>
       </div>
@@ -1041,7 +954,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
         <span class="badge">Most engaged</span>
         <span class="tn">Tier 02</span>
         <h3>Team</h3>
-        <p class="tfor">Continuous operational improvement across multiple systems.</p>
+        <p class="tfor">A standing team's worth of output. Multiple coordinated systems, advancing every month.</p>
         <div class="price"><span class="p serif">$5,000</span><span class="pu">/ month</span></div>
         <div class="setup">+ $2,500 one-time setup</div>
         <div class="bars">
@@ -1049,7 +962,8 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
           <div class="ibar"><span class="bk">Response</span><span class="btrack"><i style="--w:78%"></i></span><span class="bv">same day</span></div>
         </div>
         <ul>
-          <li>Multiple coordinated systems, one roadmap</li>
+          <li>Multiple coordinated systems, one living roadmap</li>
+          <li>Continuous building, never just maintenance</li>
           <li>Biweekly operations call with the operator</li>
           <li>Monthly report + quarterly strategy</li>
           <li>Priority bench across all eight disciplines</li>
@@ -1060,7 +974,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
       <div class="tcard">
         <span class="tn">Tier 03</span>
         <h3>Department</h3>
-        <p class="tfor">A named operator with dedicated capacity. By arrangement.</p>
+        <p class="tfor">Your entire technology function, resting on us. Dedicated capacity, by arrangement.</p>
         <div class="price"><span class="p serif">Custom</span></div>
         <div class="setup">Scoped together</div>
         <div class="bars">
@@ -1078,7 +992,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
     </div>
 
     <div class="assure fd">
-      <div><div class="ak">The guarantee</div><div class="av">Standing, not a kickoff promo: agreed work lands in its agreed window, <b>or the next month is on us.</b></div></div>
+      <div><div class="ak">The guarantee</div><div class="av">It holds every month, not just the first: agreed work lands in its agreed window, <b>or the next month is on us.</b></div></div>
       <div><div class="ak">The exit</div><div class="av">Cancel with thirty days' notice. Every system leaves <b>documented and operational.</b></div></div>
       <div><div class="ak">The ownership</div><div class="av">Everything lives in <b>your accounts</b>: code, credentials, documentation. Nothing is held.</div></div>
     </div>
@@ -1091,7 +1005,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
     <div class="psticky">
       <div class="wrap" style="width:100%">
         <div class="phead">
-          <span class="label"><span class="n">VI</span> · In practice</span>
+          <span class="label"><span class="n">V</span> · In practice</span>
           <div class="fivestar">
             <div class="stars">★★★★★</div>
             <div class="sl">Five-star operations, on record</div>
@@ -1139,7 +1053,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
 <!-- ════ VI · THE OPERATOR ════ -->
 <section class="operator" id="operator" style="border-top:none">
   <div class="wrap">
-    <span class="label"><span class="n">VII</span> · The operator</span>
+    <span class="label"><span class="n">VI</span> · The operator</span>
     <h2 class="h2" data-stagger>
       <span class="ln"><span>One operator.</span></span>
       <span class="ln"><span><em>Every system.</em></span></span>
@@ -1159,21 +1073,21 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
             <div class="cn2">Andrés Toro</div>
             <div class="ck">Founder &amp; Operator</div>
           </div>
-          <a class="cm" href="mailto:andres@axius.tech">andres@axius.tech</a>
+          <a class="cm" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Let's talk &rarr;</a>
         </div>
       </div>
 
       <div class="body">
         <p class="fd">“Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business, so the founder can stop being IT.”</p>
-        <p class="dim fd fd-1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator takes ownership of the entire technical layer of your business and runs it the way a department would, with the overhead of none.</p>
+        <p class="dim fd fd-1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator owns direction, outcomes, and every decision that touches your systems. AI systems carry the repetitive work and keep the documentation current. Vetted specialists step in when the work needs depth, managed entirely on my side. You never coordinate a vendor.</p>
         <p class="dim fd fd-2">You get one line to message. One monthly figure. One person whose name is on the work. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
-        <div class="fd fd-2" style="margin-top:34px">
-          <a class="pill-ink" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Take the trade · 30 min <span>→</span></a>
-        </div>
         <div class="facts fd fd-3">
-          <div><div class="fv serif"><span data-count="118">0</span></div><div class="fk">Named workflows</div></div>
-          <div><div class="fv serif"><span data-count="8">0</span></div><div class="fk">Disciplines</div></div>
-          <div><div class="fv serif">24h</div><div class="fk">Response window</div></div>
+          <div><div class="fv serif"><span data-count="118">0</span></div><div class="fk">Workflows ready to run</div></div>
+          <div><div class="fv serif"><span data-count="8">0</span></div><div class="fk">Disciplines, one practice</div></div>
+          <div><div class="fv serif">24h</div><div class="fk">Maximum response time</div></div>
+          <div><div class="fv serif">3</div><div class="fk">Engagements opened / month</div></div>
+          <div><div class="fv serif">100%</div><div class="fk">Owned in your accounts</div></div>
+          <div><div class="fv serif">$0</div><div class="fk">Hiring &amp; severance overhead</div></div>
         </div>
       </div>
     </div>
@@ -1183,7 +1097,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
 <!-- ════ VII · BEGIN ════ -->
 <section class="invite" data-theme="green" id="begin">
   <div class="wrap in">
-    <span class="label"><span class="n">VIII</span> · Begin</span>
+    <span class="label"><span class="n">VII</span> · Begin</span>
     <h2 data-stagger class="rv-h">
       <span class="ln"><span>Thirty minutes.</span></span>
       <span class="ln"><span>A one-page audit either way.</span></span>
@@ -1293,8 +1207,9 @@ addEventListener('scroll', () => {
   const h1El = document.getElementById('h1');
   let lastX = -1, lastY = -1, acc = 0, idx = 0, live = 0;
   hero.addEventListener('mousemove', (e) => {
-    // only above the title — below it the trail fights the text/CTAs
-    if (h1El && e.clientY > h1El.getBoundingClientRect().top - 10) return;
+    // stop well above the title so cards finish fading before the
+    // cursor can reach the headline hover
+    if (h1El && e.clientY > h1El.getBoundingClientRect().top - 140) return;
     const r = hero.getBoundingClientRect();
     const x = e.clientX - r.left, y = e.clientY - r.top;
     if (lastX < 0) { lastX = x; lastY = y; return; }
@@ -1336,15 +1251,19 @@ if (cur && matchMedia('(pointer: fine)').matches) {
   });
 }
 
-/* ── reveals, jump-proof ───────────────────────────────────── */
-const revealables = [...document.querySelectorAll('.fd, .rv-h, .h2[data-stagger]')];
+/* ── reveals, jump-proof + replayable ──────────────────────────
+   Elements re-arm once they fall back below the viewport, so a
+   second pass from top to bottom replays every animation. The
+   re-arm runs on scroll (not in the observer) because an instant
+   jump from "far above" to "below" never fires a transition. */
+const revealables = [...document.querySelectorAll('.fd, .rv-h, .h2[data-stagger]')]
+  .filter(el => !el.closest('.open'));
 const rio = new IntersectionObserver((es) => {
-  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); rio.unobserve(e.target); } });
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
 }, { threshold: 0, rootMargin: '4000px 0px -60px 0px' });
 revealables.forEach(el => {
-  if (el.closest('.open')) return;
   if (el.getBoundingClientRect().top < innerHeight) el.classList.add('on');
-  else rio.observe(el);
+  rio.observe(el);
 });
 
 /* ── manifesto word lighting ───────────────────────────────── */
@@ -1402,21 +1321,6 @@ if (ptall && ptrack) {
   onScroll();
 }
 
-/* ── pricing bars: replay the fill animation on hover ──────── */
-document.querySelectorAll('.tcard').forEach(card => {
-  const fills = card.querySelectorAll('.btrack i');
-  if (!fills.length) return;
-  card.addEventListener('mouseenter', () => {
-    fills.forEach(f => {
-      f.style.transition = 'none';
-      f.style.width = '0px';
-      void f.offsetWidth;
-      f.style.transition = '';
-      f.style.width = '';
-    });
-  });
-});
-
 /* ── operator carousel: advance when the zoom completes ────── */
 const car = document.getElementById('car');
 if (car) {
@@ -1424,24 +1328,6 @@ if (car) {
   const cap = document.getElementById('carcap');
   const dots = document.getElementById('cardots');
   let curI = 0, timer = null;
-
-  // color lens — a circle of color around the cursor while the
-  // rest of the frame sits in B&W (mirrors the logo-hover cursor)
-  const lens = document.createElement('div');
-  lens.className = 'lens';
-  const lensImg = document.createElement('img');
-  lensImg.alt = '';
-  lens.appendChild(lensImg);
-  car.appendChild(lens);
-  const syncLens = (i) => {
-    lensImg.src = imgs[i].src;
-    lensImg.style.objectPosition = imgs[i].style.objectPosition;
-  };
-  car.addEventListener('mousemove', (e) => {
-    const r = car.getBoundingClientRect();
-    lens.style.clipPath = `circle(30px at ${e.clientX - r.left}px ${e.clientY - r.top}px)`;
-    if (cur) cur.style.opacity = '0';
-  });
 
   imgs.forEach((_, i) => {
     const b = document.createElement('button');
@@ -1457,36 +1343,57 @@ if (car) {
     imgs.forEach((img, j) => img.classList.toggle('cur', j === i));
     dotEls.forEach((d, j) => d.classList.toggle('cur', j === i));
     cap.textContent = imgs[i].dataset.cap;
-    syncLens(i);
   };
-  syncLens(0);
   // zoom transform runs 5s linear; hand off to the next frame right as it lands
   const restart = () => { clearInterval(timer); timer = setInterval(() => show((curI + 1) % imgs.length), 5050); };
   car.addEventListener('mouseenter', () => clearInterval(timer));
-  car.addEventListener('mouseleave', () => { restart(); if (cur) cur.style.opacity = ''; });
+  car.addEventListener('mouseleave', restart);
   restart();
 }
 
-/* ── count-ups (jump-proof) ────────────────────────────────── */
-document.querySelectorAll('[data-count]').forEach(el => {
+/* ── count-ups (jump-proof, replay on re-scroll) ───────────── */
+const counters = [...document.querySelectorAll('[data-count]')].map(el => {
   const to = +el.dataset.count, dur = 1700;
-  const run = () => {
-    const t0 = performance.now();
+  const c = { el, played: false };
+  c.run = () => {
+    const t0 = performance.now(), gen = (c.gen = (c.gen || 0) + 1);
     const tick = (t) => {
+      if (gen !== c.gen) return;
       const p = Math.min(1, (t - t0) / dur);
       el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
   };
-  if (el.getBoundingClientRect().top < innerHeight) run();
-  else {
-    const o = new IntersectionObserver((es) => {
-      if (es[0].isIntersecting) { o.disconnect(); run(); }
-    }, { threshold: 0, rootMargin: '4000px 0px 0px 0px' });
-    o.observe(el);
-  }
+  return c;
 });
+const cio = new IntersectionObserver((es) => {
+  es.forEach(e => {
+    const c = counters.find(k => k.el === e.target);
+    if (c && e.isIntersecting && !c.played) { c.played = true; c.run(); }
+  });
+}, { threshold: 0, rootMargin: '4000px 0px 0px 0px' });
+counters.forEach(c => {
+  if (c.el.getBoundingClientRect().top < innerHeight) { c.played = true; c.run(); }
+  cio.observe(c.el);
+});
+
+/* ── re-arm sweep: anything that has fallen back below the
+   viewport resets so the next pass down replays it ──────────── */
+let rearmQueued = false;
+addEventListener('scroll', () => {
+  if (rearmQueued) return;
+  rearmQueued = true;
+  requestAnimationFrame(() => {
+    rearmQueued = false;
+    revealables.forEach(el => {
+      if (el.classList.contains('on') && el.getBoundingClientRect().top > innerHeight + 80) el.classList.remove('on');
+    });
+    counters.forEach(c => {
+      if (c.played && c.el.getBoundingClientRect().top > innerHeight + 80) { c.gen = (c.gen || 0) + 1; c.played = false; c.el.textContent = '0'; }
+    });
+  });
+}, { passive: true });
 
 /* ── cursor color over green scenes ────────────────────────── */
 const greens = [...document.querySelectorAll('[data-theme="green"], footer')];
@@ -1517,17 +1424,23 @@ greenCheck();
     'Leads slip through the cracks',
     'What does $2,500 cover?',
     'How fast can we start?',
+    'How do you work?',
+    "Show me what you'd improve",
   ];
   const REPLIES = {
     depends: "That's the most common pattern I see. The fix isn't more hires, it's documented systems with one owner. I map what lives in your head, then run it for you. Founder time comes back within the first month.",
     tools: "Tool sprawl is an ownership problem, not a software problem. Most stacks shrink 30 to 40% in the first 90 days once someone actually runs them. The audit shows exactly where.",
     leads: "Lead leakage is usually three gaps: missed calls, no routing, no follow-up. Plugging the missed-call gap alone recovers 20 to 30% of inbound. I instrument the whole funnel.",
-    price: "$2,500/month is the Operator tier: one critical system owned end to end, same-day response, a written monthly report. Team is $5,000 for multiple systems, with a first-month guarantee: miss the agreed window and the next month is on us.",
+    price: "$2,500/month is the Operator tier: your most critical systems owned end to end, new builds shipped every month, a written monthly report. Team is $5,000 for multiple coordinated systems. Both carry a standing guarantee: agreed work lands in its agreed window or the next month is on us.",
     start: "Days 1 to 7: audit. Days 8 to 14: a workflow map you approve in writing. Day 14: I'm operating. And you'll have a one-page audit in hand after our first thirty minutes.",
+    model: "Three roles, one accountable layer. I own direction and outcomes, and I'm your single point of contact. AI systems carry the repetitive work, watch the stack in the background, and keep documentation current. When something needs depth, vetted specialists step in, managed entirely on my side. You never coordinate a vendor.",
+    improve: "Easier shown than told: book the thirty-minute audit. I inventory your stack live, point at the leaks (missed leads, re-typed data, tools nobody owns) and you leave with a one-page read of what I'd run first. The page is yours either way.",
     default: "Tell me a little about what's breaking, what's manual, or what depends on you. Or book the thirty-minute audit below and you'll leave with a one-page read either way.",
   };
   const match = (q) => {
     const s = q.toLowerCase();
+    if (/improve|show me|audit my/.test(s)) return REPLIES.improve;
+    if (/how do you work|model|specialist|roles|who does the work/.test(s)) return REPLIES.model;
     if (/depend|bottleneck|myself|on me/.test(s)) return REPLIES.depends;
     if (/tool|drown|sprawl|software|apps/.test(s)) return REPLIES.tools;
     if (/lead|missed|call|funnel|sales/.test(s)) return REPLIES.leads;
@@ -1584,17 +1497,15 @@ greenCheck();
     ask(v);
   });
 
-  // notification appears when the operator section reaches mid-view
-  const op = document.getElementById('operator');
-  if (op) {
-    const nio = new IntersectionObserver((es) => {
-      if (es[0].isIntersecting && !panel.classList.contains('openc')) {
-        badge.classList.add('on');
-        nio.disconnect();
-      }
-    }, { threshold: 0.45 });
-    nio.observe(op);
-  }
+  // notification appears once the visitor has scrolled past the
+  // first screen — early enough to be seen, late enough not to nag
+  const notify = () => {
+    if (scrollY > innerHeight * 1.1 && !panel.classList.contains('openc')) {
+      badge.classList.add('on');
+      removeEventListener('scroll', notify);
+    }
+  };
+  addEventListener('scroll', notify, { passive: true });
 })();
 </script>
 </body>
