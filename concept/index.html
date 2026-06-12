@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Axius — Run your business. Not your tech.</title>
+<meta name="description" content="An independent technology operations practice. One operator takes relentless ownership of every system in your business — from $2,500/month. 30-minute audit call, one-page audit either way.">
+<meta name="theme-color" content="#100F0D">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Axius">
+<meta property="og:title" content="Axius — Run your business. Not your tech.">
+<meta property="og:description" content="One operator. Every system. A single point of contact. From $2,500/month.">
+<meta property="og:image" content="/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════
+   AXIUS — CONSOLE CONCEPT
+   A dark operations-grade one-pager. The site behaves like the
+   instrument it sells: calm, precise, alive.
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  /* canvas */
+  --bg0: #100F0D;            /* page — warm near-black        */
+  --bg1: #161412;            /* band                          */
+  --bg2: #1C1916;            /* card                          */
+  --bg3: #232019;            /* card hover                    */
+  /* ink */
+  --ink:   #F2EEE6;
+  --dim:   rgba(242,238,230,.64);
+  --mute:  rgba(242,238,230,.40);
+  --faint: rgba(242,238,230,.22);
+  /* hairlines */
+  --line:   rgba(242,238,230,.09);
+  --lineHi: rgba(242,238,230,.20);
+  /* signal — the one accent */
+  --sig:      #FF6A3D;
+  --sig-soft: rgba(255,106,61,.12);
+  --sig-glow: rgba(255,106,61,.09);
+  /* status */
+  --ok:    #6FA37C;
+  --warn:  #D9A441;
+  /* type */
+  --disp: "Bricolage Grotesque", "Geist", system-ui, sans-serif;
+  --body: "Geist", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, monospace;
+  /* rhythm */
+  --w: 1240px;
+  --gut: 32px;
+  --secY: 136px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg0); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.6;
+  letter-spacing: -.003em;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+::selection { background: var(--sig); color: #100F0D; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--sig); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ── primitives ─────────────────────────────────────────── */
+.wrap { max-width: var(--w); margin: 0 auto; padding: 0 var(--gut); }
+
+.eyebrow {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--mute);
+}
+.eyebrow .n { color: var(--sig); }
+
+h2.head {
+  margin: 22px 0 0;
+  font-family: var(--disp); font-weight: 700;
+  font-size: clamp(40px, 4.6vw, 60px);
+  line-height: 1.02; letter-spacing: -.03em;
+}
+h2.head em { font-style: normal; color: var(--sig); }
+.sub {
+  margin: 22px 0 0; max-width: 600px;
+  font-size: 18px; line-height: 1.65; color: var(--dim);
+}
+.sechead { margin-bottom: 72px; }
+
+section { padding: var(--secY) 0; border-top: 1px solid var(--line); }
+section.band { background: var(--bg1); }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 17px 30px; cursor: pointer; text-decoration: none;
+  font-family: var(--body); font-weight: 600; font-size: 15px; letter-spacing: -.005em;
+  border: 1px solid transparent; border-radius: 0;
+  transition: transform .25s var(--ease), background .25s var(--ease),
+              color .25s var(--ease), border-color .25s var(--ease);
+  will-change: transform;
+}
+.btn .arr { font-family: var(--mono); font-size: 14px; transition: transform .25s var(--ease); }
+.btn:hover .arr { transform: translateX(4px); }
+.btn-sig { background: var(--sig); color: #14110E; border-color: var(--sig); }
+.btn-sig:hover { background: #FF7E57; border-color: #FF7E57; }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--lineHi); }
+.btn-ghost:hover { border-color: var(--sig); color: var(--sig); }
+.btn-sm { padding: 11px 20px; font-size: 13px; }
+
+/* reveal on scroll */
+.rv { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.rv.on { opacity: 1; transform: none; }
+.rv-d1 { transition-delay: .08s; } .rv-d2 { transition-delay: .16s; }
+.rv-d3 { transition-delay: .24s; } .rv-d4 { transition-delay: .32s; }
+
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(111,163,124,.45); } 70% { box-shadow: 0 0 0 9px rgba(111,163,124,0); } 100% { box-shadow: 0 0 0 0 rgba(111,163,124,0); } }
+@keyframes blink { 0%,55% { opacity: 1; } 56%,100% { opacity: .1; } }
+@keyframes breathe { 0%,100% { transform: scale(1); opacity: .55; } 50% { transform: scale(1.08); opacity: .8; } }
+
+/* ── progress hairline ──────────────────────────────────── */
+#progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0;
+  background: var(--sig); z-index: 200;
+}
+
+/* ── nav ────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(16,15,13,.78);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-in {
+  display: grid; grid-template-columns: auto 1fr auto;
+  align-items: center; gap: 32px; padding: 15px 0;
+}
+.mark {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+  font-family: var(--disp); font-weight: 800; font-size: 17px; letter-spacing: .01em;
+}
+.mark i {
+  width: 9px; height: 9px; background: var(--sig);
+  transform: rotate(45deg); display: inline-block;
+}
+.nav-links { display: flex; justify-content: center; gap: 34px; }
+.nav-links a {
+  position: relative; text-decoration: none;
+  font-size: 14px; font-weight: 500; color: var(--dim);
+  transition: color .2s var(--ease); padding: 4px 0;
+}
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--sig); transform: scaleX(0); transform-origin: left;
+  transition: transform .25s var(--ease);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+/* ── hero ───────────────────────────────────────────────── */
+.hero { position: relative; overflow: hidden; border-top: none; padding: 0; }
+.hero-glow {
+  position: absolute; top: -180px; right: -120px; width: 760px; height: 760px;
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, var(--sig-glow), transparent 70%);
+  animation: breathe 10s ease-in-out infinite;
+}
+.hero-grid-bg {
+  position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 88px 88px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 60% 20%, black 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse 90% 70% at 60% 20%, black 30%, transparent 75%);
+}
+.hero-in {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1.18fr .92fr; gap: 80px;
+  align-items: center; padding: 96px 0 110px;
+}
+.hero h1 {
+  margin: 26px 0 0;
+  font-family: var(--disp); font-weight: 800;
+  font-size: clamp(58px, 6.4vw, 86px);
+  line-height: .99; letter-spacing: -.034em;
+}
+.hero h1 .l2 { color: var(--sig); display: inline-block; }
+.hero .lede {
+  margin: 30px 0 0; max-width: 540px;
+  font-size: 19px; line-height: 1.65; color: var(--dim);
+}
+.hero .lede strong { color: var(--ink); font-weight: 600; }
+.hero-ctas { display: flex; align-items: center; gap: 14px; margin-top: 40px; flex-wrap: wrap; }
+.hero-note { margin-top: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.hero-note b { color: var(--ok); font-weight: 500; }
+
+/* console */
+.console {
+  background: var(--bg2); border: 1px solid var(--lineHi);
+  box-shadow: 0 24px 70px rgba(0,0,0,.45);
+  display: flex; flex-direction: column; height: 460px;
+}
+.console-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 18px; border-bottom: 1px solid var(--line); background: var(--bg1);
+}
+.console-bar .left { display: inline-flex; align-items: center; gap: 10px; }
+.console-bar .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 2.4s ease-out infinite; }
+.console-bar .lbl { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .18em; color: var(--ink); }
+.console-bar .clock { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--mute); }
+.console-id {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-bottom: 1px solid var(--line);
+}
+.console-id img {
+  width: 42px; height: 42px; object-fit: cover; object-position: 50% 30%;
+  filter: grayscale(1) contrast(1.05); display: block; border: 1px solid var(--line);
+}
+.console-id .nm { font-family: var(--disp); font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
+.console-id .rl { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); margin-top: 3px; }
+.console-feed {
+  flex: 1; overflow: hidden; padding: 14px 18px;
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.95;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.console-feed .ln { display: grid; grid-template-columns: 56px 1fr; gap: 12px; }
+.console-feed .tg { font-weight: 600; font-size: 10px; letter-spacing: .06em; }
+.console-feed .tx { color: var(--dim); }
+.console-feed .cur { width: 7px; height: 13px; background: var(--sig); display: inline-block; animation: blink 1.1s step-end infinite; margin-top: 7px; }
+.console-foot {
+  display: flex; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--line); background: var(--bg1);
+}
+.console-foot .btn { flex: 1; justify-content: center; }
+
+/* ── proof strip ────────────────────────────────────────── */
+.proof { padding: 64px 0; }
+.proof-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.proof-cell { padding: 8px 0 8px 24px; border-left: 1px solid var(--lineHi); }
+.proof-cell .v {
+  font-family: var(--disp); font-weight: 700;
+  font-size: clamp(30px, 2.9vw, 40px); letter-spacing: -.03em; line-height: 1;
+  color: var(--ink); white-space: nowrap;
+}
+.proof-cell .v em { font-style: normal; color: var(--sig); }
+.proof-cell .k {
+  margin-top: 10px; font-family: var(--mono); font-size: 10px; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--mute);
+}
+
+/* ── catalog wall ───────────────────────────────────────── */
+.wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.cell {
+  background: var(--bg0); padding: 26px 26px 22px; min-height: 196px;
+  position: relative; display: flex; flex-direction: column;
+  transition: background .3s var(--ease);
+}
+.cell:hover { background: var(--bg2); }
+.cell .top { display: flex; justify-content: space-between; align-items: baseline; }
+.cell .no { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; color: var(--mute); transition: color .3s var(--ease); }
+.cell:hover .no { color: var(--sig); }
+.cell .ct { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; color: var(--faint); }
+.cell h3 { margin: 14px 0 0; font-family: var(--disp); font-weight: 600; font-size: 21px; letter-spacing: -.015em; line-height: 1.15; }
+.cell .stack { margin-top: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .05em; color: var(--mute); }
+.cell .more {
+  margin-top: auto; padding-top: 14px;
+  font-size: 13px; color: var(--dim); line-height: 1.5;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+.cell:hover .more { opacity: 1; transform: none; }
+.cell .more b { color: var(--sig); font-weight: 600; }
+.wall-foot {
+  margin-top: 28px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.wall-foot .note { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.wall-foot a.idx { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--sig); text-decoration: none; }
+.wall-foot a.idx:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* ── method ─────────────────────────────────────────────── */
+.stages { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; position: relative; }
+.stage {
+  background: var(--bg2); border: 1px solid var(--line);
+  padding: 26px; display: flex; flex-direction: column; gap: 16px; min-height: 300px;
+  position: relative; transition: border-color .3s var(--ease), transform .3s var(--ease);
+}
+.stage:hover { border-color: var(--sig); transform: translateY(-4px); }
+.stage::before {
+  content: ""; position: absolute; top: -1px; left: -1px; height: 2px; width: 0;
+  background: var(--sig); transition: width .45s var(--ease);
+}
+.stage:hover::before { width: calc(100% + 2px); }
+.stage .row1 { display: flex; justify-content: space-between; align-items: baseline; }
+.stage .sn { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .16em; color: var(--sig); }
+.stage .tm { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.stage h3 { margin: 0; font-family: var(--disp); font-weight: 700; font-size: 27px; letter-spacing: -.02em; }
+.stage h3 i { font-style: normal; color: var(--sig); }
+.stage p { margin: 0; flex: 1; font-size: 14px; color: var(--dim); white-space: pre-line; line-height: 1.7; }
+.artifact {
+  display: flex; justify-content: space-between; align-items: center;
+  border: 1px solid var(--line); background: var(--bg1); padding: 11px 14px;
+  transition: border-color .3s var(--ease);
+}
+.stage:hover .artifact { border-color: rgba(255,106,61,.5); }
+.artifact .f { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .04em; color: var(--ink); }
+.stage:hover .artifact .f { color: var(--sig); }
+.artifact .a { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+.roles {
+  margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--line);
+  display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute);
+}
+.roles b { color: var(--ink); font-weight: 500; }
+.roles span.sep { color: var(--faint); }
+
+/* ── deal ───────────────────────────────────────────────── */
+.tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 880px; }
+.tier {
+  background: var(--bg2); border: 1px solid var(--line); padding: 36px;
+  display: flex; flex-direction: column; gap: 22px; position: relative;
+  transition: border-color .3s var(--ease), transform .3s var(--ease);
+}
+.tier:hover { transform: translateY(-4px); }
+.tier.feat { border-color: var(--sig); }
+.tier .badge {
+  position: absolute; top: -1px; right: 24px; transform: translateY(-50%);
+  background: var(--sig); color: #14110E; padding: 4px 12px;
+  font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+}
+.tier .tn { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.tier h3 { margin: 0; font-family: var(--disp); font-weight: 700; font-size: 30px; letter-spacing: -.02em; }
+.tier .for { margin: -12px 0 0; font-size: 14px; color: var(--dim); }
+.tier .price { display: flex; align-items: baseline; gap: 10px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.tier .price .p { font-family: var(--disp); font-weight: 800; font-size: 46px; letter-spacing: -.035em; }
+.tier .price .u { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.tier .setup { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); margin-top: -14px; }
+.tier ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.tier li { display: flex; gap: 12px; align-items: baseline; font-size: 14.5px; color: var(--dim); }
+.tier li::before { content: "+"; font-family: var(--mono); color: var(--sig); font-size: 12px; }
+.custom {
+  margin-top: 20px; max-width: 880px;
+  border: 1px solid var(--line); background: var(--bg0);
+  padding: 26px 36px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;
+}
+.custom .l h3 { margin: 0; font-family: var(--disp); font-weight: 700; font-size: 21px; letter-spacing: -.015em; }
+.custom .l p { margin: 6px 0 0; font-size: 14px; color: var(--dim); }
+.guarantee {
+  margin-top: 56px; max-width: 880px;
+  border: 1px solid rgba(255,106,61,.4); background: var(--sig-soft);
+  padding: 28px 36px; display: flex; gap: 22px; align-items: center;
+}
+.guarantee .gm { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--sig); white-space: nowrap; }
+.guarantee p { margin: 0; font-size: 16px; color: var(--ink); line-height: 1.55; }
+.terms { margin-top: 20px; max-width: 880px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.terms div { background: var(--bg1); padding: 20px 24px; }
+.terms .t1 { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+.terms .t2 { margin-top: 8px; font-size: 14px; color: var(--ink); font-weight: 500; }
+
+/* ── operator ───────────────────────────────────────────── */
+.op { display: grid; grid-template-columns: 380px 1fr; gap: 72px; align-items: start; }
+.op-photo { position: relative; aspect-ratio: 4/5; overflow: hidden; border: 1px solid var(--line); }
+.op-photo img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%;
+  filter: grayscale(1) contrast(1.06); transition: filter 1.1s var(--ease); display: block;
+}
+.op-photo:hover img { filter: grayscale(0) saturate(1.04) contrast(1.02); }
+.op-photo .cap {
+  position: absolute; bottom: 14px; left: 16px;
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--ink);
+  background: rgba(16,15,13,.6); padding: 5px 10px; backdrop-filter: blur(6px);
+}
+.op-bio p { margin: 0 0 16px; font-size: 17px; line-height: 1.7; color: var(--dim); max-width: 600px; }
+.op-bio p.first { font-size: 21px; color: var(--ink); font-weight: 500; font-family: var(--disp); letter-spacing: -.01em; }
+.op-facts {
+  margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line);
+  display: flex; gap: 36px; flex-wrap: wrap;
+}
+.op-facts div .k { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.op-facts div .v { margin-top: 6px; font-size: 14px; font-weight: 500; color: var(--ink); }
+.op-ctas { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+
+/* ── results ────────────────────────────────────────────── */
+.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.case {
+  background: var(--bg2); border: 1px solid var(--line); padding: 30px;
+  display: flex; flex-direction: column; gap: 16px; min-height: 320px;
+  transition: border-color .3s var(--ease), transform .3s var(--ease);
+}
+.case:hover { border-color: var(--lineHi); transform: translateY(-4px); }
+.case .metric { font-family: var(--disp); font-weight: 700; font-size: 26px; letter-spacing: -.025em; color: var(--sig); line-height: 1.1; }
+.case .who { padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.case .co { font-family: var(--disp); font-weight: 600; font-size: 17px; letter-spacing: -.01em; }
+.case .st { margin-top: 5px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.case p { margin: 0; flex: 1; font-size: 14.5px; color: var(--dim); line-height: 1.65; }
+.case .stars { color: var(--sig); font-size: 12px; letter-spacing: 3px; }
+
+/* ── faq ────────────────────────────────────────────────── */
+.faq { max-width: 880px; border-top: 1px solid var(--line); }
+.qa { border-bottom: 1px solid var(--line); }
+.qa button {
+  all: unset; cursor: pointer; width: 100%; box-sizing: border-box;
+  display: grid; grid-template-columns: 58px 1fr 36px; gap: 22px; align-items: baseline;
+  padding: 21px 8px; transition: background .25s var(--ease);
+}
+.qa button:hover { background: var(--bg1); }
+.qa button:focus-visible { outline: 2px solid var(--sig); outline-offset: -2px; }
+.qa .qn { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; color: var(--mute); }
+.qa .qt { font-family: var(--disp); font-weight: 600; font-size: 18px; letter-spacing: -.012em; color: var(--dim); transition: color .25s var(--ease); }
+.qa button:hover .qt { color: var(--ink); }
+.qa .pl { font-family: var(--mono); font-size: 17px; color: var(--mute); text-align: right; transition: transform .25s var(--ease), color .25s var(--ease); }
+.qa.open .pl { transform: rotate(45deg); color: var(--sig); }
+.qa.open .qn { color: var(--sig); }
+.qa.open .qt { color: var(--ink); }
+.qa .ans { display: grid; grid-template-columns: 58px 1fr 36px; gap: 22px; max-height: 0; overflow: hidden; transition: max-height .45s var(--ease); }
+.qa .ans p { grid-column: 2; margin: 0 0 22px; font-size: 15px; color: var(--dim); line-height: 1.75; max-width: 680px; }
+
+/* ── begin ──────────────────────────────────────────────── */
+.begin { position: relative; overflow: hidden; text-align: center; padding: 160px 0; }
+.begin-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 820px; height: 820px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, var(--sig-glow), transparent 70%);
+  animation: breathe 10s ease-in-out infinite;
+}
+.begin .in { position: relative; z-index: 1; }
+.begin h2 {
+  margin: 24px 0 0; font-family: var(--disp); font-weight: 800;
+  font-size: clamp(52px, 6vw, 84px); line-height: 1; letter-spacing: -.035em;
+}
+.begin h2 em { font-style: normal; color: var(--sig); }
+.begin p { margin: 30px auto 0; max-width: 480px; font-size: 18px; color: var(--dim); line-height: 1.65; }
+.begin .ctas { display: flex; gap: 14px; justify-content: center; margin-top: 46px; flex-wrap: wrap; }
+.begin .slots { margin-top: 26px; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+.begin .slots b { color: var(--sig); font-weight: 600; }
+
+/* ── footer ─────────────────────────────────────────────── */
+footer { border-top: 1px solid var(--line); padding: 44px 0; }
+.foot {
+  display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute);
+}
+.foot a { color: var(--mute); text-decoration: none; }
+.foot a:hover { color: var(--sig); }
+.foot .links { display: flex; gap: 22px; }
+
+/* ── responsive guard (desktop-first; soft fallback) ────── */
+@media (max-width: 1080px) {
+  .hero-in { grid-template-columns: 1fr; }
+  .proof-grid, .stages { grid-template-columns: repeat(2, 1fr); }
+  .wall { grid-template-columns: repeat(2, 1fr); }
+  .tiers, .cases { grid-template-columns: 1fr; }
+  .op { grid-template-columns: 1fr; }
+  .terms { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress" aria-hidden="true"></div>
+
+<nav aria-label="Primary">
+  <div class="wrap nav-in">
+    <a class="mark" href="#top" aria-label="Axius — top"><i></i>AXIUS</a>
+    <div class="nav-links">
+      <a href="#work">What we run</a>
+      <a href="#method">Method</a>
+      <a href="#deal">The deal</a>
+      <a href="#operator">Operator</a>
+      <a href="#results">Results</a>
+    </div>
+    <a class="btn btn-sig btn-sm" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<header class="hero" id="top">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div>
+      <div class="eyebrow">Independent technology operations · Medellín / Florida</div>
+      <h1>Run your business.<br><span class="l2">Not your tech.</span></h1>
+      <p class="lede">We take relentless ownership of your technology — every system, every execution — through <strong>a single point of contact</strong>. From $2,500/month.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-sig" data-mag href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the 30-minute audit <span class="arr">→</span></a>
+        <a class="btn btn-ghost" data-mag href="#deal">See the deal <span class="arr">↓</span></a>
+      </div>
+      <div class="hero-note"><b>●</b>&nbsp; You leave with a one-page audit either way — no pitch</div>
+    </div>
+
+    <div class="console rv" aria-label="Live operations console">
+      <div class="console-bar">
+        <span class="left"><span class="dot"></span><span class="lbl">OPERATIONS · LIVE</span></span>
+        <span class="clock" id="clock">— MDE</span>
+      </div>
+      <div class="console-id">
+        <img src="/assets/andres-toro.jpg" alt="Andrés Toro" width="42" height="42">
+        <div>
+          <div class="nm">Andrés Toro</div>
+          <div class="rl">Founder · Operator · same hand every month</div>
+        </div>
+      </div>
+      <div class="console-feed" id="feed" aria-live="off"></div>
+      <div class="console-foot">
+        <a class="btn btn-sig btn-sm" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Talk to Andrés <span class="arr">→</span></a>
+        <a class="btn btn-ghost btn-sm" href="mailto:andres@axius.tech?subject=Axius%20—%20hello">andres@axius.tech</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ════ PROOF STRIP ════ -->
+<section class="proof band" aria-label="Measured outcomes">
+  <div class="wrap proof-grid">
+    <div class="proof-cell rv"><div class="v">4h <em>→</em> 3m</div><div class="k">Missed-call response</div></div>
+    <div class="proof-cell rv rv-d1"><div class="v">45m <em>→</em> 8m</div><div class="k">Client intake time</div></div>
+    <div class="proof-cell rv rv-d2"><div class="v"><em>$</em>1.4k<span style="font-size:.55em">/mo</span></div><div class="k">Ghost SaaS recovered</div></div>
+    <div class="proof-cell rv rv-d3"><div class="v"><span data-count="129">0</span></div><div class="k">Workflows on the bench</div></div>
+  </div>
+</section>
+
+<!-- ════ 01 · WHAT WE RUN ════ -->
+<section id="work">
+  <div class="wrap">
+    <div class="sechead rv">
+      <div class="eyebrow"><span class="n">01</span> · WHAT WE RUN</div>
+      <h2 class="head">One layer. <em>Everything technical.</em></h2>
+      <p class="sub">Nine categories, 129 named workflows — sites, automations, AI, data, support, software. You point at the pain. We run the system that removes it.</p>
+    </div>
+
+    <div class="wall rv">
+      <div class="cell"><div class="top"><span class="no">CAT.01</span><span class="ct">16</span></div><h3>Sales &amp; Prospecting</h3><div class="stack">apollo · smartlead · hubspot</div><div class="more">Missed-call recovery — <b>4h → 3m response</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.02</span><span class="ct">17</span></div><h3>Customer Experience</h3><div class="stack">zendesk · intercom · whatsapp</div><div class="more">Inbox unification — <b>5 inboxes → 1</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.03</span><span class="ct">16</span></div><h3>Internal Operations</h3><div class="stack">notion · linear · stripe</div><div class="more">Cross-tool sync — <b>eliminates 12 manual hops</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.04</span><span class="ct">14</span></div><h3>AI Implementation</h3><div class="stack">claude · openai · vector dbs</div><div class="more">Knowledge-base agent — <b>90s answers vs 12min search</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.05</span><span class="ct">13</span></div><h3>Data &amp; Analytics</h3><div class="stack">supabase · metabase · postgres</div><div class="more">Dashboard automation — <b>live ops board</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.06</span><span class="ct">15</span></div><h3>Web &amp; Storefront</h3><div class="stack">next.js · shopify · webflow</div><div class="more">Marketing site — <b>4-week production ship</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.07</span><span class="ct">15</span></div><h3>Custom Software</h3><div class="stack">react · retool · postgres</div><div class="more">Internal admin tools — <b>3-week builds</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.08</span><span class="ct">11</span></div><h3>Marketing &amp; Growth</h3><div class="stack">meta · google · beehiiv</div><div class="more">Email automation — <b>38% avg open rate</b></div></div>
+      <div class="cell"><div class="top"><span class="no">CAT.09</span><span class="ct">12</span></div><h3>Content Production</h3><div class="stack">davinci · elevenlabs · midjourney</div><div class="more">AI voice generation — <b>sub-day audio output</b></div></div>
+    </div>
+
+    <div class="wall-foot rv">
+      <span class="note">Each workflow carries a weight — most businesses run 2–5 at a time</span>
+      <a class="idx" href="mailto:andres@axius.tech?subject=Axius%20—%20full%20catalog%20index">Request the full index →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 02 · METHOD ════ -->
+<section id="method" class="band">
+  <div class="wrap">
+    <div class="sechead rv">
+      <div class="eyebrow"><span class="n">02</span> · THE METHOD</div>
+      <h2 class="head">Named stages. <em>Named deliverables.</em></h2>
+      <p class="sub">Nothing is built until you've approved what we're building. Every artifact lives in your accounts.</p>
+    </div>
+
+    <div class="stages">
+      <div class="stage rv"><div class="row1"><span class="sn">STAGE 01</span><span class="tm">Days 1–7</span></div><h3>Audit<i>.</i></h3><p>Inventory the systems.
+Find the leaks.
+Deliver the report.</p><div class="artifact"><span class="f">stack_audit.pdf</span><span class="a">artifact</span></div></div>
+      <div class="stage rv rv-d1"><div class="row1"><span class="sn">STAGE 02</span><span class="tm">Days 8–14</span></div><h3>Configure<i>.</i></h3><p>Map workflows to your business.
+You sign off in writing.</p><div class="artifact"><span class="f">config_map.json</span><span class="a">artifact</span></div></div>
+      <div class="stage rv rv-d2"><div class="row1"><span class="sn">STAGE 03</span><span class="tm">Month 1+</span></div><h3>Operate<i>.</i></h3><p>Run it.
+Log tickets. Ship fixes.
+Report monthly.</p><div class="artifact"><span class="f">monthly_report.md</span><span class="a">artifact</span></div></div>
+      <div class="stage rv rv-d3"><div class="row1"><span class="sn">STAGE 04</span><span class="tm">Quarterly</span></div><h3>Evolve<i>.</i></h3><p>Review quarterly.
+The roadmap stays yours.</p><div class="artifact"><span class="f">roadmap.notion</span><span class="a">artifact</span></div></div>
+    </div>
+
+    <div class="roles rv">
+      <b>One operator</b> <span class="sep">·</span> AI systems for continuity <span class="sep">·</span> Vetted specialists for depth <span class="sep">·</span> Zero vendor coordination on your side
+    </div>
+  </div>
+</section>
+
+<!-- ════ 03 · THE DEAL ════ -->
+<section id="deal">
+  <div class="wrap">
+    <div class="sechead rv">
+      <div class="eyebrow"><span class="n">03</span> · THE DEAL</div>
+      <h2 class="head">Pricing that reads like <em>an agreement.</em></h2>
+      <p class="sub">Two layers and a custom engagement. Month-to-month after 90 days. One-time setup per tier.</p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier rv">
+        <span class="tn">Tier 01</span>
+        <h3>Operator</h3>
+        <p class="for">Technology ownership for a few critical systems.</p>
+        <div class="price"><span class="p">$2,500</span><span class="u">/ month</span></div>
+        <div class="setup">+ $1,250 one-time setup</div>
+        <ul>
+          <li>One critical system, owned end to end</li>
+          <li>Email + Slack · same-day response on issues</li>
+          <li>Monthly operations report</li>
+          <li>Pause anytime after 90 days</li>
+        </ul>
+        <a class="btn btn-ghost" data-mag href="https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01" target="_blank" rel="noopener">Get started <span class="arr">→</span></a>
+      </div>
+      <div class="tier feat rv rv-d1">
+        <span class="badge">Most chosen</span>
+        <span class="tn">Tier 02</span>
+        <h3>Team</h3>
+        <p class="for">Continuous operational improvement, multiple systems.</p>
+        <div class="price"><span class="p">$5,000</span><span class="u">/ month</span></div>
+        <div class="setup">+ $2,500 one-time setup</div>
+        <ul>
+          <li>Multiple coordinated systems</li>
+          <li>Biweekly ops call · &lt;24h response window</li>
+          <li>Monthly written report + quarterly strategy</li>
+          <li>First-month outcome guarantee</li>
+        </ul>
+        <a class="btn btn-sig" data-mag href="https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02" target="_blank" rel="noopener">Get started <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="custom rv">
+      <div class="l">
+        <h3>Department — custom engagement</h3>
+        <p>Named operator, dedicated capacity, same-hour response on critical. Scoped together.</p>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book a call <span class="arr">→</span></a>
+    </div>
+
+    <div class="guarantee rv">
+      <span class="gm">First-month guarantee</span>
+      <p>We agree on one operationally meaningful win at kickoff. If we don't deliver it in the agreed timeline, we keep working at no additional cost.</p>
+    </div>
+
+    <div class="terms rv">
+      <div><div class="t1">Flexibility</div><div class="t2">Pause anytime after 90 days</div></div>
+      <div><div class="t1">Exit</div><div class="t2">Cancel with 30 days notice — fully documented handoff</div></div>
+      <div><div class="t1">Ownership</div><div class="t2">Everything lives in your accounts, not ours</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 04 · OPERATOR ════ -->
+<section id="operator" class="band">
+  <div class="wrap">
+    <div class="sechead rv">
+      <div class="eyebrow"><span class="n">04</span> · THE OPERATOR</div>
+      <h2 class="head">A name, <em>not a queue.</em></h2>
+    </div>
+
+    <div class="op">
+      <div class="op-photo rv">
+        <img src="/assets/andres-toro.jpg" alt="Andrés Toro, founder and operator of Axius">
+        <span class="cap">Andrés Toro · Founder</span>
+      </div>
+      <div class="op-bio rv rv-d1">
+        <p class="first">Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business so the founder can stop being IT.</p>
+        <p>After years inside SMB operations, I kept seeing the same issue: fragmented systems, scattered contractors, and founders stuck managing operational complexity themselves. Axius was built to solve that.</p>
+        <p>One accountable layer — structured systems, AI-assisted execution, and specialist support when the work needs depth. Your business keeps moving without you managing the tech side of it.</p>
+        <div class="op-facts">
+          <div><div class="k">Based</div><div class="v">Altamonte Springs, FL</div></div>
+          <div><div class="k">Currently</div><div class="v">Medellín, Colombia</div></div>
+          <div><div class="k">Hours</div><div class="v">US business hours</div></div>
+          <div><div class="k">Languages</div><div class="v">EN · ES</div></div>
+        </div>
+        <div class="op-ctas">
+          <a class="btn btn-sig" data-mag href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Talk to Andrés <span class="arr">→</span></a>
+          <a class="btn btn-ghost" data-mag href="https://www.linkedin.com/in/followrace/" target="_blank" rel="noopener">LinkedIn <span class="arr">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 05 · RESULTS ════ -->
+<section id="results">
+  <div class="wrap">
+    <div class="sechead rv">
+      <div class="eyebrow"><span class="n">05</span> · RESULTS</div>
+      <h2 class="head">Measured <em>outcomes.</em></h2>
+    </div>
+
+    <div class="cases">
+      <div class="case rv">
+        <div class="metric">8h / week back</div>
+        <div class="who"><div class="co">Mariana's Cantina Group</div><div class="st">3-location restaurant group · South FL</div></div>
+        <p>Inventory reconciliation was eating two manager-nights a week across three locations. A daily Shopify-to-sheet sync with variance alerts ended it. Managers stopped working Sundays.</p>
+        <div class="stars" aria-label="5 star review">★★★★★</div>
+      </div>
+      <div class="case rv rv-d1">
+        <div class="metric">45m → 8m intake</div>
+        <div class="who"><div class="co">Hartwell &amp; Bain LLP</div><div class="st">Boutique litigation firm · Charlotte NC</div></div>
+        <p>Intake forms were re-typed three times — receptionist, Clio, document templates. A single-entry intake now pushes into all three. New matters open in eight minutes.</p>
+        <div class="stars" aria-label="5 star review">★★★★★</div>
+      </div>
+      <div class="case rv rv-d2">
+        <div class="metric">11 showings saved</div>
+        <div class="who"><div class="co">Bridgepoint Realty Partners</div><div class="st">Independent brokerage · Tampa FL</div></div>
+        <p>Missed calls during showings were costing leads weekly. Missed-call SMS now routes to an AI replier; high-intent leads ping the founder directly. Eleven recovered in 30 days.</p>
+        <div class="stars" aria-label="5 star review">★★★★★</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 06 · QUESTIONS ════ -->
+<section id="faq" class="band">
+  <div class="wrap">
+    <div class="sechead rv">
+      <div class="eyebrow"><span class="n">06</span> · QUESTIONS</div>
+      <h2 class="head">Asked <em>simply.</em></h2>
+    </div>
+
+    <div class="faq rv">
+      <div class="qa">
+        <button aria-expanded="false"><span class="qn">Q.01</span><span class="qt">Is this an agency, a contractor, or what exactly?</span><span class="pl">+</span></button>
+        <div class="ans"><p>Neither. Axius is a small operating practice — one accountable operator running your technology layer, with a vetted specialist bench underneath when work needs depth. Same hand on your stack month after month.</p></div>
+      </div>
+      <div class="qa">
+        <button aria-expanded="false"><span class="qn">Q.02</span><span class="qt">What if I already have a developer or agency?</span><span class="pl">+</span></button>
+        <div class="ans"><p>We work alongside them where it makes sense. Axius is the layer that coordinates, documents, and ensures things compound — not necessarily a replacement. Most clients keep specialists on contract and use Axius for ownership.</p></div>
+      </div>
+      <div class="qa">
+        <button aria-expanded="false"><span class="qn">Q.03</span><span class="qt">What do the first 30 days look like?</span><span class="pl">+</span></button>
+        <div class="ans"><p>Week 1: discovery + audit of your current stack. Week 2: roadmap, priorities, first win identified. Weeks 3–4: first system stood up, monitored, documented. Written ops report monthly thereafter.</p></div>
+      </div>
+      <div class="qa">
+        <button aria-expanded="false"><span class="qn">Q.04</span><span class="qt">How do you handle confidentiality?</span><span class="pl">+</span></button>
+        <div class="ans"><p>NDA on every engagement, before access. Access-scoped credentials with rotation. Everything lives in your accounts, not ours — Axius operates inside your stack, not in a black box.</p></div>
+      </div>
+      <div class="qa">
+        <button aria-expanded="false"><span class="qn">Q.05</span><span class="qt">Can I pause or cancel?</span><span class="pl">+</span></button>
+        <div class="ans"><p>Pause anytime after 90 days. Cancel with 30 days notice. Full documentation of every system on the way out — nothing locks you in.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 07 · BEGIN ════ -->
+<section class="begin" id="begin">
+  <div class="begin-glow" aria-hidden="true"></div>
+  <div class="wrap in">
+    <div class="eyebrow rv"><span class="n">07</span> · BEGIN</div>
+    <h2 class="rv">Thirty minutes.<br><em>One-page audit either way.</em></h2>
+    <p class="rv rv-d1">No pitch, no pressure — just a clear picture of where your systems leak, and what we'd run first.</p>
+    <div class="ctas rv rv-d2">
+      <a class="btn btn-sig" data-mag href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit call <span class="arr">→</span></a>
+      <a class="btn btn-ghost" data-mag href="mailto:andres@axius.tech?subject=Axius%20—%20discovery">andres@axius.tech</a>
+    </div>
+    <div class="slots rv rv-d3">Only accepting <b>3 new clients / month</b></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a class="mark" href="#top" style="font-size:14px"><i style="width:7px;height:7px"></i>AXIUS</a>
+    <div class="links">
+      <a href="#deal">The deal</a>
+      <a href="mailto:andres@axius.tech">Email</a>
+      <a href="https://www.linkedin.com/in/followrace/" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <span>© 2026 Axius · Medellín / Altamonte Springs</span>
+  </div>
+</footer>
+
+<script>
+/* ── scroll progress ─────────────────────────────────────── */
+const prog = document.getElementById('progress');
+addEventListener('scroll', () => {
+  const h = document.documentElement;
+  prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+}, { passive: true });
+
+/* ── reveals (jump-proof: anything above the fold reveals) ─ */
+const io = new IntersectionObserver((es) => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+}, { threshold: 0, rootMargin: '4000px 0px -40px 0px' });
+document.querySelectorAll('.rv').forEach(el => {
+  if (el.getBoundingClientRect().top < innerHeight) el.classList.add('on');
+  else io.observe(el);
+});
+
+/* ── count-up ────────────────────────────────────────────── */
+document.querySelectorAll('[data-count]').forEach(el => {
+  const to = +el.dataset.count, dur = 1600;
+  const run = () => {
+    const t0 = performance.now();
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  if (el.getBoundingClientRect().top < innerHeight) run();
+  else {
+    const o = new IntersectionObserver((es) => {
+      if (es[0].isIntersecting) { o.disconnect(); run(); }
+    }, { threshold: 0, rootMargin: '4000px 0px 0px 0px' });
+    o.observe(el);
+  }
+});
+
+/* ── MDE clock ───────────────────────────────────────────── */
+const clock = document.getElementById('clock');
+const fmtClock = () => {
+  try {
+    clock.textContent = new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false, timeZone: 'America/Bogota',
+    }).format(new Date()) + ' MDE';
+  } catch (_) {}
+};
+fmtClock(); setInterval(fmtClock, 1000);
+
+/* ── console feed ────────────────────────────────────────── */
+const FEED = [
+  ['BOOT','#FF6A3D','dispatch initialized'],
+  ['OK','#6FA37C','129 workflows indexed'],
+  ['OK','#6FA37C','operator.online · in medellín now'],
+  ['OK','#6FA37C','response windows active'],
+  ['OK','#6FA37C','missed_call.recovery · lead routed'],
+  ['INFO','#8FA6B3','monthly.report generated'],
+  ['OK','#6FA37C','inbox.unification · 3 channels synced'],
+  ['INFO','#8FA6B3','proposal.sent · awaiting signature'],
+  ['OK','#6FA37C','crm.sync · records updated'],
+  ['INFO','#8FA6B3','onboarding.audit delivered'],
+  ['OK','#6FA37C','knowledge base updated'],
+  ['INFO','#8FA6B3','quarterly roadmap prepared'],
+  ['OK','#6FA37C','config_map.json updated'],
+  ['READY','#FF6A3D','discovery.call intake available'],
+];
+const feed = document.getElementById('feed');
+const cursor = document.createElement('span');
+cursor.className = 'cur';
+let fi = 0;
+const pushLine = () => {
+  const [tag, color, text] = FEED[fi % FEED.length]; fi++;
+  const ln = document.createElement('div');
+  ln.className = 'ln';
+  ln.innerHTML = `<span class="tg" style="color:${color}">[${tag}]</span><span class="tx">${text}</span>`;
+  feed.insertBefore(ln, cursor);
+  while (feed.children.length > 11) feed.removeChild(feed.firstChild);
+};
+feed.appendChild(cursor);
+[0, 420, 840, 1260].forEach((d) => setTimeout(pushLine, d));
+setInterval(pushLine, 3600);
+
+/* ── magnetic buttons (subtle) ───────────────────────────── */
+if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  document.querySelectorAll('[data-mag]').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const r = btn.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width / 2) / r.width;
+      const y = (e.clientY - r.top - r.height / 2) / r.height;
+      btn.style.transform = `translate(${x * 5}px, ${y * 4}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
+}
+
+/* ── FAQ accordion ───────────────────────────────────────── */
+document.querySelectorAll('.qa').forEach(qa => {
+  const btn = qa.querySelector('button');
+  const ans = qa.querySelector('.ans');
+  btn.addEventListener('click', () => {
+    const open = qa.classList.contains('open');
+    document.querySelectorAll('.qa.open').forEach(o => {
+      o.classList.remove('open');
+      o.querySelector('button').setAttribute('aria-expanded', 'false');
+      o.querySelector('.ans').style.maxHeight = '0px';
+    });
+    if (!open) {
+      qa.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      ans.style.maxHeight = ans.scrollHeight + 'px';
+    }
+  });
+});
+// open the first question by default
+document.querySelector('.qa button')?.click();
+</script>
+</body>
+</html>
