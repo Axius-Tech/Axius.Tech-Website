@@ -89,14 +89,20 @@ a { color: inherit; }
 }
 .h2 em { font-style: normal; color: var(--green); }
 
-/* masked line reveals */
-.js .ln { display: block; overflow: hidden; }
-.js .ln > span { display: block; transform: translateY(112%); transition: transform 1.1s var(--ease); }
-.js .on .ln > span, .js .ln.on > span { transform: translateY(0); }
-.js [data-stagger] .ln:nth-child(2) > span { transition-delay: .08s; }
+/* line reveals — soft rise + de-blur, no hard mask edge */
+.js .ln { display: block; }
+.js .ln > span {
+  display: block; opacity: 0; transform: translateY(34px); filter: blur(10px);
+  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease), filter 1.1s var(--ease);
+}
+.js .on .ln > span, .js .ln.on > span { opacity: 1; transform: translateY(0); filter: blur(0); }
+.js [data-stagger] .ln:nth-child(2) > span { transition-delay: .1s; }
 
-.js .fd { opacity: 0; transform: translateY(24px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
-.js .fd.on { opacity: 1; transform: none; }
+.js .fd {
+  opacity: 0; transform: translateY(24px); filter: blur(8px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease);
+}
+.js .fd.on { opacity: 1; transform: none; filter: blur(0); }
 .js .fd-1 { transition-delay: .1s; } .js .fd-2 { transition-delay: .2s; } .js .fd-3 { transition-delay: .3s; }
 
 /* ── preloader ────────────────────────────────────────────── */
@@ -158,6 +164,24 @@ a { color: inherit; }
 }
 .bar .cta:hover { letter-spacing: .3em; }
 
+/* ── right-edge section rail ──────────────────────────────── */
+#rail {
+  position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 90;
+  display: flex; flex-direction: column; gap: 13px; align-items: flex-end;
+  mix-blend-mode: difference; color: #EDEAE2;
+}
+#rail a {
+  text-decoration: none; display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: inherit; opacity: .4; transition: opacity .35s var(--ease);
+}
+#rail a .tick { width: 14px; height: 1px; background: currentColor; transition: width .35s var(--ease); }
+#rail a.cur { opacity: 1; }
+#rail a.cur .tick { width: 28px; }
+#rail a .t { opacity: 0; transform: translateX(6px); transition: opacity .35s var(--ease), transform .35s var(--ease); }
+#rail a.cur .t, #rail:hover a .t { opacity: 1; transform: none; }
+@media (max-width: 1100px) { #rail { display: none; } }
+
 /* ── opening ──────────────────────────────────────────────── */
 .open { min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; }
 .open .meta-top { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: center; padding-top: 26px; z-index: 3; }
@@ -199,22 +223,15 @@ a { color: inherit; }
   transition: transform .7s var(--ease);
 }
 .open h1:hover .l1 { transform: scale(1.015); }
-/* "Not your tech." — green sweep + ivory text on hover */
-.open h1 .it {
-  position: relative; display: inline-block;
-  padding: 0 .12em; margin-left: -.12em;
-  color: var(--green);
-  transition: color .45s var(--ease);
+/* "Not your tech." — live green line with a terminal caret.
+   On hover the line backspaces and retypes its answer. */
+.open h1 .it { display: inline-block; color: var(--green); white-space: nowrap; }
+.open h1 .caret {
+  display: inline-block; width: .085em; height: .76em;
+  background: var(--green); margin-left: .07em; vertical-align: -.02em;
+  animation: caret 1.1s steps(1) infinite;
 }
-.open h1 .it::before {
-  content: ""; position: absolute; inset: .07em 0 .03em;
-  background: var(--green);
-  transform: scaleX(0); transform-origin: 0 50%;
-  transition: transform .65s var(--ease);
-  z-index: -1;
-}
-.open h1:hover .it { color: var(--ivory); }
-.open h1:hover .it::before { transform: scaleX(1); }
+@keyframes caret { 50% { opacity: 0; } }
 
 .open .floor {
   display: grid; grid-template-columns: 220px 1fr 1fr; gap: clamp(24px, 4vw, 64px);
@@ -264,6 +281,19 @@ a { color: inherit; }
 }
 .manifesto .mtext .w { opacity: .13; transition: opacity .35s linear; }
 .manifesto .mtext .w.lit { opacity: 1; }
+.manifesto .mthead {
+  margin-top: clamp(56px, 9vh, 84px);
+  font-family: var(--sans); font-weight: 600; font-size: 21px; letter-spacing: -.02em;
+  color: var(--on-green);
+}
+.manifesto .mtriad {
+  margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+}
+.manifesto .mtriad > div { border-top: 1px solid var(--green-rule); padding-top: 20px; }
+.manifesto .mtk { font-family: var(--mono); font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--on-green); }
+.manifesto .mtriad p { margin: 12px 0 0; font-size: 14px; line-height: 1.65; color: var(--on-green-65); max-width: 320px; }
+@media (max-width: 900px) { .manifesto .mtriad { grid-template-columns: 1fr; } }
 .manifesto .mfoot {
   margin-top: 68px; padding-top: 26px; border-top: 1px solid var(--green-rule);
   display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
@@ -281,36 +311,40 @@ section { border-top: 1px solid var(--rule); }
 }
 .index .bigk { margin-top: 12px; text-align: right; }
 
-.toc { border-top: 1px solid var(--ink); }
-.toc-row {
-  display: grid; grid-template-columns: 92px 1fr minmax(300px, auto); gap: 28px; align-items: start;
-  padding: 18px 0 14px; border-bottom: 1px solid var(--rule); cursor: default;
+/* capability grid — White Room structure in olive cloth */
+.grid8 { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--rule); }
+.gcell {
+  position: relative; padding: 24px 22px 24px; min-height: 236px;
+  border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  display: flex; flex-direction: column; cursor: default;
+  transition: background .4s var(--ease);
 }
-.toc-row .no { font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em; color: var(--ink-40); transition: color .3s var(--ease); padding-top: 8px; }
-.toc-row .nm {
-  font-family: var(--sans); font-weight: 400;
-  font-variation-settings: "wght" 420;
-  font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -.025em; line-height: 1.1;
-  transition: transform .45s var(--ease), font-variation-settings .45s var(--ease);
+.gcell:hover { background: rgba(255,255,255,.55); }
+.gcell .no { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; color: var(--ink-40); transition: color .3s var(--ease); }
+.gcell:hover .no { color: var(--green); }
+.gcell h3 {
+  margin: 14px 0 0; font-family: var(--sans); font-weight: 400;
+  font-variation-settings: "wght" 520;
+  font-size: 19.5px; letter-spacing: -.02em; line-height: 1.22;
 }
-.toc-row:hover .nm { transform: translateX(16px); font-variation-settings: "wght" 640; }
-.toc-row:hover .no { color: var(--green); }
-.toc-row .meta { text-align: right; }
-.toc-row .ct { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--ink-40); transition: color .3s var(--ease); }
-.toc-row:hover .ct { color: var(--ink); }
-/* three impact lines under the count, revealed on hover */
-.toc-row .xtra { margin-top: 7px; display: flex; flex-direction: column; gap: 3px; }
-.toc-row .xl {
-  display: flex; justify-content: flex-end; gap: 10px; align-items: baseline;
-  font-size: 12px; line-height: 1.5; color: var(--ink-55); white-space: nowrap;
+.gcell .ct { margin-top: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--ink-40); }
+.gcell .xtra { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 4px; }
+.gcell .xl {
+  display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
+  font-size: 12px; line-height: 1.5; color: var(--ink-55);
   opacity: 0; transform: translateY(6px);
   transition: opacity .4s var(--ease), transform .4s var(--ease);
 }
-.toc-row .xl .im { font-family: var(--mono); font-size: 10px; letter-spacing: .04em; color: var(--green); }
-.toc-row:hover .xl { opacity: 1; transform: none; }
-.toc-row:hover .xl:nth-child(1) { transition-delay: .04s; }
-.toc-row:hover .xl:nth-child(2) { transition-delay: .1s; }
-.toc-row:hover .xl:nth-child(3) { transition-delay: .16s; }
+.gcell .xl .im { font-family: var(--mono); font-size: 9.5px; letter-spacing: .03em; color: var(--green); white-space: nowrap; }
+.gcell:hover .xl { opacity: 1; transform: none; }
+.gcell:hover .xl:nth-child(1) { transition-delay: .04s; }
+.gcell:hover .xl:nth-child(2) { transition-delay: .1s; }
+.gcell:hover .xl:nth-child(3) { transition-delay: .16s; }
+.gcell .meter { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; }
+.gcell .meter i { display: block; height: 100%; width: 0; background: var(--green); transition: width .9s var(--ease); }
+.gcell:hover .meter i { width: var(--m); }
+@media (max-width: 1024px) { .grid8 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .grid8 { grid-template-columns: 1fr; } }
 .index .foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 40px; flex-wrap: wrap; }
 .index .foot .note { font-size: 14.5px; color: var(--ink-55); max-width: 520px; }
 
@@ -492,7 +526,7 @@ section { border-top: 1px solid var(--rule); }
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover;
   filter: none;
-  opacity: 0; transition: opacity 1s var(--ease), transform 5s linear, filter .6s var(--ease);
+  opacity: 0; transition: opacity .5s var(--ease), transform 5s linear, filter .6s var(--ease);
   transform: scale(1.02);
 }
 .car img.cur { opacity: 1; transform: scale(1.07); }
@@ -537,13 +571,6 @@ section { border-top: 1px solid var(--rule); }
   color: var(--ink); max-width: 640px;
 }
 .operator .body p.dim { color: var(--ink-55); }
-.operator .facts {
-  margin: 38px 0 0; border-top: 1px solid var(--rule);
-  display: grid; grid-template-columns: repeat(3, 1fr); max-width: 640px;
-}
-.operator .facts > div { padding: 18px 18px 20px 0; border-bottom: 1px solid var(--rule); }
-.operator .facts .fv { font-family: var(--serif); font-variation-settings: "opsz" 60; font-weight: 500; font-size: 24px; letter-spacing: -.01em; }
-.operator .facts .fk { margin-top: 5px; font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-40); }
 .operator .sig { margin-top: 38px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .operator .signame { font-family: var(--serif); font-variation-settings: "opsz" 144; font-weight: 500; font-size: 30px; letter-spacing: -.01em; }
 .operator .sigrole { font-family: var(--mono); font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-40); }
@@ -688,10 +715,6 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
   .tgrid { grid-template-columns: 1fr; }
   .tcard.feat { transform: none; }
   .assure { grid-template-columns: 1fr; }
-  .operator .facts { grid-template-columns: 1fr 1fr; }
-  .toc-row { grid-template-columns: 64px 1fr; }
-  .toc-row .meta { grid-column: 2; text-align: left; }
-  .toc-row .xl { justify-content: flex-start; }
 }
 </style>
 </head>
@@ -705,6 +728,16 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
   <a class="cta" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit</a>
 </header>
 
+<div id="rail" role="navigation" aria-label="Sections">
+  <a href="#why" data-sec="why"><span class="t">Why</span><span class="tick"></span></a>
+  <a href="#run" data-sec="run"><span class="t">Catalog</span><span class="tick"></span></a>
+  <a href="#method" data-sec="method"><span class="t">Method</span><span class="tick"></span></a>
+  <a href="#terms" data-sec="terms"><span class="t">Terms</span><span class="tick"></span></a>
+  <a href="#proof" data-sec="proof"><span class="t">Practice</span><span class="tick"></span></a>
+  <a href="#operator" data-sec="operator"><span class="t">Operator</span><span class="tick"></span></a>
+  <a href="#begin" data-sec="begin"><span class="t">Begin</span><span class="tick"></span></a>
+</div>
+
 <!-- ════ OPENING ════ -->
 <section class="open wrap" id="top" style="border-top:none">
   <div id="trail" aria-hidden="true"></div>
@@ -716,7 +749,7 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
   </div>
   <h1 class="soft" id="h1">
     <span class="l1">Run your business.</span><br>
-    <span class="it">Not your tech.</span>
+    <span class="it"><span class="txt">Not your tech.</span><span class="caret" aria-hidden="true"></span></span>
   </h1>
   <div class="floor soft d1">
     <span class="scrollcue" id="cue">
@@ -731,7 +764,8 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
     </div>
     <div class="cell">
       <span class="label">The figure</span>
-      <p>From $2,500 per month. One line to message. One name accountable for all of it.</p>
+      <p>From $2,500 per month. One line to message. Everything else, handled.</p>
+      <a class="lnk" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener" style="display:inline-block;margin-top:18px">Book the 30-minute audit</a>
     </div>
   </div>
 </section>
@@ -750,7 +784,22 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
 <section class="manifesto" data-theme="green" id="why" style="border-top:none">
   <div class="wrap">
     <span class="label"><span class="n">I</span> · Why we exist</span>
-    <p class="mtext" id="mtext">Every business is now a technology business, whether you chose that or not. Websites, CRMs, automations, AI: none of it runs itself. Axius gives that job one owner. A single operator, amplified by AI systems and backed by vetted specialists, accountable for the entire technical layer of your business.</p>
+    <p class="mtext" id="mtext">Every business is now a technology business, whether you chose that or not. Websites, CRMs, automations, AI: none of it runs itself. Axius gives that job one owner, accountable for the entire technical layer of your business. And it is never you again.</p>
+    <div class="mthead fd">Three roles. One accountable layer.</div>
+    <div class="mtriad fd">
+      <div>
+        <div class="mtk">01 · The operator</div>
+        <p>Owns direction, outcomes, and every decision that touches your systems. Your single point of contact.</p>
+      </div>
+      <div>
+        <div class="mtk">02 · AI systems</div>
+        <p>Carry the repetitive work, watch the stack in the background, and keep the documentation current.</p>
+      </div>
+      <div>
+        <div class="mtk">03 · Specialists</div>
+        <p>Vetted depth on demand, managed entirely by the operator. You never coordinate a vendor.</p>
+      </div>
+    </div>
     <div class="mfoot fd">
       <span>Axius · Technology operations</span>
       <span>For owners who refuse to be the bottleneck</span>
@@ -775,86 +824,94 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
       </div>
     </div>
 
-    <div class="toc fd">
-      <div class="toc-row">
-        <span class="no">No. 01</span><span class="nm">Sales &amp; Prospecting</span>
-        <span class="meta"><span class="ct">16 workflows</span>
-          <span class="xtra">
-            <span class="xl">Missed-call recovery <span class="im">4h &rarr; 3m response</span></span>
-            <span class="xl">Dormant lead reactivation <span class="im">47% reactivation</span></span>
-            <span class="xl">Voice agent qualification <span class="im">every call answered</span></span>
-          </span>
+    <div class="grid8 fd">
+      <div class="gcell" style="--m:78%">
+        <span class="no">No. 01</span>
+        <h3>Sales &amp; Prospecting</h3>
+        <span class="ct">16 workflows</span>
+        <span class="xtra">
+          <span class="xl">Missed-call recovery <span class="im">4h &rarr; 3m</span></span>
+          <span class="xl">Lead reactivation <span class="im">47% return</span></span>
+          <span class="xl">Voice agents <span class="im">every call answered</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
-      <div class="toc-row">
-        <span class="no">No. 02</span><span class="nm">Customer Experience</span>
-        <span class="meta"><span class="ct">17 workflows</span>
-          <span class="xtra">
-            <span class="xl">AI FAQ chatbot <span class="im">~70% deflection</span></span>
-            <span class="xl">Inbox unification <span class="im">5 inboxes &rarr; 1</span></span>
-            <span class="xl">Ticket triage &amp; routing <span class="im">8h SLA &rarr; under 1h</span></span>
-          </span>
+      <div class="gcell" style="--m:84%">
+        <span class="no">No. 02</span>
+        <h3>Customer Experience</h3>
+        <span class="ct">17 workflows</span>
+        <span class="xtra">
+          <span class="xl">AI FAQ chatbot <span class="im">~70% deflection</span></span>
+          <span class="xl">Inbox unification <span class="im">5 inboxes &rarr; 1</span></span>
+          <span class="xl">Ticket triage <span class="im">8h SLA &rarr; 1h</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
-      <div class="toc-row">
-        <span class="no">No. 03</span><span class="nm">Internal Operations</span>
-        <span class="meta"><span class="ct">16 workflows</span>
-          <span class="xtra">
-            <span class="xl">Cross-tool sync <span class="im">removes 12 manual hops</span></span>
-            <span class="xl">Document automation <span class="im">45m &rarr; 8m onboarding</span></span>
-            <span class="xl">SaaS subscription audit <span class="im">$1.4k/mo recovered</span></span>
-          </span>
+      <div class="gcell" style="--m:76%">
+        <span class="no">No. 03</span>
+        <h3>Internal Operations</h3>
+        <span class="ct">16 workflows</span>
+        <span class="xtra">
+          <span class="xl">Cross-tool sync <span class="im">12 hops removed</span></span>
+          <span class="xl">Document automation <span class="im">45m &rarr; 8m</span></span>
+          <span class="xl">SaaS audit <span class="im">$1.4k/mo back</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
-      <div class="toc-row">
-        <span class="no">No. 04</span><span class="nm">AI Implementation</span>
-        <span class="meta"><span class="ct">14 workflows</span>
-          <span class="xtra">
-            <span class="xl">Knowledge-base agent <span class="im">90s answers vs 12min</span></span>
-            <span class="xl">Predictive lead scoring <span class="im">2.3&times; pipeline accuracy</span></span>
-            <span class="xl">Multi-step custom agents <span class="im">decisions, automated</span></span>
-          </span>
+      <div class="gcell" style="--m:70%">
+        <span class="no">No. 04</span>
+        <h3>AI Implementation</h3>
+        <span class="ct">14 workflows</span>
+        <span class="xtra">
+          <span class="xl">Knowledge agents <span class="im">90s answers</span></span>
+          <span class="xl">Lead scoring <span class="im">2.3&times; accuracy</span></span>
+          <span class="xl">Multi-step agents <span class="im">decisions, automated</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
-      <div class="toc-row">
-        <span class="no">No. 05</span><span class="nm">Data &amp; Analytics</span>
-        <span class="meta"><span class="ct">13 workflows</span>
-          <span class="xtra">
-            <span class="xl">Dashboard automation <span class="im">a live ops board</span></span>
-            <span class="xl">Revenue attribution <span class="im">spend tied to revenue</span></span>
-            <span class="xl">LTV &amp; churn modeling <span class="im">churn seen early</span></span>
-          </span>
+      <div class="gcell" style="--m:64%">
+        <span class="no">No. 05</span>
+        <h3>Data &amp; Analytics</h3>
+        <span class="ct">13 workflows</span>
+        <span class="xtra">
+          <span class="xl">Live dashboards <span class="im">one ops board</span></span>
+          <span class="xl">Revenue attribution <span class="im">spend &rarr; revenue</span></span>
+          <span class="xl">Churn modeling <span class="im">seen early</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
-      <div class="toc-row">
-        <span class="no">No. 06</span><span class="nm">Web &amp; Storefront</span>
-        <span class="meta"><span class="ct">15 workflows</span>
-          <span class="xtra">
-            <span class="xl">Production website <span class="im">4-week ship</span></span>
-            <span class="xl">E-commerce setup <span class="im">selling in weeks</span></span>
-            <span class="xl">Multi-language site <span class="im">two markets, one site</span></span>
-          </span>
+      <div class="gcell" style="--m:74%">
+        <span class="no">No. 06</span>
+        <h3>Web &amp; Storefront</h3>
+        <span class="ct">15 workflows</span>
+        <span class="xtra">
+          <span class="xl">Production website <span class="im">4-week ship</span></span>
+          <span class="xl">E-commerce setup <span class="im">selling in weeks</span></span>
+          <span class="xl">Multi-language <span class="im">two markets, one site</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
-      <div class="toc-row">
-        <span class="no">No. 07</span><span class="nm">Custom Software</span>
-        <span class="meta"><span class="ct">15 workflows</span>
-          <span class="xtra">
-            <span class="xl">Internal admin tools <span class="im">3-week builds</span></span>
-            <span class="xl">Customer-facing apps <span class="im">shipped to spec</span></span>
-            <span class="xl">API integrations <span class="im">systems that finally talk</span></span>
-          </span>
+      <div class="gcell" style="--m:74%">
+        <span class="no">No. 07</span>
+        <h3>Custom Software</h3>
+        <span class="ct">15 workflows</span>
+        <span class="xtra">
+          <span class="xl">Internal tools <span class="im">3-week builds</span></span>
+          <span class="xl">Customer apps <span class="im">shipped to spec</span></span>
+          <span class="xl">API integrations <span class="im">systems that talk</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
-      <div class="toc-row">
-        <span class="no">No. 08</span><span class="nm">Finance &amp; Back Office</span>
-        <span class="meta"><span class="ct">12 workflows</span>
-          <span class="xtra">
-            <span class="xl">Invoice chase automation <span class="im">paid 12 days sooner</span></span>
-            <span class="xl">Payment reconciliation <span class="im">books close in a day</span></span>
-            <span class="xl">Quote-to-invoice flow <span class="im">zero re-typing</span></span>
-          </span>
+      <div class="gcell" style="--m:60%">
+        <span class="no">No. 08</span>
+        <h3>Finance &amp; Back Office</h3>
+        <span class="ct">12 workflows</span>
+        <span class="xtra">
+          <span class="xl">Invoice chasing <span class="im">paid 12 days sooner</span></span>
+          <span class="xl">Reconciliation <span class="im">books close in a day</span></span>
+          <span class="xl">Quote-to-invoice <span class="im">zero re-typing</span></span>
         </span>
+        <span class="meter"><i></i></span>
       </div>
     </div>
 
@@ -928,7 +985,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
       <span class="ln"><span>No hourly billing.</span></span>
       <span class="ln"><span><em>One monthly figure.</em></span></span>
     </h2>
-    <p class="intro fd">Two standing engagements and one by arrangement. Every tier keeps building month after month; none of them is a setup that fades into maintenance. Month-to-month after ninety days. Setup stated up front.</p>
+    <p class="intro fd">Two standing engagements and one by arrangement. Every tier keeps building month after month; none of them fades into maintenance. Month-to-month after ninety days. Setup stated up front.</p>
 
     <div class="tgrid fd">
       <div class="tcard">
@@ -1081,14 +1138,6 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
         <p class="fd">“Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business, so the founder can stop being IT.”</p>
         <p class="dim fd fd-1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator owns direction, outcomes, and every decision that touches your systems. AI systems carry the repetitive work and keep the documentation current. Vetted specialists step in when the work needs depth, managed entirely on my side. You never coordinate a vendor.</p>
         <p class="dim fd fd-2">You get one line to message. One monthly figure. One person whose name is on the work. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
-        <div class="facts fd fd-3">
-          <div><div class="fv serif"><span data-count="118">0</span></div><div class="fk">Workflows ready to run</div></div>
-          <div><div class="fv serif"><span data-count="8">0</span></div><div class="fk">Disciplines, one practice</div></div>
-          <div><div class="fv serif">24h</div><div class="fk">Maximum response time</div></div>
-          <div><div class="fv serif">3</div><div class="fk">Engagements opened / month</div></div>
-          <div><div class="fv serif">100%</div><div class="fk">Owned in your accounts</div></div>
-          <div><div class="fv serif">$0</div><div class="fk">Hiring &amp; severance overhead</div></div>
-        </div>
       </div>
     </div>
   </div>
@@ -1149,7 +1198,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
     <img src="/assets/andres-toro.jpg" alt="">
     <div>
       <div class="cn">Andrés Toro</div>
-      <div class="cr"><span class="dot"></span> Operator · Online</div>
+      <div class="cr"><span class="dot"></span> Online · 24/7</div>
     </div>
     <button class="x" id="chatx" aria-label="Close chat">✕</button>
   </div>
@@ -1185,6 +1234,28 @@ addEventListener('scroll', () => {
     cueText.textContent = w ? 'Welcome' : 'Scroll';
   }
 }, { passive: true });
+
+/* ── hero headline: backspace + retype on hover ────────────── */
+(function () {
+  const h1 = document.getElementById('h1');
+  const txt = h1 && h1.querySelector('.it .txt');
+  if (!txt) return;
+  const A = 'Not your tech.', B = "We'll handle it.";
+  let timer = null;
+  const seq = (target) => {
+    clearInterval(timer);
+    timer = setInterval(() => {
+      const cur = txt.textContent;
+      let common = 0;
+      while (common < cur.length && common < target.length && cur[common] === target[common]) common++;
+      if (cur.length > common) txt.textContent = cur.slice(0, -1);
+      else if (cur.length < target.length) txt.textContent = target.slice(0, cur.length + 1);
+      else clearInterval(timer);
+    }, 34);
+  };
+  h1.addEventListener('mouseenter', () => seq(B));
+  h1.addEventListener('mouseleave', () => seq(A));
+})();
 
 /* ── hero portfolio trail — cards follow the cursor, then fade.
      Placeholder color blocks for now; swap in work shots/gifs by
@@ -1344,8 +1415,8 @@ if (car) {
     dotEls.forEach((d, j) => d.classList.toggle('cur', j === i));
     cap.textContent = imgs[i].dataset.cap;
   };
-  // zoom transform runs 5s linear; hand off to the next frame right as it lands
-  const restart = () => { clearInterval(timer); timer = setInterval(() => show((curI + 1) % imgs.length), 5050); };
+  // zoom transform runs 5s linear; switch the instant it lands
+  const restart = () => { clearInterval(timer); timer = setInterval(() => show((curI + 1) % imgs.length), 5000); };
   car.addEventListener('mouseenter', () => clearInterval(timer));
   car.addEventListener('mouseleave', restart);
   restart();
@@ -1394,6 +1465,17 @@ addEventListener('scroll', () => {
     });
   });
 }, { passive: true });
+
+/* ── right rail: highlight the active section ──────────────── */
+const railLinks = [...document.querySelectorAll('#rail a')];
+const railSecs = railLinks.map(a => document.getElementById(a.dataset.sec));
+const railTick = () => {
+  let cur = -1;
+  railSecs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < innerHeight * .5) cur = i; });
+  railLinks.forEach((a, i) => a.classList.toggle('cur', i === cur));
+};
+addEventListener('scroll', railTick, { passive: true });
+railTick();
 
 /* ── cursor color over green scenes ────────────────────────── */
 const greens = [...document.querySelectorAll('[data-theme="green"], footer')];
