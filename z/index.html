@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Axius — Your technology, run through the night</title>
+<meta name="description" content="One operator takes ownership of every system in your business and runs it like a department. One line to message. One monthly figure. From $2,500/month.">
+<meta name="theme-color" content="#060A08">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Axius">
+<meta property="og:title" content="Axius — Your technology, run through the night">
+<meta property="og:description" content="Run your business. Not your tech. One operator, every system, a single point of contact.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   AXIUS · NIGHT OPS
+   The welcoming dark machine. A practice that runs while you
+   sleep, rendered as soft phosphor on deep green-black. Sparse
+   glyph rain, a live ops feed, circuit-lit method. Warm, calm,
+   nothing to be afraid of.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --void:   #060A08;
+  --pane:   #0A100D;
+  --pane-2: #0D1511;
+  --txt:    #E9F0EA;
+  --dim:    rgba(233,240,234,.58);
+  --faint:  rgba(233,240,234,.36);
+  --ghostc: rgba(233,240,234,.2);
+  --hair:   rgba(233,240,234,.09);
+  --hair-2: rgba(233,240,234,.18);
+
+  --phos:      #51E8A8;
+  --phos-dim:  rgba(81,232,168,.6);
+  --phos-soft: rgba(81,232,168,.12);
+  --phos-hair: rgba(81,232,168,.22);
+
+  --disp: "Clash Display", system-ui, sans-serif;
+  --body: "Hanken Grotesk", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --w: 1240px;
+  --gut: clamp(24px, 4vw, 56px);
+  --ease: cubic-bezier(.22,1,.24,1);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--void); color: var(--txt);
+  font-family: var(--body); font-size: 16px; line-height: 1.65; font-weight: 400;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+::selection { background: var(--phos); color: #03130C; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--phos); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  #rain { display: none; }
+}
+
+/* ── shared ───────────────────────────────────────────────── */
+.wrap { max-width: var(--w); margin: 0 auto; padding: 0 var(--gut); }
+.lbl {
+  font-family: var(--mono); font-size: 10px; font-weight: 400;
+  letter-spacing: .26em; text-transform: uppercase; color: var(--faint);
+}
+.lbl b { color: var(--phos); font-weight: 400; }
+.sec { padding: clamp(120px, 15vh, 200px) 0; position: relative; }
+.sec + .sec { border-top: 1px solid var(--hair); }
+.h2 {
+  margin: 22px 0 0; font-family: var(--disp); font-weight: 500;
+  font-size: clamp(38px, 4.4vw, 64px);
+  line-height: 1.02; letter-spacing: -.015em;
+}
+.h2 .ph { color: var(--phos); text-shadow: 0 0 28px rgba(81,232,168,.3); }
+.sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap; margin-bottom: clamp(52px, 8vh, 84px); }
+
+.pip { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--phos); box-shadow: 0 0 10px rgba(81,232,168,.8); animation: pip 2.4s ease-out infinite; vertical-align: 2px; }
+@keyframes pip { 50% { opacity: .55; } }
+
+/* reveals (replayable) */
+.js .rv { opacity: 0; transform: translateY(26px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+.js .rv.on { opacity: 1; transform: none; }
+.js .rv.d1 { transition-delay: .12s; } .js .rv.d2 { transition-delay: .24s; } .js .rv.d3 { transition-delay: .36s; }
+
+/* ── boot veil ────────────────────────────────────────────── */
+#boot {
+  position: fixed; inset: 0; z-index: 1000; background: var(--void);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .8s var(--ease), visibility .8s;
+}
+#boot.off { opacity: 0; visibility: hidden; }
+#boot pre {
+  margin: 0; font-family: var(--mono); font-size: 11px; line-height: 2.1;
+  color: var(--dim); letter-spacing: .06em;
+}
+#boot pre .ok { color: var(--phos); }
+#boot pre .c { display: inline-block; width: .6em; height: 1.1em; background: var(--phos); vertical-align: -2px; animation: blink .8s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── nav ──────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px var(--gut);
+  background: linear-gradient(to bottom, rgba(6,10,8,.9), rgba(6,10,8,0));
+}
+nav .wm { text-decoration: none; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .42em; text-transform: uppercase; color: var(--txt); }
+nav .wm b { color: var(--phos); font-weight: 500; }
+nav .stat { font-family: var(--mono); font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: var(--faint); display: flex; align-items: center; gap: 9px; }
+nav .cta {
+  text-decoration: none; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--phos); padding: 11px 20px;
+  border: 1px solid var(--phos-hair); border-radius: 3px;
+  background: var(--phos-soft);
+  transition: background .35s var(--ease), box-shadow .35s var(--ease), color .35s var(--ease);
+}
+nav .cta:hover { background: var(--phos); color: #03130C; box-shadow: 0 0 30px rgba(81,232,168,.35); }
+@media (max-width: 760px) { nav .stat { display: none; } }
+
+/* ── hero ─────────────────────────────────────────────────── */
+.hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+#rain { position: absolute; inset: 0; z-index: 0; opacity: .8; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 60%, transparent 40%, var(--void) 100%); }
+.hero .in { position: relative; z-index: 2; }
+.hero .sys { display: inline-flex; align-items: center; gap: 12px; }
+.hero h1 {
+  margin: 30px 0 0; font-family: var(--disp); font-weight: 500;
+  font-size: clamp(56px, 8.4vw, 118px);
+  line-height: .98; letter-spacing: -.015em;
+}
+.hero h1 .r { display: block; }
+.hero h1 .r.ph { color: var(--phos); text-shadow: 0 0 42px rgba(81,232,168,.35); }
+.hero .sub { margin: 36px 0 0; max-width: 560px; font-size: 18px; line-height: 1.68; color: var(--dim); font-weight: 300; }
+.hero .acts { margin-top: 42px; display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+  background: var(--phos); color: #03130C;
+  border-radius: 3px; padding: 17px 32px;
+  font-weight: 600; font-size: 15px; font-family: var(--body);
+  box-shadow: 0 0 0 rgba(81,232,168,0);
+  transition: box-shadow .4s var(--ease), transform .35s var(--ease);
+}
+.btn:hover { box-shadow: 0 0 44px rgba(81,232,168,.4); transform: translateY(-2px); }
+.ghost {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+  text-decoration: none; color: var(--dim);
+  border-bottom: 1px solid var(--hair-2); padding-bottom: 4px;
+  transition: color .3s var(--ease), border-color .3s var(--ease);
+}
+.ghost:hover { color: var(--phos); border-color: var(--phos); }
+
+/* live ops feed */
+.feed {
+  margin-top: clamp(52px, 9vh, 90px); border: 1px solid var(--hair); border-radius: 4px;
+  background: rgba(10,16,13,.7); backdrop-filter: blur(4px);
+  max-width: 640px; overflow: hidden;
+}
+.feed .fh {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+  border-bottom: 1px solid var(--hair);
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--faint);
+}
+.feed .fb { padding: 12px 16px; height: 88px; overflow: hidden; position: relative; }
+.feed .fl {
+  display: flex; gap: 14px; align-items: baseline;
+  font-family: var(--mono); font-size: 11px; line-height: 2.05; color: var(--dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transform: translateY(8px); transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.feed .fl.in { opacity: 1; transform: none; }
+.feed .fl .t { color: var(--faint); }
+.feed .fl .k { color: var(--phos); }
+
+/* ── I · why ──────────────────────────────────────────────── */
+.why .big {
+  margin: 0; max-width: 1040px;
+  font-family: var(--disp); font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 50px);
+  line-height: 1.28; letter-spacing: -.005em;
+}
+.why .big .w { opacity: .16; transition: opacity .3s linear; }
+.why .big .w.lit { opacity: 1; }
+.why .triad { margin-top: clamp(52px, 8vh, 84px); display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.why .tcell {
+  border: 1px solid var(--hair); border-radius: 4px; background: var(--pane);
+  padding: 26px 26px 30px;
+  transition: border-color .4s var(--ease), background .4s var(--ease);
+}
+.why .tcell:hover { border-color: var(--phos-hair); background: var(--pane-2); }
+.why .tcell .tk { font-family: var(--mono); font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--phos); }
+.why .tcell p { margin: 12px 0 0; font-size: 14.5px; line-height: 1.66; color: var(--dim); }
+@media (max-width: 900px) { .why .triad { grid-template-columns: 1fr; } }
+
+/* ── II · what we run (terminal index) ────────────────────── */
+.idx .row {
+  display: grid; grid-template-columns: 70px 1fr minmax(300px, auto); gap: 24px; align-items: center;
+  padding: 20px 14px; border-bottom: 1px solid var(--hair); cursor: default;
+  border-radius: 3px;
+  transition: background .35s var(--ease);
+}
+.idx .row:first-child { border-top: 1px solid var(--hair); }
+.idx .row:hover { background: var(--pane); }
+.idx .no { font-family: var(--mono); font-size: 10.5px; color: var(--faint); transition: color .3s var(--ease); }
+.idx .row:hover .no { color: var(--phos); }
+.idx .nm {
+  font-family: var(--disp); font-weight: 400; font-size: clamp(21px, 2.1vw, 30px); letter-spacing: 0;
+  display: flex; align-items: center; gap: 14px;
+  transition: transform .4s var(--ease);
+}
+.idx .nm::before { content: "▸"; font-size: 11px; color: var(--ghostc); transition: color .3s var(--ease), transform .3s var(--ease); }
+.idx .row:hover .nm { transform: translateX(8px); }
+.idx .row:hover .nm::before { color: var(--phos); transform: translateX(2px); }
+.idx .meta { text-align: right; }
+.idx .ct { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; color: var(--faint); }
+.idx .xl {
+  display: block; font-size: 12.5px; line-height: 1.6; color: var(--dim); white-space: nowrap;
+  opacity: 0; transform: translateY(5px); transition: opacity .4s var(--ease), transform .4s var(--ease);
+}
+.idx .xl b { color: var(--phos); font-weight: 500; font-family: var(--mono); font-size: 10.5px; }
+.idx .row:hover .xl { opacity: 1; transform: none; }
+.idx .row:hover .xl:nth-of-type(2) { transition-delay: .06s; }
+.idx .row:hover .xl:nth-of-type(3) { transition-delay: .12s; }
+.idx .foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 42px; flex-wrap: wrap; }
+.idx .foot .note { font-size: 14.5px; color: var(--dim); max-width: 540px; }
+.bigct { text-align: right; }
+.bigct .n { font-family: var(--disp); font-weight: 500; font-size: clamp(60px, 6vw, 96px); line-height: .9; letter-spacing: -.02em; color: var(--phos); text-shadow: 0 0 36px rgba(81,232,168,.3); }
+@media (max-width: 900px) {
+  .idx .row { grid-template-columns: 50px 1fr; }
+  .idx .meta { grid-column: 2; text-align: left; }
+}
+
+/* ── III · method (circuit rail) ──────────────────────────── */
+.meth { position: relative; }
+.meth .railwrap { position: relative; margin-top: 10px; }
+.meth .vline { position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px; background: var(--hair-2); }
+.meth .vline i { position: absolute; left: 0; top: 0; width: 100%; height: 0; background: var(--phos); box-shadow: 0 0 12px rgba(81,232,168,.6); transition: height .2s linear; }
+.mstep { position: relative; padding: 0 0 clamp(48px, 7vh, 76px) 56px; }
+.mstep:last-child { padding-bottom: 0; }
+.mstep .node {
+  position: absolute; left: 0; top: 6px;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--void); border: 1px solid var(--hair-2);
+  transition: all .4s var(--ease);
+}
+.mstep.lit .node { background: var(--phos); border-color: var(--phos); box-shadow: 0 0 18px rgba(81,232,168,.7); }
+.mstep .tm { font-family: var(--mono); font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: var(--faint); }
+.mstep h3 { margin: 10px 0 0; font-family: var(--disp); font-weight: 500; font-size: clamp(26px, 2.6vw, 38px); letter-spacing: -.01em; transition: color .4s var(--ease); }
+.mstep.lit h3 { color: var(--phos); }
+.mstep p { margin: 12px 0 0; max-width: 480px; font-size: 15px; line-height: 1.7; color: var(--dim); }
+.mstep .art { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--txt); }
+.mstep .art span { color: var(--faint); font-size: 8.5px; letter-spacing: .2em; text-transform: uppercase; margin-left: 10px; }
+
+/* ── IV · terms ───────────────────────────────────────────── */
+.tgrid { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 16px; align-items: stretch; }
+.tc {
+  position: relative; border: 1px solid var(--hair); border-radius: 5px; background: var(--pane);
+  padding: 34px 30px; display: flex; flex-direction: column; gap: 17px;
+  transition: transform .35s var(--ease), border-color .35s var(--ease), box-shadow .4s var(--ease);
+}
+.tc:hover { transform: translateY(-6px); border-color: var(--hair-2); }
+.tc.feat { border-color: var(--phos-hair); background: var(--pane-2); box-shadow: 0 0 60px rgba(81,232,168,.08); }
+.tc.feat:hover { box-shadow: 0 0 80px rgba(81,232,168,.16); border-color: var(--phos-dim); }
+.tc .tn { font-family: var(--mono); font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--faint); }
+.tc h3 { margin: 0; font-family: var(--disp); font-weight: 500; font-size: 27px; letter-spacing: 0; }
+.tc .for { margin: -5px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--dim); min-height: 44px; }
+.tc .pr { display: flex; align-items: baseline; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--hair); }
+.tc .p { font-family: var(--disp); font-size: 44px; font-weight: 500; letter-spacing: -.02em; line-height: 1; }
+.tc.feat .p { color: var(--phos); text-shadow: 0 0 24px rgba(81,232,168,.3); }
+.tc .pu { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+.tc .setup { margin-top: -5px; font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.tc .mrow { display: grid; grid-template-columns: 64px 1fr auto; gap: 10px; align-items: center; }
+.tc .mk { font-family: var(--mono); font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+.tc .mtr { height: 2px; background: var(--hair); position: relative; overflow: hidden; border-radius: 2px; }
+.tc .mtr i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--phos); box-shadow: 0 0 8px rgba(81,232,168,.7); transition: width 1.1s var(--ease) .25s; }
+.on .tc .mtr i { width: var(--m); }
+.tc .mv { font-family: var(--mono); font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.tc ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.tc li { font-size: 13.5px; color: var(--dim); padding-left: 18px; position: relative; line-height: 1.55; }
+.tc li::before { content: "+"; position: absolute; left: 0; font-family: var(--mono); color: var(--phos); }
+.tc .badge {
+  position: absolute; top: -11px; left: 28px;
+  background: var(--phos); color: #03130C;
+  font-family: var(--mono); font-size: 8.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 3px;
+  box-shadow: 0 0 24px rgba(81,232,168,.4);
+}
+.tc .go {
+  margin-top: 4px; text-align: center; text-decoration: none;
+  border: 1px solid var(--hair-2); border-radius: 3px; padding: 13px 20px;
+  font-weight: 600; font-size: 14px; color: var(--txt);
+  transition: all .3s var(--ease);
+}
+.tc .go:hover { border-color: var(--phos); color: var(--phos); background: var(--phos-soft); }
+.tc.feat .go { background: var(--phos); border-color: var(--phos); color: #03130C; }
+.tc.feat .go:hover { box-shadow: 0 0 34px rgba(81,232,168,.4); }
+.assure { margin-top: 50px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.assure > div { border: 1px solid var(--hair); border-radius: 4px; background: var(--pane); padding: 20px 22px; }
+.assure .ak { font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--phos); }
+.assure p { margin: 9px 0 0; font-size: 13.5px; line-height: 1.62; color: var(--dim); }
+.assure p b { color: var(--txt); font-weight: 500; }
+@media (max-width: 1024px) { .tgrid { grid-template-columns: 1fr; } .assure { grid-template-columns: 1fr; } }
+
+/* ── V · in practice ──────────────────────────────────────── */
+.proof .scroller { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 22px; scrollbar-width: thin; scrollbar-color: var(--phos-hair) transparent; }
+.proof .scroller::-webkit-scrollbar { height: 4px; }
+.proof .scroller::-webkit-scrollbar-thumb { background: var(--phos-hair); border-radius: 2px; }
+.pq {
+  flex: 0 0 min(520px, 84vw); scroll-snap-align: start;
+  border: 1px solid var(--hair); border-radius: 5px; background: var(--pane);
+  padding: 30px 30px 26px; display: flex; flex-direction: column; gap: 22px;
+  transition: border-color .4s var(--ease), background .4s var(--ease);
+}
+.pq:hover { border-color: var(--phos-hair); background: var(--pane-2); }
+.pq blockquote { margin: 0; font-size: 17.5px; line-height: 1.62; color: var(--txt); font-weight: 300; flex: 1; }
+.pq blockquote b { color: var(--phos); font-weight: 500; }
+.pq .src { display: flex; align-items: center; gap: 14px; }
+.pq .ava {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: var(--phos-soft); color: var(--phos); border: 1px solid var(--phos-hair);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 12px;
+}
+.pq .who { font-size: 13.5px; font-weight: 600; }
+.pq .what { margin-top: 2px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+.pq .met { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--phos); white-space: nowrap; }
+.proof .stars { margin-top: 20px; display: flex; justify-content: space-between; gap: 20px; align-items: baseline; }
+.proof .stars .s { color: var(--phos); letter-spacing: 4px; font-size: 14px; text-shadow: 0 0 14px rgba(81,232,168,.5); }
+.proof .stars .t { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
+
+/* ── VI · operator ────────────────────────────────────────── */
+.op .duo { display: grid; grid-template-columns: 400px 1fr; gap: clamp(44px, 6vw, 100px); align-items: start; }
+.op .photo { position: relative; aspect-ratio: 4/5; overflow: hidden; border-radius: 5px; border: 1px solid var(--hair); }
+.op .photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: grayscale(1) sepia(.35) hue-rotate(100deg) saturate(1.5) brightness(.92);
+  transition: filter .8s var(--ease), transform 1.4s var(--ease);
+  transform: scale(1.015);
+}
+.op .photo:hover img { filter: none; transform: scale(1.05); }
+.op .photo .hud {
+  position: absolute; left: 12px; bottom: 12px; z-index: 1;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--phos); background: rgba(6,10,8,.72); border: 1px solid var(--phos-hair);
+  padding: 7px 12px; border-radius: 3px; backdrop-filter: blur(6px);
+  display: flex; align-items: center; gap: 8px;
+}
+.op .pid { margin-top: 16px; display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.op .pid .nm { font-family: var(--disp); font-size: 22px; font-weight: 500; }
+.op .pid .rk { margin-top: 3px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
+.op .bio p { margin: 0 0 20px; font-size: clamp(17px, 1.4vw, 19px); line-height: 1.7; color: var(--txt); max-width: 620px; font-weight: 300; }
+.op .bio p.dim2 { color: var(--dim); font-size: 15.5px; }
+.op .facts { margin-top: 34px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 660px; }
+.op .facts > div { border: 1px solid var(--hair); border-radius: 4px; background: var(--pane); padding: 16px 16px 17px; transition: border-color .35s var(--ease); }
+.op .facts > div:hover { border-color: var(--phos-hair); }
+.op .facts .fv { font-family: var(--disp); font-size: 24px; font-weight: 500; letter-spacing: -.01em; color: var(--phos); }
+.op .facts .fk { margin-top: 4px; font-family: var(--mono); font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+@media (max-width: 1024px) { .op .duo { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .op .facts { grid-template-columns: 1fr 1fr; } }
+
+/* ── VII · begin ──────────────────────────────────────────── */
+.begin { text-align: center; overflow: hidden; }
+.begin .in { position: relative; z-index: 1; }
+.begin h2 {
+  margin: 28px 0 0; font-family: var(--disp); font-weight: 500;
+  font-size: clamp(44px, 6.2vw, 92px); line-height: 1.0; letter-spacing: -.015em;
+}
+.begin h2 .ph { color: var(--phos); text-shadow: 0 0 44px rgba(81,232,168,.4); }
+.begin h2 .cur2 { display: inline-block; width: .09em; height: .74em; background: var(--phos); margin-left: .06em; vertical-align: -.02em; animation: blink 1s steps(1) infinite; box-shadow: 0 0 16px rgba(81,232,168,.8); }
+.begin p { margin: 30px auto 0; max-width: 480px; font-size: 16.5px; line-height: 1.7; color: var(--dim); }
+.begin .acts { margin-top: 46px; display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap; }
+.begin .btn { padding: 19px 38px; font-size: 16px; }
+.begin .slots { margin-top: 42px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .26em; text-transform: uppercase; color: var(--faint); }
+.begin .slots b { color: var(--phos); font-weight: 400; }
+
+/* ── footer ───────────────────────────────────────────────── */
+footer { border-top: 1px solid var(--hair); padding: 40px 0 36px; }
+.fin { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.fin .l { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
+.fin a { text-decoration: none; font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); transition: color .3s var(--ease); }
+.fin a:hover { color: var(--phos); }
+
+/* ── floating chat ────────────────────────────────────────── */
+#fab {
+  position: fixed; right: 26px; bottom: 26px; z-index: 96;
+  width: 60px; height: 60px; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--phos-hair); padding: 0; background: var(--pane);
+  box-shadow: 0 0 30px rgba(81,232,168,.15);
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+  overflow: visible;
+}
+#fab:hover { transform: scale(1.07); box-shadow: 0 0 44px rgba(81,232,168,.3); }
+#fab img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; border-radius: 50%; display: block; filter: grayscale(1) brightness(.95); transition: filter .5s var(--ease); }
+#fab:hover img { filter: none; }
+#fab .nb {
+  position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px; border-radius: 99px;
+  background: var(--phos); color: #03130C; border: 0;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  display: none; align-items: center; justify-content: center;
+  box-shadow: 0 0 16px rgba(81,232,168,.6);
+}
+#fab .nb.on { display: inline-flex; animation: nbpop .6s var(--ease); }
+@keyframes nbpop { 0% { transform: scale(0); } 70% { transform: scale(1.3); } 100% { transform: scale(1); } }
+#chat {
+  position: fixed; right: 26px; bottom: 100px; z-index: 96;
+  width: min(378px, calc(100vw - 52px)); max-height: min(560px, 70vh);
+  background: var(--pane-2); border: 1px solid var(--phos-hair); border-radius: 6px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 60px rgba(81,232,168,.08);
+  display: flex; flex-direction: column; overflow: hidden;
+  opacity: 0; transform: translateY(14px) scale(.98); pointer-events: none;
+  transition: opacity .4s var(--ease), transform .4s var(--ease);
+}
+#chat.openc { opacity: 1; transform: none; pointer-events: auto; }
+#chat .ch { background: var(--pane); border-bottom: 1px solid var(--hair); padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
+#chat .ch img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; object-position: 50% 28%; }
+#chat .ch .n { font-weight: 600; font-size: 14px; }
+#chat .ch .r { margin-top: 1px; font-family: var(--mono); font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); display: flex; align-items: center; gap: 6px; }
+#chat .ch .x { margin-left: auto; all: unset; cursor: pointer; font-family: var(--mono); font-size: 13px; color: var(--faint); padding: 4px 8px; }
+#chat .ch .x:hover { color: var(--txt); }
+#chat .cb { padding: 16px 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 11px; }
+#chat .m { font-size: 13.5px; line-height: 1.58; white-space: pre-wrap; max-width: 92%; color: var(--txt); }
+#chat .m.you { align-self: flex-end; background: var(--phos); color: #03130C; padding: 9px 13px; border-radius: 8px 8px 2px 8px; font-weight: 500; }
+#chat .chips { padding: 0 18px 12px; display: flex; flex-wrap: wrap; gap: 7px; }
+#chat .chips button {
+  all: unset; cursor: pointer; border: 1px solid var(--hair-2); border-radius: 3px;
+  padding: 7px 12px; font-size: 12px; color: var(--dim);
+  transition: all .25s var(--ease);
+}
+#chat .chips button:hover { border-color: var(--phos); color: var(--phos); background: var(--phos-soft); }
+#chat .cf { border-top: 1px solid var(--hair); padding: 11px 18px; display: flex; gap: 10px; }
+#chat .cf input { flex: 1; border: none; outline: none; background: transparent; font-family: var(--body); font-size: 13.5px; color: var(--txt); }
+#chat .cf input::placeholder { color: var(--faint); }
+#chat .cf button { all: unset; cursor: pointer; font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--phos); padding: 6px 0 6px 10px; }
+#chat .bk { display: block; text-align: center; text-decoration: none; background: var(--phos); color: #03130C; padding: 12px; font-size: 13px; font-weight: 600; }
+#chat .bk:hover { filter: brightness(1.1); }
+</style>
+</head>
+<body>
+
+<div id="boot" aria-hidden="true"><pre id="bootlines"></pre></div>
+
+<nav>
+  <a class="wm" href="#top">AXIUS<b>_</b></a>
+  <span class="stat"><span class="pip"></span> Systems nominal · Altamonte Springs, FL · 24/7</span>
+  <a class="cta" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit</a>
+</nav>
+
+<!-- ════ HERO ════ -->
+<header class="hero" id="top">
+  <canvas id="rain" aria-hidden="true"></canvas>
+  <div class="wrap in">
+    <span class="sys rv on"><span class="lbl"><b>axius.os</b> · A private technology operations practice</span></span>
+    <h1>
+      <span class="r rv on">Run your business.</span>
+      <span class="r ph rv on d1">Not your tech.</span>
+    </h1>
+    <p class="sub rv on d2">One operator takes ownership of every system in your business and runs it like a department, around the clock. One line to message. One monthly figure. One name accountable for all of it.</p>
+    <div class="acts rv on d3">
+      <a class="btn" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the 30-minute audit →</a>
+      <a class="ghost" href="#terms">See the terms</a>
+    </div>
+    <div class="feed rv on d3" aria-hidden="true">
+      <div class="fh"><span class="pip"></span> Live operations feed · sample</div>
+      <div class="fb" id="feedbody"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ════ I · WHY ════ -->
+<section class="sec why" id="why">
+  <div class="wrap">
+    <span class="lbl"><b>01</b> · Why we exist</span>
+    <div class="sec-head"></div>
+    <p class="big" id="why-big">Every business is now a technology business, whether you chose that or not. Websites, CRMs, automations, AI: none of it runs itself. Axius gives that job one owner, so it is never you again.</p>
+    <div class="triad rv">
+      <div class="tcell">
+        <div class="tk">The operator</div>
+        <p>Owns direction, outcomes, and every decision that touches your systems. Your single point of contact.</p>
+      </div>
+      <div class="tcell">
+        <div class="tk">AI systems</div>
+        <p>Carry the repetitive work, watch the stack through the night, and keep the documentation current.</p>
+      </div>
+      <div class="tcell">
+        <div class="tk">Specialists</div>
+        <p>Vetted depth on demand: engineering, automation, design, infrastructure. Managed entirely on our side.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ II · WHAT WE RUN ════ -->
+<section class="sec idx" id="run">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="lbl"><b>02</b> · What we run</span>
+        <h2 class="h2 rv">From missed calls<br><span class="ph">to custom software.</span></h2>
+      </div>
+      <div class="bigct rv">
+        <div class="n"><span data-count="118">0</span></div>
+        <div class="lbl" style="margin-top:8px">Workflows · 8 disciplines</div>
+      </div>
+    </div>
+
+    <div class="rv">
+      <div class="row">
+        <span class="no">01</span><span class="nm">Sales &amp; Prospecting</span>
+        <span class="meta"><span class="ct">16 workflows</span>
+          <span class="xl">Missed-call recovery <b>4h → 3m response</b></span>
+          <span class="xl">Dormant lead reactivation <b>47% reactivation</b></span>
+          <span class="xl">Voice agent qualification <b>every call answered</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="no">02</span><span class="nm">Customer Experience</span>
+        <span class="meta"><span class="ct">17 workflows</span>
+          <span class="xl">AI FAQ chatbot <b>~70% deflection</b></span>
+          <span class="xl">Inbox unification <b>5 inboxes → 1</b></span>
+          <span class="xl">Ticket triage &amp; routing <b>8h SLA → under 1h</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="no">03</span><span class="nm">Internal Operations</span>
+        <span class="meta"><span class="ct">16 workflows</span>
+          <span class="xl">Cross-tool sync <b>12 manual hops removed</b></span>
+          <span class="xl">Document automation <b>45m → 8m onboarding</b></span>
+          <span class="xl">SaaS subscription audit <b>$1.4k/mo recovered</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="no">04</span><span class="nm">AI Implementation</span>
+        <span class="meta"><span class="ct">14 workflows</span>
+          <span class="xl">Knowledge-base agent <b>90s answers vs 12min</b></span>
+          <span class="xl">Predictive lead scoring <b>2.3x pipeline accuracy</b></span>
+          <span class="xl">Multi-step custom agents <b>decisions, automated</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="no">05</span><span class="nm">Data &amp; Analytics</span>
+        <span class="meta"><span class="ct">13 workflows</span>
+          <span class="xl">Dashboard automation <b>a live ops board</b></span>
+          <span class="xl">Revenue attribution <b>spend tied to revenue</b></span>
+          <span class="xl">LTV &amp; churn modeling <b>churn seen early</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="no">06</span><span class="nm">Web &amp; Storefront</span>
+        <span class="meta"><span class="ct">15 workflows</span>
+          <span class="xl">Production website <b>4-week ship</b></span>
+          <span class="xl">E-commerce setup <b>selling in weeks</b></span>
+          <span class="xl">Multi-language site <b>two markets, one site</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="no">07</span><span class="nm">Custom Software</span>
+        <span class="meta"><span class="ct">15 workflows</span>
+          <span class="xl">Internal admin tools <b>3-week builds</b></span>
+          <span class="xl">Customer-facing apps <b>shipped to spec</b></span>
+          <span class="xl">API integrations <b>systems that finally talk</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="no">08</span><span class="nm">Finance &amp; Back Office</span>
+        <span class="meta"><span class="ct">12 workflows</span>
+          <span class="xl">Invoice chase automation <b>paid 12 days sooner</b></span>
+          <span class="xl">Payment reconciliation <b>books close in a day</b></span>
+          <span class="xl">Quote-to-invoice flow <b>zero re-typing</b></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="foot rv">
+      <span class="note">Each workflow carries a weight. Most businesses run two to five at a time, and the practice sizes the engagement around them.</span>
+      <a class="ghost" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Get your curated shortlist</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ III · METHOD ════ -->
+<section class="sec meth" id="method">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="lbl"><b>03</b> · The method</span>
+        <h2 class="h2 rv">Named stages.<br><span class="ph">Written deliverables.</span></h2>
+      </div>
+    </div>
+    <div class="railwrap">
+      <span class="vline" aria-hidden="true"><i id="vfill"></i></span>
+      <div class="mstep rv" data-m="0">
+        <span class="node" aria-hidden="true"></span>
+        <span class="tm">Stage 01 · Days 1 to 7</span>
+        <h3>Audit.</h3>
+        <p>Inventory the systems. Find the leaks. Deliver the report.</p>
+        <div class="art">stack_audit.pdf <span>deliverable</span></div>
+      </div>
+      <div class="mstep rv" data-m="1">
+        <span class="node" aria-hidden="true"></span>
+        <span class="tm">Stage 02 · Days 8 to 14</span>
+        <h3>Configure.</h3>
+        <p>Map workflows to your business. You sign off in writing before anything is built.</p>
+        <div class="art">config_map.json <span>deliverable</span></div>
+      </div>
+      <div class="mstep rv" data-m="2">
+        <span class="node" aria-hidden="true"></span>
+        <span class="tm">Stage 03 · Month 1 +</span>
+        <h3>Operate.</h3>
+        <p>Run it. Log tickets, ship fixes, and report monthly, in writing.</p>
+        <div class="art">monthly_report.md <span>deliverable</span></div>
+      </div>
+      <div class="mstep rv" data-m="3">
+        <span class="node" aria-hidden="true"></span>
+        <span class="tm">Stage 04 · Quarterly</span>
+        <h3>Evolve.</h3>
+        <p>Review quarterly. The roadmap stays yours and every artifact lives in your accounts.</p>
+        <div class="art">roadmap.notion <span>deliverable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ IV · TERMS ════ -->
+<section class="sec" id="terms">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="lbl"><b>04</b> · The terms</span>
+        <h2 class="h2 rv">No hourly billing.<br><span class="ph">One monthly figure.</span></h2>
+      </div>
+      <p class="rv" style="max-width:420px;font-size:15px;line-height:1.66;color:var(--dim);margin:0">Every tier keeps building month after month; none of them is a setup that fades into maintenance. Month-to-month after ninety days.</p>
+    </div>
+
+    <div class="tgrid rv">
+      <div class="tc">
+        <span class="tn">Tier 01</span>
+        <h3>Operator</h3>
+        <p class="for">A standing operator on your side. Your most critical systems, run and improved every month.</p>
+        <div class="pr"><span class="p">$2,500</span><span class="pu">/ month</span></div>
+        <div class="setup">+ $1,250 one-time setup</div>
+        <div class="mrow"><span class="mk">Capacity</span><span class="mtr"><i style="--m:34%"></i></span><span class="mv">a few systems</span></div>
+        <div class="mrow"><span class="mk">Response</span><span class="mtr"><i style="--m:55%"></i></span><span class="mv">within 24h</span></div>
+        <ul>
+          <li>Your most critical systems, owned end to end</li>
+          <li>New builds and fixes shipped every month</li>
+          <li>Direct line to the operator, no queue</li>
+          <li>Monthly operations report, in writing</li>
+        </ul>
+        <a class="go" href="https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01" target="_blank" rel="noopener">Begin with Operator</a>
+      </div>
+      <div class="tc feat">
+        <span class="badge">Most engaged</span>
+        <span class="tn">Tier 02</span>
+        <h3>Team</h3>
+        <p class="for">A standing team's worth of output. Multiple coordinated systems, advancing every month.</p>
+        <div class="pr"><span class="p">$5,000</span><span class="pu">/ month</span></div>
+        <div class="setup">+ $2,500 one-time setup</div>
+        <div class="mrow"><span class="mk">Capacity</span><span class="mtr"><i style="--m:68%"></i></span><span class="mv">multi-system</span></div>
+        <div class="mrow"><span class="mk">Response</span><span class="mtr"><i style="--m:78%"></i></span><span class="mv">same day</span></div>
+        <ul>
+          <li>Multiple coordinated systems, one living roadmap</li>
+          <li>Continuous building, never just maintenance</li>
+          <li>Biweekly operations call with the operator</li>
+          <li>Monthly report + quarterly strategy</li>
+          <li>Priority bench across all eight disciplines</li>
+        </ul>
+        <a class="go" href="https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02" target="_blank" rel="noopener">Begin with Team →</a>
+      </div>
+      <div class="tc">
+        <span class="tn">Tier 03</span>
+        <h3>Department</h3>
+        <p class="for">Your entire technology function, resting on us. Dedicated capacity, by arrangement.</p>
+        <div class="pr"><span class="p">Custom</span></div>
+        <div class="setup">Scoped together</div>
+        <div class="mrow"><span class="mk">Capacity</span><span class="mtr"><i style="--m:100%"></i></span><span class="mv">dedicated</span></div>
+        <div class="mrow"><span class="mk">Response</span><span class="mtr"><i style="--m:96%"></i></span><span class="mv">same hour</span></div>
+        <ul>
+          <li>Technology leadership, operational ownership</li>
+          <li>Dedicated capacity, named operator</li>
+          <li>Quarterly executive review + risk register</li>
+          <li>Full documentation, always current</li>
+        </ul>
+        <a class="go" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Arrange a conversation</a>
+      </div>
+    </div>
+
+    <div class="assure rv">
+      <div><div class="ak">The guarantee</div><p>It holds every month, not just the first: agreed work lands in its agreed window, <b>or the next month is on us.</b></p></div>
+      <div><div class="ak">The exit</div><p>Cancel with thirty days' notice. Every system leaves <b>documented and operational.</b></p></div>
+      <div><div class="ak">The ownership</div><p>Everything lives in <b>your accounts</b>: code, credentials, documentation. Nothing is held.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ V · IN PRACTICE ════ -->
+<section class="sec proof" id="proof">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="lbl"><b>05</b> · In practice</span>
+        <h2 class="h2 rv">Quiet systems.<br><span class="ph">Loud results.</span></h2>
+      </div>
+    </div>
+    <div class="scroller rv">
+      <div class="pq">
+        <blockquote>"Inventory reconciliation was eating two manager-nights a week across three locations. <b>Managers stopped working Sundays.</b>"</blockquote>
+        <div class="src"><span class="ava">MC</span><span><span class="who">Mariana's Cantina Group</span><br><span class="what">Restaurant group · South Florida</span></span><span class="met">8 h/wk returned</span></div>
+      </div>
+      <div class="pq">
+        <blockquote>"Intake was re-typed three times: receptionist, Clio, templates. Now it's typed once. <b>A new matter opens in eight minutes.</b>"</blockquote>
+        <div class="src"><span class="ava">HB</span><span><span class="who">Hartwell &amp; Bain LLP</span><br><span class="what">Litigation firm · Charlotte, NC</span></span><span class="met">45m → 8m</span></div>
+      </div>
+      <div class="pq">
+        <blockquote>"Missed calls during showings were costing us leads every week. <b>Eleven came back in the first thirty days.</b>"</blockquote>
+        <div class="src"><span class="ava">BR</span><span><span class="who">Bridgepoint Realty Partners</span><br><span class="what">Brokerage · Tampa, FL</span></span><span class="met">11 recovered</span></div>
+      </div>
+      <div class="pq">
+        <blockquote>"Quotes used to take a day of back-and-forth. The proposal builds itself from the call notes now. <b>We send it before the prospect's coffee goes cold.</b>"</blockquote>
+        <div class="src"><span class="ava">CP</span><span><span class="who">Cobalt &amp; Pine Studio</span><br><span class="what">Design studio · Austin, TX</span></span><span class="met">1 day → 20 min</span></div>
+      </div>
+      <div class="pq">
+        <blockquote>"Reminders, reschedules, recall lists, all of it ran on sticky notes. Now the schedule defends itself. <b>No-shows fell by almost half.</b>"</blockquote>
+        <div class="src"><span class="ava">FD</span><span><span class="who">Foster Dental Collective</span><br><span class="what">Dental group · Orlando, FL</span></span><span class="met">No-shows −41%</span></div>
+      </div>
+      <div class="pq">
+        <blockquote>"We oversold constantly during drops. Channels sync in real time now. <b>Zero oversells in ninety days.</b>"</blockquote>
+        <div class="src"><span class="ava">HV</span><span><span class="who">Harbor &amp; Vine Goods</span><br><span class="what">E-commerce · Savannah, GA</span></span><span class="met">0 oversells / 90d</span></div>
+      </div>
+      <div class="pq">
+        <blockquote>"Tenant requests sat in a shared inbox nobody owned. Now they're routed, tracked, and closed. <b>Nine-day fixes became two.</b>"</blockquote>
+        <div class="src"><span class="ava">CL</span><span><span class="who">Crestline Property Group</span><br><span class="what">Property mgmt · Boise, ID</span></span><span class="met">9 days → 2</span></div>
+      </div>
+    </div>
+    <div class="stars rv">
+      <span class="s">★★★★★</span>
+      <span class="t">Five-star operations, on record · drag to read</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════ VI · OPERATOR ════ -->
+<section class="sec op" id="operator">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="lbl"><b>06</b> · The operator</span>
+        <h2 class="h2 rv">One operator.<br><span class="ph">Every system.</span></h2>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="rv">
+        <div class="photo">
+          <img src="/assets/andres-toro.jpg" alt="Andrés Toro, the operator" style="object-position:50% 28%">
+          <span class="hud"><span class="pip"></span> Operator · On duty</span>
+        </div>
+        <div class="pid">
+          <div>
+            <div class="nm">Andrés Toro</div>
+            <div class="rk">Founder &amp; Operator</div>
+          </div>
+          <a class="ghost" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Let's talk →</a>
+        </div>
+      </div>
+      <div class="bio">
+        <p class="rv">"Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business, so the founder can stop being IT."</p>
+        <p class="dim2 rv d1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator owns direction, outcomes, and every decision that touches your systems. AI systems carry the repetitive work. Vetted specialists step in when the work needs depth, managed entirely on my side. You never coordinate a vendor.</p>
+        <p class="dim2 rv d2">You get one line to message. One monthly figure. One person whose name is on the work. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
+        <div class="facts rv d3">
+          <div><div class="fv"><span data-count="118">0</span></div><div class="fk">Workflows ready to run</div></div>
+          <div><div class="fv"><span data-count="8">0</span></div><div class="fk">Disciplines, one practice</div></div>
+          <div><div class="fv">24h</div><div class="fk">Maximum response time</div></div>
+          <div><div class="fv">3</div><div class="fk">Engagements opened / month</div></div>
+          <div><div class="fv">100%</div><div class="fk">Owned in your accounts</div></div>
+          <div><div class="fv">$0</div><div class="fk">Hiring &amp; severance overhead</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ VII · BEGIN ════ -->
+<section class="sec begin" id="begin">
+  <div class="wrap in">
+    <span class="lbl"><b>07</b> · Begin</span>
+    <h2 class="rv">Thirty minutes.<br><span class="ph">A one-page audit either way.</span><span class="cur2" aria-hidden="true"></span></h2>
+    <p class="rv d1">No pitch and no pressure. A clear picture of where your systems leak, and what the practice would run first.</p>
+    <div class="acts rv d2">
+      <a class="btn" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit call →</a>
+      <a class="ghost" href="mailto:andres@axius.tech?subject=Axius%20—%20discovery">or write directly</a>
+    </div>
+    <div class="slots rv d3">Only <b>three new engagements</b> accepted per month</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap fin">
+    <span class="l">© 2026 Axius · A private technology operations practice</span>
+    <span style="display:flex;gap:26px">
+      <a href="mailto:andres@axius.tech">andres@axius.tech</a>
+      <a href="https://www.linkedin.com/in/followrace/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#top">Back to top</a>
+    </span>
+    <span class="l">Altamonte Springs, Florida</span>
+  </div>
+</footer>
+
+<!-- floating chat -->
+<button id="fab" aria-label="Chat with Andrés" aria-expanded="false">
+  <img src="/assets/andres-toro.jpg" alt="">
+  <span class="nb" id="nb">1</span>
+</button>
+<div id="chat" role="dialog" aria-label="Chat with Andrés">
+  <div class="ch">
+    <img src="/assets/andres-toro.jpg" alt="">
+    <div>
+      <div class="n">Andrés Toro</div>
+      <div class="r"><span class="pip"></span> Operator · Online</div>
+    </div>
+    <button class="x" id="chatx" aria-label="Close chat">✕</button>
+  </div>
+  <div class="cb" id="cb"></div>
+  <div class="chips" id="chips"></div>
+  <form class="cf" id="cform">
+    <input id="cin" placeholder="What's slowing you down?" aria-label="Message Andrés">
+    <button type="submit">Send</button>
+  </form>
+  <a class="bk" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the 30-minute audit →</a>
+</div>
+
+<script>
+document.documentElement.classList.add('js');
+
+/* ── boot sequence ─────────────────────────────────────────── */
+(function () {
+  const boot = document.getElementById('boot');
+  const pre = document.getElementById('bootlines');
+  const LINES = [
+    ['axius.os v2.8', ''],
+    ['loading operations layer', ' <span class="ok">ok</span>'],
+    ['118 workflows indexed', ' <span class="ok">ok</span>'],
+    ['operator on duty', ' <span class="ok">ok</span>'],
+  ];
+  let i = 0;
+  const next = () => {
+    if (i < LINES.length) {
+      pre.innerHTML = LINES.slice(0, i + 1).map(l => '<span>' + l[0] + l[1] + '</span>').join('\n') + '\n<span class="c"></span>';
+      i++;
+      setTimeout(next, 240);
+    } else {
+      setTimeout(() => {
+        boot.classList.add('off');
+        setTimeout(() => boot.remove(), 900);
+      }, 320);
+    }
+  };
+  next();
+})();
+
+/* ── glyph rain: sparse, slow, phosphor. Parts around cursor. ── */
+(function () {
+  const cv = document.getElementById('rain');
+  if (!cv || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ctx = cv.getContext('2d');
+  const CHARS = 'AXIUS01<>/{}=+*#%abcdeghknopqrtz';
+  let W, H, cols = [], mx = -9999, my = -9999, visible = true;
+  const CW = 26;
+  const build = () => {
+    W = cv.width = cv.offsetWidth * devicePixelRatio;
+    H = cv.height = cv.offsetHeight * devicePixelRatio;
+    const n = Math.floor(cv.offsetWidth / CW);
+    cols = [];
+    for (let i = 0; i < n; i++) {
+      if (Math.random() > .42) continue; // sparse
+      cols.push({
+        x: i * CW + CW / 2,
+        y: Math.random() * cv.offsetHeight,
+        v: .25 + Math.random() * .55,
+        ch: CHARS[Math.floor(Math.random() * CHARS.length)],
+        a: .04 + Math.random() * .1,
+        sw: Math.random() < .12, // a few brighter "head" glyphs
+      });
+    }
+  };
+  build();
+  addEventListener('resize', build);
+  cv.parentElement.addEventListener('mousemove', (e) => {
+    const r = cv.getBoundingClientRect();
+    mx = e.clientX - r.left; my = e.clientY - r.top;
+  });
+  cv.parentElement.addEventListener('mouseleave', () => { mx = my = -9999; });
+  const draw = () => {
+    requestAnimationFrame(draw);
+    if (!visible) return;
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = `${13 * devicePixelRatio}px "IBM Plex Mono", monospace`;
+    ctx.textAlign = 'center';
+    for (const c of cols) {
+      c.y += c.v;
+      if (c.y > cv.offsetHeight + 20) {
+        c.y = -20;
+        c.ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+      }
+      if (Math.random() < .012) c.ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+      // part around the cursor
+      const d = Math.hypot(c.x - mx, c.y - my);
+      const push = d < 130 ? (1 - d / 130) * 30 : 0;
+      const dx = push ? (c.x - mx) / (d || 1) * push : 0;
+      const a = c.sw ? Math.min(.5, c.a * 4) : c.a;
+      ctx.fillStyle = `rgba(81,232,168,${a})`;
+      ctx.fillText(c.ch, (c.x + dx) * devicePixelRatio, c.y * devicePixelRatio);
+    }
+  };
+  draw();
+  new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(cv);
+})();
+
+/* ── live ops feed ─────────────────────────────────────────── */
+(function () {
+  const body = document.getElementById('feedbody');
+  if (!body) return;
+  const EVENTS = [
+    ['02:14', 'missed-call recovery', 'lead texted back in 41s'],
+    ['03:02', 'inventory sync', '3 locations reconciled'],
+    ['06:48', 'invoice chase', 'payment received, 9 days early'],
+    ['08:21', 'ticket triage', 'routed + answered, 7 min'],
+    ['09:41', 'voice agent', 'call answered, meeting booked'],
+    ['11:35', 'channel sync', '0 oversells this week'],
+    ['14:09', 'intake automation', 'new matter opened in 8 min'],
+    ['17:52', 'no-show shield', '12 reminders sent, 0 gaps'],
+    ['23:17', 'stack watch', 'all systems nominal'],
+  ];
+  let i = 0;
+  const push = () => {
+    const e = EVENTS[i % EVENTS.length]; i++;
+    const div = document.createElement('div');
+    div.className = 'fl';
+    div.innerHTML = `<span class="t">${e[0]}</span><span class="k">${e[1]}</span><span>${e[2]}</span>`;
+    body.appendChild(div);
+    requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('in')));
+    while (body.children.length > 4) body.removeChild(body.firstChild);
+  };
+  push(); push(); push();
+  setInterval(push, 2600);
+})();
+
+/* ── reveals: jump-proof + replayable ──────────────────────── */
+const revealables = [...document.querySelectorAll('.rv')].filter(el => !el.closest('.hero'));
+const rio = new IntersectionObserver((es) => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0, rootMargin: '4000px 0px -60px 0px' });
+revealables.forEach(el => {
+  if (el.getBoundingClientRect().top < innerHeight) el.classList.add('on');
+  rio.observe(el);
+});
+
+/* ── count-ups, replayable ─────────────────────────────────── */
+const counters = [...document.querySelectorAll('[data-count]')].map(el => {
+  const to = +el.dataset.count, dur = 1600;
+  const c = { el, played: false };
+  c.run = () => {
+    const t0 = performance.now(), gen = (c.gen = (c.gen || 0) + 1);
+    const tick = (t) => {
+      if (gen !== c.gen) return;
+      const p = Math.min(1, (t - t0) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  return c;
+});
+const cio = new IntersectionObserver((es) => {
+  es.forEach(e => {
+    const c = counters.find(k => k.el === e.target);
+    if (c && e.isIntersecting && !c.played) { c.played = true; c.run(); }
+  });
+}, { threshold: 0, rootMargin: '4000px 0px 0px 0px' });
+counters.forEach(c => {
+  if (c.el.getBoundingClientRect().top < innerHeight) { c.played = true; c.run(); }
+  cio.observe(c.el);
+});
+
+/* re-arm anything that drops back below the viewport */
+let rq = false;
+addEventListener('scroll', () => {
+  if (rq) return; rq = true;
+  requestAnimationFrame(() => {
+    rq = false;
+    revealables.forEach(el => {
+      if (el.classList.contains('on') && el.getBoundingClientRect().top > innerHeight + 80) el.classList.remove('on');
+    });
+    counters.forEach(c => {
+      if (c.played && c.el.getBoundingClientRect().top > innerHeight + 80) { c.gen = (c.gen || 0) + 1; c.played = false; c.el.textContent = '0'; }
+    });
+  });
+}, { passive: true });
+
+/* ── why: word lighting ────────────────────────────────────── */
+const wb = document.getElementById('why-big');
+if (wb) {
+  const words = wb.textContent.trim().split(/\s+/);
+  wb.innerHTML = words.map(w => `<span class="w">${w}</span>`).join(' ');
+  const spans = [...wb.querySelectorAll('.w')];
+  const onS = () => {
+    const r = wb.getBoundingClientRect();
+    const start = innerHeight * .85, end = innerHeight * .35;
+    const p = Math.max(0, Math.min(1, (start - r.top) / (r.height + start - end)));
+    const lit = Math.floor(p * spans.length * 1.25);
+    spans.forEach((s, i) => s.classList.toggle('lit', i < lit));
+  };
+  addEventListener('scroll', onS, { passive: true });
+  onS();
+}
+
+/* ── method circuit rail ───────────────────────────────────── */
+const vfill = document.getElementById('vfill');
+const msteps = [...document.querySelectorAll('.mstep')];
+if (vfill) {
+  const railEl = document.querySelector('.railwrap');
+  const onS = () => {
+    const r = railEl.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, (innerHeight * .7 - r.top) / r.height));
+    vfill.style.height = (p * 100) + '%';
+    msteps.forEach((s) => {
+      const sr = s.getBoundingClientRect();
+      s.classList.toggle('lit', (sr.top - r.top + 12) / r.height <= p);
+    });
+  };
+  addEventListener('scroll', onS, { passive: true });
+  onS();
+}
+
+/* ── floating chat ─────────────────────────────────────────── */
+(function () {
+  const fab = document.getElementById('fab');
+  const panel = document.getElementById('chat');
+  const badge = document.getElementById('nb');
+  const body = document.getElementById('cb');
+  const chipsEl = document.getElementById('chips');
+  const form = document.getElementById('cform');
+  const input = document.getElementById('cin');
+
+  const GREETING = "Hi, I'm Andrés. Tell me what's slowing the business down and I'll show you exactly how I'd run it.";
+  const CHIPS = [
+    'Everything depends on me',
+    "We're drowning in tools",
+    'Leads slip through the cracks',
+    'What does $2,500 cover?',
+    'How fast can we start?',
+    'How do you work?',
+    "Show me what you'd improve",
+  ];
+  const REPLIES = {
+    depends: "That's the most common pattern I see. The fix isn't more hires, it's documented systems with one owner. I map what lives in your head, then run it for you. Founder time comes back within the first month.",
+    tools: "Tool sprawl is an ownership problem, not a software problem. Most stacks shrink 30 to 40% in the first 90 days once someone actually runs them. The audit shows exactly where.",
+    leads: "Lead leakage is usually three gaps: missed calls, no routing, no follow-up. Plugging the missed-call gap alone recovers 20 to 30% of inbound. I instrument the whole funnel.",
+    price: "$2,500/month is the Operator tier: your most critical systems owned end to end, new builds shipped every month, a written monthly report. Team is $5,000 for multiple coordinated systems. Both carry a standing guarantee: agreed work lands in its agreed window or the next month is on us.",
+    start: "Days 1 to 7: audit. Days 8 to 14: a workflow map you approve in writing. Day 14: I'm operating. And you'll have a one-page audit in hand after our first thirty minutes.",
+    model: "Three roles, one accountable layer. I own direction and outcomes, and I'm your single point of contact. AI systems carry the repetitive work, watch the stack in the background, and keep documentation current. When something needs depth, vetted specialists step in, managed entirely on my side. You never coordinate a vendor.",
+    improve: "Easier shown than told: book the thirty-minute audit. I inventory your stack live, point at the leaks (missed leads, re-typed data, tools nobody owns) and you leave with a one-page read of what I'd run first. The page is yours either way.",
+    default: "Tell me a little about what's breaking, what's manual, or what depends on you. Or book the thirty-minute audit below and you'll leave with a one-page read either way.",
+  };
+  const match = (q) => {
+    const s = q.toLowerCase();
+    if (/improve|show me|audit my/.test(s)) return REPLIES.improve;
+    if (/how do you work|model|specialist|roles|who does the work/.test(s)) return REPLIES.model;
+    if (/depend|bottleneck|myself|on me/.test(s)) return REPLIES.depends;
+    if (/tool|drown|sprawl|software|apps/.test(s)) return REPLIES.tools;
+    if (/lead|missed|call|funnel|sales/.test(s)) return REPLIES.leads;
+    if (/price|cost|2,?500|cover|fee|month/.test(s)) return REPLIES.price;
+    if (/start|fast|soon|when|how long/.test(s)) return REPLIES.start;
+    return REPLIES.default;
+  };
+  const addMsg = (text, you) => {
+    const m = document.createElement('div');
+    m.className = 'm' + (you ? ' you' : '');
+    body.appendChild(m);
+    if (you) { m.textContent = text; body.scrollTop = body.scrollHeight; return; }
+    let i = 0;
+    const id = setInterval(() => {
+      i += 2;
+      m.textContent = text.slice(0, i);
+      body.scrollTop = body.scrollHeight;
+      if (i >= text.length) clearInterval(id);
+    }, 14);
+  };
+  let booted = false;
+  const boot = () => {
+    if (booted) return;
+    booted = true;
+    addMsg(GREETING, false);
+    CHIPS.forEach(c => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = c;
+      b.addEventListener('click', () => ask(c));
+      chipsEl.appendChild(b);
+    });
+  };
+  const ask = (q) => { addMsg(q, true); setTimeout(() => addMsg(match(q), false), 450); };
+  const setOpen = (open) => {
+    panel.classList.toggle('openc', open);
+    fab.setAttribute('aria-expanded', String(open));
+    if (open) { boot(); badge.classList.remove('on'); setTimeout(() => input.focus(), 350); }
+  };
+  fab.addEventListener('click', () => setOpen(!panel.classList.contains('openc')));
+  document.getElementById('chatx').addEventListener('click', () => setOpen(false));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = input.value.trim();
+    if (!v) return;
+    input.value = '';
+    ask(v);
+  });
+  const notify = () => {
+    if (scrollY > innerHeight * 1.1 && !panel.classList.contains('openc')) {
+      badge.classList.add('on');
+      removeEventListener('scroll', notify);
+    }
+  };
+  addEventListener('scroll', notify, { passive: true });
+})();
+</script>
+</body>
+</html>
