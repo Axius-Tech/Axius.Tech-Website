@@ -159,13 +159,33 @@ a { color: inherit; }
 .bar .cta:hover { letter-spacing: .3em; }
 
 /* ── opening ──────────────────────────────────────────────── */
-.open { min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
-.open .meta-top { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: center; padding-top: 26px; }
+.open { min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; }
+.open .meta-top { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: center; padding-top: 26px; z-index: 3; }
+/* practice line ⇄ location line crossfade on hover */
+.swap { position: relative; display: inline-block; cursor: default; }
+.swap .sa, .swap .sb { transition: opacity .45s var(--ease); display: block; }
+.swap .sb { position: absolute; inset: 0; opacity: 0; text-align: center; color: var(--green); }
+.swap:hover .sa { opacity: 0; }
+.swap:hover .sb { opacity: 1; }
+/* portfolio mouse-trail layer */
+#trail { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.tr-card {
+  position: absolute; pointer-events: none; will-change: transform, opacity;
+  opacity: 0; transform: scale(.85) translateY(6px);
+  transition: opacity .35s var(--ease), transform .45s var(--ease);
+}
+.tr-card.in { opacity: 1; transform: scale(1) translateY(0); }
+.tr-card.out {
+  opacity: 0; transform: scale(.97) translateY(-18px);
+  transition: opacity 1.15s ease, transform 1.15s ease;
+}
+.open > h1, .open .floor { position: relative; z-index: 2; }
 .open h1 {
   margin: 0; cursor: default;
-  font-family: var(--sans); font-weight: 700;
-  font-size: clamp(64px, 10vw, 144px);
-  line-height: .98; letter-spacing: -.045em;
+  font-family: var(--serif); font-variation-settings: "opsz" 144;
+  font-weight: 500;
+  font-size: clamp(68px, 10.5vw, 152px);
+  line-height: .98; letter-spacing: -.03em;
 }
 .open h1 .l1 {
   display: inline-block; transform-origin: 0 60%;
@@ -180,7 +200,7 @@ a { color: inherit; }
   transition: color .45s var(--ease);
 }
 .open h1 .it::before {
-  content: ""; position: absolute; inset: .04em 0 .02em;
+  content: ""; position: absolute; inset: .07em 0 .03em;
   background: var(--green);
   transform: scaleX(0); transform-origin: 0 50%;
   transition: transform .65s var(--ease);
@@ -199,36 +219,43 @@ a { color: inherit; }
 .scrollcue {
   display: inline-flex; align-items: center; gap: 16px; align-self: center;
   font-family: var(--mono); font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: var(--ink-55);
-  transition: opacity .6s var(--ease);
 }
-.scrollcue.hide { opacity: 0; }
 .scrollcue .ring {
   width: 46px; height: 46px; border: 1px solid var(--ink-24); border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden; flex-shrink: 0;
+  transition: border-color .5s var(--ease);
 }
 .scrollcue .ring span {
   font-family: var(--sans); font-size: 15px; color: var(--green);
   animation: cueDrop 1.9s var(--ease) infinite;
 }
-.scrollcue.hide .ring span { animation-play-state: paused; }
 @keyframes cueDrop {
   0% { transform: translateY(-26px); opacity: 0; }
   35% { transform: translateY(0); opacity: 1; }
   70% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(26px); opacity: 0; }
 }
+/* once scrolling starts: arrow becomes a wave, scroll becomes welcome */
+.scrollcue.welcome .ring { border-color: var(--green); }
+.scrollcue.welcome .ring span {
+  animation: cueWave 1.6s ease-in-out infinite;
+  transform-origin: 70% 70%; font-size: 17px;
+}
+@keyframes cueWave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  50% { transform: rotate(-8deg); }
+  75% { transform: rotate(14deg); }
+}
 
 /* ── marquee ──────────────────────────────────────────────── */
 .mq { overflow: hidden; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 16px 0; }
 .mq .track { display: flex; width: max-content; animation: mq 36s linear infinite; }
-.mq:hover .track { animation-play-state: paused; }
 .mq span {
   font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: .26em;
   text-transform: uppercase; color: var(--ink-40); white-space: nowrap; padding-right: 3.2em;
-  transition: color .4s var(--ease), font-weight .4s var(--ease);
 }
-.mq:hover span { color: var(--ink); font-weight: 500; }
 .mq span b { color: var(--green); font-weight: 500; }
 @keyframes mq { to { transform: translateX(-50%); } }
 
@@ -356,6 +383,22 @@ section { border-top: 1px solid var(--rule); }
 .tcard .p { font-family: var(--serif); font-variation-settings: "opsz" 144; font-weight: 400; font-size: 52px; letter-spacing: -.02em; line-height: 1; }
 .tcard .pu { font-family: var(--mono); font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-40); }
 .tcard .setup { margin-top: -8px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-40); }
+/* capacity / response instrument bars (scoped — .bar is the top nav) */
+.bars { display: flex; flex-direction: column; gap: 12px; padding: 4px 0 6px; }
+.bars .ibar { display: grid; grid-template-columns: 76px 1fr auto; gap: 12px; align-items: center; }
+.bars .bk { font-family: var(--mono); font-size: 8.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-40); }
+.bars .btrack { height: 3px; background: var(--rule); position: relative; overflow: hidden; }
+.bars .btrack i {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+  background: var(--green);
+  transition: width 1.1s var(--ease) .25s;
+}
+.on .bars .btrack i, .tcard:hover .bars .btrack i { width: var(--w); }
+.bars .bv { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-55); white-space: nowrap; }
+.tcard.feat .bars .bk { color: var(--on-green-40); }
+.tcard.feat .bars .btrack { background: var(--green-rule); }
+.tcard.feat .bars .btrack i { background: var(--on-green); }
+.tcard.feat .bars .bv { color: var(--on-green-65); }
 .tcard ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; flex: 1; }
 .tcard li { font-size: 14px; color: var(--ink-70); padding-left: 20px; position: relative; line-height: 1.5; }
 .tcard li::before { content: "+"; position: absolute; left: 0; font-family: var(--mono); color: var(--green); }
@@ -456,10 +499,31 @@ section { border-top: 1px solid var(--rule); }
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover;
   filter: none;
-  opacity: 0; transition: opacity 1s var(--ease), transform 5s linear;
+  opacity: 0; transition: opacity 1s var(--ease), transform 5s linear, filter .6s var(--ease);
   transform: scale(1.02);
 }
 .car img.cur { opacity: 1; transform: scale(1.07); }
+.car:hover img { filter: grayscale(1) contrast(1.05); }
+/* identity under the carousel */
+.carid { margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.carid .cn2 { font-family: var(--serif); font-variation-settings: "opsz" 144; font-weight: 500; font-size: 24px; letter-spacing: -.01em; }
+.carid .ck { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-40); margin-top: 4px; }
+.carid .cm {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em;
+  color: var(--ink-55); text-decoration: none;
+  border-bottom: 1px solid var(--ink-24); padding-bottom: 3px;
+  transition: color .3s var(--ease), border-color .3s var(--ease);
+}
+.carid .cm:hover { color: var(--green); border-color: var(--green); }
+/* contact pill on light */
+.pill-ink {
+  display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+  background: var(--green); color: var(--on-green);
+  border-radius: 999px; padding: 16px 30px;
+  font-family: var(--sans); font-weight: 600; font-size: 15px; letter-spacing: -.005em;
+  transition: transform .35s var(--ease), background .35s var(--ease);
+}
+.pill-ink:hover { transform: scale(1.04); background: var(--green-2); }
 .car .cap {
   position: absolute; left: 16px; bottom: 16px; z-index: 2;
   font-family: var(--mono); font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase;
@@ -650,15 +714,19 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
 
 <!-- ════ OPENING ════ -->
 <section class="open wrap" id="top" style="border-top:none">
+  <div id="trail" aria-hidden="true"></div>
   <div class="meta-top">
-    <span class="label">A private technology operations practice · Altamonte Springs, Florida</span>
+    <span class="label swap">
+      <span class="sa">A private technology operations practice</span>
+      <span class="sb">Based out of Altamonte Springs, Florida</span>
+    </span>
   </div>
   <h1 data-stagger class="rv-h" id="h1">
     <span class="ln"><span><span class="l1">Run your business.</span></span></span>
     <span class="ln"><span><span class="it">Not your tech.</span></span></span>
   </h1>
   <div class="floor fd">
-    <span class="scrollcue" id="cue"><span class="ring"><span>↓</span></span> Scroll</span>
+    <span class="scrollcue" id="cue"><span class="ring"><span id="cueglyph">↓</span></span> <span id="cuetext">Scroll</span></span>
     <div class="cell">
       <span class="label">The proposition</span>
       <p>One operator takes ownership of every system in your business and runs it like a department.</p>
@@ -697,8 +765,8 @@ footer { background: var(--green-2); color: var(--on-green); overflow: hidden; b
       <div>
         <span class="label"><span class="n">II</span> · What we run</span>
         <h2 class="h2" data-stagger>
-          <span class="ln"><span>If it runs your business,</span></span>
-          <span class="ln"><span><em>it's on the bench.</em></span></span>
+          <span class="ln"><span>From missed calls</span></span>
+          <span class="ln"><span><em>to custom software.</em></span></span>
         </h2>
       </div>
       <div class="fd">
@@ -869,11 +937,15 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
         <p class="tfor">Technology ownership for a few critical systems.</p>
         <div class="price"><span class="p serif">$2,500</span><span class="pu">/ month</span></div>
         <div class="setup">+ $1,250 one-time setup</div>
+        <div class="bars">
+          <div class="ibar"><span class="bk">Capacity</span><span class="btrack"><i style="--w:34%"></i></span><span class="bv">a few systems</span></div>
+          <div class="ibar"><span class="bk">Response</span><span class="btrack"><i style="--w:55%"></i></span><span class="bv">within 24h</span></div>
+        </div>
         <ul>
-          <li>One critical system, owned end to end</li>
-          <li>Email + Slack, same-day response on issues</li>
+          <li>Your most critical systems, owned end to end</li>
+          <li>Direct line to the operator, no queue</li>
           <li>Monthly operations report, in writing</li>
-          <li>Pause anytime after 90 days</li>
+          <li>Quarterly roadmap review</li>
         </ul>
         <a class="lnk" href="https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01" target="_blank" rel="noopener">Begin with Operator</a>
       </div>
@@ -885,13 +957,16 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
         <p class="tfor">Continuous operational improvement across multiple systems.</p>
         <div class="price"><span class="p serif">$5,000</span><span class="pu">/ month</span></div>
         <div class="setup">+ $2,500 one-time setup</div>
+        <div class="bars">
+          <div class="ibar"><span class="bk">Capacity</span><span class="btrack"><i style="--w:68%"></i></span><span class="bv">multi-system</span></div>
+          <div class="ibar"><span class="bk">Response</span><span class="btrack"><i style="--w:78%"></i></span><span class="bv">same day</span></div>
+        </div>
         <ul>
-          <li>Multiple coordinated systems</li>
-          <li>Biweekly operations call, under-24h window</li>
+          <li>Multiple coordinated systems, one roadmap</li>
+          <li>Biweekly operations call with the operator</li>
           <li>Monthly report + quarterly strategy</li>
           <li>Priority bench across all eight disciplines</li>
         </ul>
-        <div class="gnote">First-month guarantee: one meaningful win, agreed at kickoff. <b>Miss the window and the next month is on us.</b></div>
         <a class="pill" href="https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02" target="_blank" rel="noopener">Begin with Team →</a>
       </div>
 
@@ -901,9 +976,13 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
         <p class="tfor">A named operator with dedicated capacity. By arrangement.</p>
         <div class="price"><span class="p serif">Custom</span></div>
         <div class="setup">Scoped together</div>
+        <div class="bars">
+          <div class="ibar"><span class="bk">Capacity</span><span class="btrack"><i style="--w:100%"></i></span><span class="bv">dedicated</span></div>
+          <div class="ibar"><span class="bk">Response</span><span class="btrack"><i style="--w:96%"></i></span><span class="bv">same hour</span></div>
+        </div>
         <ul>
           <li>Technology leadership, operational ownership</li>
-          <li>Same-hour response on critical</li>
+          <li>Dedicated capacity, named operator</li>
           <li>Quarterly executive review + risk register</li>
           <li>Full documentation, always current</li>
         </ul>
@@ -912,7 +991,7 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
     </div>
 
     <div class="assure fd">
-      <div><div class="ak">The guarantee</div><div class="av">One meaningful win is agreed at kickoff and delivered in the agreed window, <b>or the next month is on us.</b></div></div>
+      <div><div class="ak">The guarantee</div><div class="av">Standing, not a kickoff promo: agreed work lands in its agreed window, <b>or the next month is on us.</b></div></div>
       <div><div class="ak">The exit</div><div class="av">Cancel with thirty days' notice. Every system leaves <b>documented and operational.</b></div></div>
       <div><div class="ak">The ownership</div><div class="av">Everything lives in <b>your accounts</b>: code, credentials, documentation. Nothing is held.</div></div>
     </div>
@@ -980,33 +1059,34 @@ The roadmap stays yours. Every artifact lives in your accounts.</p>
     </h2>
 
     <div class="duo">
-      <div class="car fd" id="car" aria-label="Photographs of Andrés Toro">
-        <img src="/assets/andres-toro.jpg" alt="Andrés Toro, the operator" class="cur" data-cap="The Operator · On duty" style="object-position:50% 28%">
-        <img src="/assets/andres-toro-studio.jpg" alt="Andrés Toro in the studio" data-cap="The Studio · Where it runs" style="object-position:50% 58%">
-        <img src="/assets/andres-toro-on-the-go.jpg" alt="Andrés Toro on the go" data-cap="On the Go · Same hand" style="object-position:50% 35%">
-        <span class="cap" id="carcap">The Operator · On duty</span>
-        <div class="dots" id="cardots" role="tablist" aria-label="Photo selector"></div>
+      <div class="fd">
+        <div class="car" id="car" aria-label="Photographs of Andrés Toro">
+          <img src="/assets/andres-toro.jpg" alt="Andrés Toro, the operator" class="cur" data-cap="The Operator · On duty" style="object-position:50% 28%">
+          <img src="/assets/andres-toro-studio.jpg" alt="Andrés Toro in the studio" data-cap="The Studio · Where it runs" style="object-position:50% 58%">
+          <img src="/assets/andres-toro-on-the-go.jpg" alt="Andrés Toro on the go" data-cap="On the Go · Same hand" style="object-position:50% 35%">
+          <span class="cap" id="carcap">The Operator · On duty</span>
+          <div class="dots" id="cardots" role="tablist" aria-label="Photo selector"></div>
+        </div>
+        <div class="carid">
+          <div>
+            <div class="cn2">Andrés Toro</div>
+            <div class="ck">Founder &amp; Operator</div>
+          </div>
+          <a class="cm" href="mailto:andres@axius.tech">andres@axius.tech</a>
+        </div>
       </div>
 
       <div class="body">
         <p class="fd">Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business, so the founder can stop being IT.</p>
         <p class="dim fd fd-1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator takes ownership of the entire technical layer of your business and runs it the way a department would, with the overhead of none.</p>
         <p class="dim fd fd-2">You get one line to message. One monthly figure. One person whose name is on the work. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
-        <div class="facts fd fd-2">
+        <div class="fd fd-2" style="margin-top:34px">
+          <a class="pill-ink" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Contact me <span>→</span></a>
+        </div>
+        <div class="facts fd fd-3">
           <div><div class="fv serif"><span data-count="118">0</span></div><div class="fk">Named workflows</div></div>
           <div><div class="fv serif"><span data-count="8">0</span></div><div class="fk">Disciplines</div></div>
-          <div><div class="fv serif"><span data-count="1">0</span></div><div class="fk">Point of contact</div></div>
-          <div><div class="fv serif">7–14d</div><div class="fk">To operational</div></div>
           <div><div class="fv serif">24h</div><div class="fk">Response window</div></div>
-          <div><div class="fv serif">Mo.</div><div class="fk">Written report</div></div>
-        </div>
-        <div class="sig fd fd-3">
-          <span class="signame">Andrés Toro</span>
-          <span class="sigrole">Founder &amp; Operator · Based out of Altamonte Springs, FL</span>
-        </div>
-        <div class="sigl fd fd-3">
-          <a class="lnk" href="mailto:andres@axius.tech">andres@axius.tech</a>
-          <a class="lnk" href="https://www.linkedin.com/in/followrace/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>
     </div>
@@ -1095,11 +1175,63 @@ setTimeout(() => {
   setTimeout(() => openH1.querySelectorAll('.ln').forEach(l => l.style.overflow = 'visible'), 2400);
 }, 1450);
 
-/* ── scroll cue stops + fades once scrolling starts ────────── */
+/* ── scroll cue → wave + welcome once scrolling starts ─────── */
 const cue = document.getElementById('cue');
+const cueGlyph = document.getElementById('cueglyph');
+const cueText = document.getElementById('cuetext');
 addEventListener('scroll', () => {
-  cue.classList.toggle('hide', scrollY > 60);
+  const w = scrollY > 60;
+  if (w !== cue.classList.contains('welcome')) {
+    cue.classList.toggle('welcome', w);
+    cueGlyph.textContent = w ? '👋' : '↓';
+    cueText.textContent = w ? 'Welcome' : 'Scroll';
+  }
 }, { passive: true });
+
+/* ── hero portfolio trail — cards follow the cursor, then fade.
+     Placeholder color blocks for now; swap in work shots/gifs by
+     giving TRAIL_MEDIA entries a `src` instead of a `color`. ──── */
+(function () {
+  const hero = document.querySelector('.open');
+  const layer = document.getElementById('trail');
+  if (!hero || !layer || !matchMedia('(pointer: fine)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const TRAIL_MEDIA = [
+    { color: '#173B2D', w: 200, h: 260 },
+    { color: '#2F5343', w: 260, h: 170 },
+    { color: '#C9C2B2', w: 190, h: 190 },
+    { color: '#16140F', w: 170, h: 230 },
+    { color: '#8FA98F', w: 250, h: 160 },
+    { color: '#EDE9DF', w: 180, h: 240 },
+    { color: '#0E241B', w: 230, h: 150 },
+    { color: '#A8B5A0', w: 160, h: 210 },
+  ];
+  let lastX = -1, lastY = -1, acc = 0, idx = 0, live = 0;
+  hero.addEventListener('mousemove', (e) => {
+    const r = hero.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    if (lastX < 0) { lastX = x; lastY = y; return; }
+    acc += Math.hypot(x - lastX, y - lastY);
+    lastX = x; lastY = y;
+    if (acc < 110 || live >= 12) return;
+    acc = 0;
+    const m = TRAIL_MEDIA[idx % TRAIL_MEDIA.length]; idx++;
+    const el = document.createElement(m.src ? 'img' : 'div');
+    el.className = 'tr-card';
+    el.style.width = m.w + 'px';
+    el.style.height = m.h + 'px';
+    el.style.left = (x - m.w / 2) + 'px';
+    el.style.top = (y - m.h / 2) + 'px';
+    el.style.rotate = (Math.random() * 8 - 4).toFixed(1) + 'deg';
+    if (m.src) { el.src = m.src; el.alt = ''; el.style.objectFit = 'cover'; }
+    else el.style.background = m.color;
+    layer.appendChild(el);
+    live++;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+    setTimeout(() => el.classList.add('out'), 520);
+    setTimeout(() => { el.remove(); live--; }, 1750);
+  });
+})();
 
 /* ── cursor ────────────────────────────────────────────────── */
 const cur = document.getElementById('cur');
