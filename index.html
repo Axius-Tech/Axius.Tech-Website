@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Axius — Run your business. Not your tech.</title>
-<meta name="description" content="We run the tech side of your business — all of it — for one monthly fee. An independent technology operations practice based in Medellín and Altamonte Springs, FL.">
-<meta name="theme-color" content="#F7F6F2">
+<meta name="description" content="We take relentless ownership of your technology — managing every execution — through a single point of contact. An independent technology operations practice based in Medellín and Altamonte Springs, FL.">
+<meta name="theme-color" content="#F5F3EE">
 <meta name="color-scheme" content="light">
 <link rel="canonical" href="https://axius-tech-website.vercel.app/">
 
@@ -13,67 +13,66 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Axius">
 <meta property="og:title" content="Axius — Run your business. Not your tech.">
-<meta property="og:description" content="An independent technology operations practice. We run the tech side of your business — all of it — for one monthly fee.">
+<meta property="og:description" content="An independent technology operations practice. We take relentless ownership of your technology through a single point of contact.">
 <meta property="og:url" content="https://axius-tech-website.vercel.app/">
 <meta property="og:image" content="https://axius-tech-website.vercel.app/assets/og.jpg">
-<meta property="og:image:secure_url" content="https://axius-tech-website.vercel.app/assets/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Axius — Run your business. Not your tech.">
 <meta property="og:locale" content="en_US">
-<meta property="og:locale:alternate" content="es_LA">
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Axius — Run your business. Not your tech.">
-<meta name="twitter:description" content="An independent technology operations practice. We run the tech side of your business — all of it — for one monthly fee.">
+<meta name="twitter:description" content="An independent technology operations practice. One operator. One accountable layer.">
 <meta name="twitter:image" content="https://axius-tech-website.vercel.app/assets/og.jpg">
-<meta name="twitter:image:alt" content="Axius — Run your business. Not your tech.">
 
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Axius",
+  "url": "https://axius-tech-website.vercel.app/",
+  "description": "An independent technology operations practice. One accountable operator running the technology layer of your business.",
+  "founder": { "@type": "Person", "name": "Andrés Toro" },
+  "areaServed": ["US", "CO"],
+  "address": { "@type": "PostalAddress", "addressLocality": "Altamonte Springs", "addressRegion": "FL", "addressCountry": "US" },
+  "email": "andres@axius.tech",
+  "knowsLanguage": ["en", "es"],
+  "makesOffer": [
+    { "@type": "Offer", "name": "Operator", "price": "2500", "priceCurrency": "USD",
+      "priceSpecification": { "@type": "UnitPriceSpecification", "price": "2500", "priceCurrency": "USD", "unitText": "per month" } },
+    { "@type": "Offer", "name": "Team", "price": "5000", "priceCurrency": "USD",
+      "priceSpecification": { "@type": "UnitPriceSpecification", "price": "5000", "priceCurrency": "USD", "unitText": "per month" } }
+  ]
+}
+</script>
+
+<!-- Fonts — Geist + Geist Mono only -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,500;1,8..60,600&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  html, body { margin: 0; padding: 0; background: #F7F6F2; }
-  body { font-family: 'Inter', system-ui, sans-serif; color: #0F0E0C; }
-  .stage-quiet05 { width: 100%; max-width: 1800px; margin: 0 auto; background: #F7F6F2; }
+  /* Pre-React paint: match the canvas so there's no flash */
+  html, body { margin: 0; background: #F5F3EE; }
 </style>
-<script>
-  window.addEventListener('error', function (e) {
-    if (e && e.message && e.message.indexOf('ResizeObserver') !== -1) {
-      e.stopImmediatePropagation && e.stopImmediatePropagation();
-      e.preventDefault && e.preventDefault();
-    }
-  }, true);
-</script>
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
+<div id="root"></div>
 
-<div id="stage-quiet05" class="stage-quiet05"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-<!-- Local-only secrets (gitignored). If missing, Telegram integration stays inert with placeholder credentials. -->
+<!-- Secrets (gitignored; silently absent in the public repo) -->
 <script type="text/babel" src="/reference/axius-secrets.local.jsx"></script>
-
-<!-- Design tokens, data, atoms, AxiusConfig -->
-<script type="text/babel" src="/reference/axius-shared.jsx"></script>
-
-<!-- Quiet 0.5 — the live direction -->
-<script type="text/babel" src="/reference/axius-direction-E05.jsx"></script>
-
-<script type="text/babel">
-  function waitForGlobals(cb) {
-    if (window.AxiusTokens && window.AxiusDirectionE05) cb();
-    else setTimeout(function () { waitForGlobals(cb); }, 40);
-  }
-  waitForGlobals(function () {
-    ReactDOM.createRoot(document.getElementById('stage-quiet05'))
-      .render(React.createElement(window.AxiusDirectionE05));
-  });
-</script>
-
+<!-- Data → design system → chat → app -->
+<script type="text/babel" src="/src/axius.data.jsx"></script>
+<script type="text/babel" src="/src/axius.tokens.jsx"></script>
+<script type="text/babel" src="/src/axius.chat.jsx"></script>
+<script type="text/babel" src="/src/axius.app.jsx"></script>
 </body>
 </html>
