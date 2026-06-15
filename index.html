@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Axius — A private technology operations practice</title>
-<meta name="description" content="One operator takes ownership of every system in your business and runs it like a department. One line to message. One monthly figure. One name accountable for all of it. From $2,500/month.">
+<meta name="description" content="One accountable operator running the technology behind your business. Software, AI, automations, and vendors, owned and managed. One line to message. One monthly figure. From $2,500/month.">
 <meta name="theme-color" content="#F4F1EA">
 <meta name="color-scheme" content="light">
 <link rel="canonical" href="https://axius.tech/">
@@ -183,6 +183,14 @@ a { color: inherit; }
   transition: transform .35s var(--spring), box-shadow .35s var(--ease), border-color .3s var(--ease);
 }
 .navcta:hover { transform: scale(1.06) rotate(-1.5deg); box-shadow: 0 12px 30px rgba(22,20,15,.13); border-color: var(--ink-24); }
+
+/* scroll progress bar — sits at the very top, adapts over green scenes */
+#progress {
+  position: fixed; top: 0; left: 0; height: 2.5px; width: 0; z-index: 97;
+  background: var(--green); pointer-events: none;
+  transition: width .1s linear, background .55s var(--ease);
+}
+.ongreen #progress { background: var(--on-green); }
 
 /* ── right-edge section rail ──────────────────────────────── */
 #rail {
@@ -471,6 +479,11 @@ section { border-top: 1px solid var(--rule); }
 .scard.feat .pu { color: var(--on-green-40); }
 .scard .setup { margin-top: 11px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-40); }
 .scard.feat .setup { color: var(--on-green-40); }
+/* per-tier focus clarification (Team vs Department vs Enterprise) */
+.scard .focus { margin-top: 16px; display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--green); }
+.scard .focus::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.scard.feat .focus { color: var(--on-green); }
+.scard.feat .focus::before { background: var(--on-green); }
 .scard ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
 .scard li { font-size: 14.5px; color: var(--ink-70); padding-left: 20px; position: relative; line-height: 1.5; }
 .scard li::before { content: "+"; position: absolute; left: 0; font-family: var(--mono); color: var(--green); }
@@ -839,10 +852,11 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   <a class="wm" href="#top">AXIUS</a>
 </header>
 <a class="navcta" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit</a>
+<div id="progress" aria-hidden="true"></div>
 
 <div id="rail" role="navigation" aria-label="Sections">
   <a href="#why" data-sec="why"><span class="t">Why</span><span class="tick"></span></a>
-  <a href="#run" data-sec="run"><span class="t">Catalog</span><span class="tick"></span></a>
+  <a href="#run" data-sec="run"><span class="t">Owned</span><span class="tick"></span></a>
   <a href="#method" data-sec="method"><span class="t">Method</span><span class="tick"></span></a>
   <a href="#terms" data-sec="terms"><span class="t">Terms</span><span class="tick"></span></a>
   <a href="#proof" data-sec="proof"><span class="t">Practice</span><span class="tick"></span></a>
@@ -861,7 +875,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   </div>
   <h1 class="soft" id="h1">
     <span class="l1">Run your business.</span><br>
-    <span class="it">Not your <span class="txt" id="flip">tech.</span><span class="caret" aria-hidden="true"></span></span>
+    <span class="it">Not your <span class="txt" id="flip">technology.</span><span class="caret" aria-hidden="true"></span></span>
   </h1>
   <div class="floor soft d1">
     <span class="scrollcue" id="cue">
@@ -872,7 +886,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
     </span>
     <div class="cell">
       <span class="label">The proposition</span>
-      <p>One operator takes ownership of every system in your business and runs it like a department.</p>
+      <p>One accountable operator running the technology behind your business.</p>
     </div>
     <div class="cell">
       <span class="label">The figure</span>
@@ -895,7 +909,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <section class="manifesto" data-theme="green" id="why" style="border-top:none">
   <div class="wrap">
     <span class="label"><span class="n">I</span> · Why we exist</span>
-    <p class="mtext" id="mtext">Every business is now a technology business, whether you chose that or not. Websites, CRMs, automations, AI: none of it runs itself. Axius gives that job one owner. And it is never you again.</p>
+    <p class="mtext" id="mtext">Every business is now a technology business, whether you chose that or not. Software, AI, automations, and vendors do not manage themselves. Axius gives that responsibility one owner. And it is never you again.</p>
     <div class="roles fd">
       <div class="role">
         <div class="rk">01 · The operator</div>
@@ -918,7 +932,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   <div class="wrap">
     <div class="head">
       <div>
-        <span class="label"><span class="n">II</span> · What we run</span>
+        <span class="label"><span class="n">II</span> · What we own</span>
         <h2 class="h2" data-stagger>
           <span class="ln"><span>From missed calls</span></span>
           <span class="ln"><span><em>to custom software.</em></span></span>
@@ -1038,28 +1052,28 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
         <div class="num serif">01</div>
         <div class="tm">Days 1 to 7</div>
         <h3>Audit.</h3>
-        <p>Inventory the systems. Find the leaks. Deliver the report.</p>
+        <p>Inventory every system, vendor, and dependency. Find the risks and the leaks.</p>
         <div class="art">stack_audit.pdf</div>
       </div>
       <div class="mcard" data-tilt>
         <div class="num serif">02</div>
         <div class="tm">Days 8 to 14</div>
-        <h3>Configure.</h3>
-        <p>Map workflows to your business. You sign off in writing before anything is built.</p>
+        <h3>Stabilize.</h3>
+        <p>Take ownership of what's fragile. Document it, secure it, and put it under one accountable hand.</p>
         <div class="art">config_map.json</div>
       </div>
       <div class="mcard" data-tilt>
         <div class="num serif">03</div>
         <div class="tm">Month 1 +</div>
-        <h3>Operate.</h3>
-        <p>Run it. Log tickets, ship fixes, and report monthly, in writing.</p>
+        <h3>Optimize.</h3>
+        <p>Run it and improve it. Automate the manual, resolve the recurring, report monthly in writing.</p>
         <div class="art">monthly_report.md</div>
       </div>
       <div class="mcard" data-tilt>
         <div class="num serif">04</div>
         <div class="tm">Quarterly</div>
-        <h3>Evolve.</h3>
-        <p>Review quarterly. The roadmap stays yours and every artifact lives in your accounts.</p>
+        <h3>Scale.</h3>
+        <p>Advance the roadmap. New leverage, fewer constraints. Every artifact stays in your accounts.</p>
         <div class="art">roadmap.notion</div>
       </div>
     </div>
@@ -1079,49 +1093,52 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       <div class="scard">
         <div>
           <span class="tn">Tier 01</span>
-          <h3>Operator</h3>
-          <p class="for">A standing operator on your side. Your most critical systems, run and improved every month.</p>
+          <h3>Team</h3>
+          <p class="for">A technology operator embedded into your business. Your most critical systems, owned, improved, and managed every month.</p>
+          <div class="focus">One active priority at a time</div>
           <div class="price"><span class="p serif">$2,500</span><span class="pu">/ month</span></div>
           <div class="setup">+ $1,250 one-time setup</div>
         </div>
         <ul>
           <li>Your most critical systems, owned end to end</li>
-          <li>New builds and fixes shipped every month</li>
+          <li>Ongoing improvements shipped every month</li>
           <li>Direct line to the operator, no queue</li>
           <li>Monthly operations report, in writing</li>
         </ul>
         <div class="actcol">
           <span></span>
-          <a class="pill lite" href="https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01" target="_blank" rel="noopener">Begin with Operator</a>
+          <a class="pill lite" href="https://buy.stripe.com/4gM14m13W4x1dQo7CLcbC01" target="_blank" rel="noopener">Begin with Team</a>
         </div>
       </div>
 
       <div class="scard feat">
         <div>
           <span class="tn">Tier 02</span>
-          <h3>Team</h3>
-          <p class="for">A standing team's worth of output. Multiple coordinated systems, advancing every month.</p>
+          <h3>Department</h3>
+          <p class="for">A coordinated technology function, owned and advancing. Multiple initiatives moving simultaneously, every month.</p>
+          <div class="focus">Multiple active priorities, simultaneously</div>
           <div class="price"><span class="p serif">$5,000</span><span class="pu">/ month</span></div>
           <div class="setup">+ $2,500 one-time setup</div>
         </div>
         <ul>
-          <li>Multiple coordinated systems, one living roadmap</li>
-          <li>Continuous building, never just maintenance</li>
+          <li>Multiple initiatives advancing in parallel</li>
+          <li>One living roadmap, owned end to end</li>
           <li>Biweekly operations call with the operator</li>
           <li>Monthly report + quarterly strategy</li>
           <li>Priority bench across all eight disciplines</li>
         </ul>
         <div class="actcol">
           <span class="badge2">Most engaged</span>
-          <a class="pill" href="https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02" target="_blank" rel="noopener">Begin with Team →</a>
+          <a class="pill" href="https://buy.stripe.com/3cIdR86oge7BbIg0ajcbC02" target="_blank" rel="noopener">Begin with Department →</a>
         </div>
       </div>
 
       <div class="scard">
         <div>
           <span class="tn">Tier 03</span>
-          <h3>Department</h3>
-          <p class="for">Your entire technology function, resting on us. Dedicated capacity, by arrangement.</p>
+          <h3>Enterprise</h3>
+          <p class="for">Your technology department, fully managed. Dedicated capacity, by arrangement.</p>
+          <div class="focus">Dedicated capacity + executive ownership</div>
           <div class="price"><span class="p serif">Custom</span></div>
           <div class="setup">Scoped together</div>
         </div>
@@ -1219,7 +1236,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       </div>
 
       <div class="body">
-        <p class="fd">“Most SMBs don't need a CTO. They need someone who quietly handles the systems behind the business, so the founder can stop being IT.”</p>
+        <p class="fd">“Most SMBs don't need a CTO. They need someone accountable for the systems that keep the business running.”</p>
         <p class="dim fd fd-1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator owns direction, outcomes, and every decision that touches your systems. AI systems carry the repetitive work and keep the documentation current. Vetted specialists step in when the work needs depth, managed entirely on my side. You never coordinate a vendor.</p>
         <p class="dim fd fd-2">You get one line to message. One monthly figure. One person whose name is on the work. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
         <div class="acts fd fd-3">
@@ -1251,7 +1268,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
     <div class="fc">
       <div class="fk">Practice</div>
       <a href="#why">Why we exist</a>
-      <a href="#run">What we run</a>
+      <a href="#run">What we own</a>
       <a href="#method">The method</a>
       <a href="#terms">The terms</a>
     </div>
@@ -1339,7 +1356,7 @@ cue.addEventListener('click', () => {
   const el = document.getElementById('flip');
   if (!el) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const WORDS = ['tech.', 'CRM.', 'website.', 'automations.', 'logins.'];
+  const WORDS = ['technology.', 'systems.', 'software.', 'automations.', 'integrations.'];
   let wi = 0, ci = WORDS[0].length, deleting = true;
   const tick = () => {
     const word = WORDS[wi];
@@ -1612,6 +1629,18 @@ const greenCheck = () => {
 addEventListener('scroll', greenCheck, { passive: true });
 greenCheck();
 
+/* ── scroll progress bar ───────────────────────────────────── */
+const progress = document.getElementById('progress');
+if (progress) {
+  const setProgress = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (max > 0 ? Math.min(100, (scrollY / max) * 100) : 0) + '%';
+  };
+  addEventListener('scroll', setProgress, { passive: true });
+  addEventListener('resize', setProgress);
+  setProgress();
+}
+
 /* ── floating operator chat ────────────────────────────────── */
 (function () {
   const fab = document.getElementById('fab');
@@ -1636,7 +1665,7 @@ greenCheck();
     depends: "That's the most common pattern I see. The fix isn't more hires, it's documented systems with one owner. I map what lives in your head, then run it for you. Founder time comes back within the first month.",
     tools: "Tool sprawl is an ownership problem, not a software problem. Most stacks shrink 30 to 40% in the first 90 days once someone actually runs them. The audit shows exactly where.",
     leads: "Lead leakage is usually three gaps: missed calls, no routing, no follow-up. Plugging the missed-call gap alone recovers 20 to 30% of inbound. I instrument the whole funnel.",
-    price: "$2,500/month is the Operator tier: your most critical systems owned end to end, new builds shipped every month, a written monthly report. Team is $5,000 for multiple coordinated systems. Both carry a standing guarantee: agreed work lands in its agreed window or the next month is on us.",
+    price: "The Team engagement gives you a dedicated technology operator who takes ownership of your most important systems. That includes ongoing improvements, automations, integrations, troubleshooting, vendor coordination, reporting, and roadmap management. Instead of hiring multiple specialists or managing technology yourself, you get one accountable owner responsible for outcomes.",
     start: "Days 1 to 7: audit. Days 8 to 14: a workflow map you approve in writing. Day 14: I'm operating. And you'll have a one-page audit in hand after our first thirty minutes.",
     model: "Three roles, one accountable layer. I own direction and outcomes, and I'm your single point of contact. AI systems carry the repetitive work, watch the stack in the background, and keep documentation current. When something needs depth, vetted specialists step in, managed entirely on my side. You never coordinate a vendor.",
     improve: "Easier shown than told: book the thirty-minute audit. I inventory your stack live, point at the leaks (missed leads, re-typed data, tools nobody owns) and you leave with a one-page read of what I'd run first. The page is yours either way.",
