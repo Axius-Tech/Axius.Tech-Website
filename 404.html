@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found — Axius</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Instrument+Sans:wght@400..600&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --ivory:#F4F1EA; --ink:#16140F; --ink-55:rgba(22,20,15,.55); --green:#173B2D; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--ivory); color:var(--ink); font-family:"Instrument Sans",system-ui,sans-serif;
+         min-height:100svh; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
+  .bar { padding:22px clamp(24px,4vw,64px); }
+  .wm { font-family:"Geist Mono",monospace; font-size:12px; font-weight:500; letter-spacing:.42em; text-transform:uppercase; text-decoration:none; color:var(--ink); }
+  main { flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 clamp(24px,4vw,64px) 12vh; max-width:1360px; margin:0 auto; width:100%; }
+  .code { font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:rgba(22,20,15,.4); }
+  h1 { margin:18px 0 0; font-family:"Fraunces",Georgia,serif; font-weight:300; font-size:clamp(40px,7vw,84px); line-height:1.02; letter-spacing:-.025em; }
+  h1 em { font-style:normal; color:var(--green); }
+  p { margin:22px 0 0; font-size:17px; line-height:1.6; color:var(--ink-55); max-width:460px; }
+  a.back { display:inline-flex; align-items:center; gap:10px; margin-top:40px; text-decoration:none;
+           background:var(--green); color:var(--ivory); border-radius:999px; padding:15px 28px;
+           font-weight:600; font-size:15px; transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+  a.back:hover { transform:scale(1.05) rotate(-1deg); }
+</style>
+</head>
+<body>
+  <header class="bar"><a class="wm" href="/">AXIUS</a></header>
+  <main>
+    <span class="code">404 · Not found</span>
+    <h1>That page isn't <em>here.</em></h1>
+    <p>The link may be old or mistyped. Everything Axius runs lives back on the main page.</p>
+    <a class="back" href="/">Back to Axius <span>→</span></a>
+  </main>
+</body>
+</html>

@@ -22,6 +22,34 @@
 <meta name="twitter:description" content="One accountable operator running the technology behind your business.">
 <meta name="twitter:image" content="https://axius.tech/assets/og-share.jpg">
 
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Axius",
+  "alternateName": "Axius — Technology Operations",
+  "description": "A private technology operations practice. One accountable operator runs the technology behind your business — software, AI, automations, and vendors — owned and managed for one monthly figure.",
+  "url": "https://axius.tech/",
+  "email": "andres@axius.tech",
+  "image": "https://axius.tech/assets/og-share.jpg",
+  "logo": "https://axius.tech/favicon.svg",
+  "priceRange": "$2,500–$5,000/mo",
+  "areaServed": "US",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Altamonte Springs",
+    "addressRegion": "FL",
+    "addressCountry": "US"
+  },
+  "founder": { "@type": "Person", "name": "Andrés Toro" },
+  "sameAs": [ "https://www.linkedin.com/in/followrace/" ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -676,6 +704,8 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   font-family: var(--mono); font-size: 9.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--on-green-40);
   position: relative; z-index: 1; background: var(--scene-2);
 }
+.fbot .flegal a { color: var(--on-green-65); text-decoration: none; transition: color .3s var(--ease); }
+.fbot .flegal a:hover { color: var(--on-green); }
 
 /* ── floating operator chat ───────────────────────────────── */
 #fab {
@@ -778,7 +808,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 
   /* hero */
   .open .meta-top { display: none; }
-  .open h1 { font-size: clamp(38px, 12.5vw, 66px); line-height: 1.03; }
+  .open h1 { font-size: clamp(34px, 8.6vw, 54px); line-height: 1.05; }
+  /* the rotating words ("integrations." etc.) are long — let line 2 wrap
+     instead of overflowing the viewport on small screens */
+  .open h1 .it { white-space: normal; }
   .open .floor { grid-template-columns: 1fr; gap: 22px; padding: 28px 0 32px; margin-top: 34px; }
   .open .floor .cell p { max-width: none; }
   .scrollcue { display: none; }
@@ -811,7 +844,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 }
 
 @media (max-width: 460px) {
-  .open h1 { font-size: clamp(33px, 13vw, 50px); }
+  .open h1 { font-size: clamp(27px, 8.2vw, 36px); }
   .h2 { font-size: clamp(29px, 9.4vw, 40px); }
   .manifesto .mtext { font-size: clamp(23px, 7.2vw, 32px); }
   .index .big { font-size: clamp(52px, 19vw, 78px); }
@@ -1290,7 +1323,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   <div class="fwm serif" aria-hidden="true">AXIUS</div>
   <div class="fbot">
     <span>© 2026 Axius · A private technology operations practice</span>
-    <span>Altamonte Springs, Florida</span>
+    <span class="flegal"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · Altamonte Springs, Florida</span>
   </div>
 </footer>
 
@@ -1732,6 +1765,15 @@ if (progress) {
     if (!v) return;
     input.value = '';
     ask(v);
+    // forward the real message to Andrés (Telegram via /api/lead); fire-and-forget
+    try {
+      fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: v, path: location.pathname }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch (e) {}
   });
 
   // notification appears once the visitor has scrolled past the

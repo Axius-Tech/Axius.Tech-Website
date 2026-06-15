@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /reference/
+Disallow: /api/
+
+Sitemap: https://axius.tech/sitemap.xml
