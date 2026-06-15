@@ -479,11 +479,9 @@ section { border-top: 1px solid var(--rule); }
 .scard.feat .pu { color: var(--on-green-40); }
 .scard .setup { margin-top: 11px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-40); }
 .scard.feat .setup { color: var(--on-green-40); }
-/* per-tier focus clarification (Team vs Department vs Enterprise) */
-.scard .focus { margin-top: 16px; display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--green); }
-.scard .focus::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
-.scard.feat .focus { color: var(--on-green); }
-.scard.feat .focus::before { background: var(--on-green); }
+/* emphasized lead bullet (the per-tier priority clarification) */
+.scard li b { font-weight: 600; color: var(--ink); }
+.scard.feat li b { color: var(--on-green); }
 .scard ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
 .scard li { font-size: 14.5px; color: var(--ink-70); padding-left: 20px; position: relative; line-height: 1.5; }
 .scard li::before { content: "+"; position: absolute; left: 0; font-family: var(--mono); color: var(--green); }
@@ -1095,11 +1093,11 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
           <span class="tn">Tier 01</span>
           <h3>Team</h3>
           <p class="for">A technology operator embedded into your business. Your most critical systems, owned, improved, and managed every month.</p>
-          <div class="focus">One active priority at a time</div>
           <div class="price"><span class="p serif">$2,500</span><span class="pu">/ month</span></div>
           <div class="setup">+ $1,250 one-time setup</div>
         </div>
         <ul>
+          <li><b>One active priority at a time</b></li>
           <li>Your most critical systems, owned end to end</li>
           <li>Ongoing improvements shipped every month</li>
           <li>Direct line to the operator, no queue</li>
@@ -1116,12 +1114,11 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
           <span class="tn">Tier 02</span>
           <h3>Department</h3>
           <p class="for">A coordinated technology function, owned and advancing. Multiple initiatives moving simultaneously, every month.</p>
-          <div class="focus">Multiple active priorities, simultaneously</div>
           <div class="price"><span class="p serif">$5,000</span><span class="pu">/ month</span></div>
           <div class="setup">+ $2,500 one-time setup</div>
         </div>
         <ul>
-          <li>Multiple initiatives advancing in parallel</li>
+          <li><b>Multiple active priorities, simultaneously</b></li>
           <li>One living roadmap, owned end to end</li>
           <li>Biweekly operations call with the operator</li>
           <li>Monthly report + quarterly strategy</li>
@@ -1138,13 +1135,13 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
           <span class="tn">Tier 03</span>
           <h3>Enterprise</h3>
           <p class="for">Your technology department, fully managed. Dedicated capacity, by arrangement.</p>
-          <div class="focus">Dedicated capacity + executive ownership</div>
           <div class="price"><span class="p serif">Custom</span></div>
           <div class="setup">Scoped together</div>
         </div>
         <ul>
+          <li><b>Dedicated capacity and executive ownership</b></li>
           <li>Technology leadership, operational ownership</li>
-          <li>Dedicated capacity, named operator</li>
+          <li>Named operator, accountable end to end</li>
           <li>Quarterly executive review + risk register</li>
           <li>Full documentation, always current</li>
         </ul>
