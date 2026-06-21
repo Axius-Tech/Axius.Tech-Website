@@ -395,12 +395,19 @@ section { border-top: 1px solid var(--rule); }
 /* capability grid — sharp tiling at rest, each cell lifts into a
    soft, gently-tilted card on hover (subtle Kinetic flavour) */
 .grid8 {
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid var(--rule); border-left: 1px solid var(--rule);
-  border-radius: 16px; overflow: hidden; perspective: 1100px;
+  border-radius: 16px; overflow: visible; perspective: 1100px;
 }
+/* round only the four outer corners so the tiled block keeps its
+   silhouette at rest — overflow stays visible so a hovered card in
+   the bottom row can lift and cast its shadow without being clipped */
+.grid8 .gcell:nth-child(1) { border-top-left-radius: 16px; }
+.grid8 .gcell:nth-child(3) { border-top-right-radius: 16px; }
+.grid8 .gcell:nth-child(4) { border-bottom-left-radius: 16px; }
+.grid8 .gcell:nth-child(6) { border-bottom-right-radius: 16px; }
 .gcell {
-  position: relative; padding: 24px 22px 24px; min-height: 236px;
+  position: relative; padding: 24px 22px 24px; min-height: 236px; overflow: hidden;
   border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
   display: flex; flex-direction: column; cursor: default;
   transform-style: preserve-3d; will-change: transform;
@@ -427,18 +434,18 @@ section { border-top: 1px solid var(--rule); }
   transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
 }
 .gcell:hover .ct { background: var(--green); color: var(--on-green); border-color: var(--green); }
-.gcell .xtra { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 4px; }
+/* on hover the block reveals, then the rows cycle through the system's
+   full workflow list — each swap fades + de-blurs (echoes the hero reveal) */
+.gcell .xtra { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; opacity: 0; transition: opacity .4s var(--ease); }
+.gcell:hover .xtra { opacity: 1; }
 .gcell .xl {
   display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
   font-size: 12px; line-height: 1.5; color: var(--ink-55);
-  opacity: 0; transform: translateY(6px);
-  transition: opacity .4s var(--ease), transform .4s var(--ease);
+  transition: opacity .24s var(--ease), filter .24s var(--ease), transform .24s var(--ease);
 }
-.gcell .xl .im { font-family: var(--mono); font-size: 9.5px; letter-spacing: .03em; color: var(--green); white-space: nowrap; }
-.gcell:hover .xl { opacity: 1; transform: none; }
-.gcell:hover .xl:nth-child(1) { transition-delay: .04s; }
-.gcell:hover .xl:nth-child(2) { transition-delay: .1s; }
-.gcell:hover .xl:nth-child(3) { transition-delay: .16s; }
+.gcell .xl.chg { opacity: 0; filter: blur(5px); transform: translateY(-5px); }
+.gcell .xl .wn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gcell .xl .im { font-family: var(--mono); font-size: 9.5px; letter-spacing: .03em; color: var(--green); white-space: nowrap; flex-shrink: 0; }
 .gcell .meter { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; }
 .gcell .meter i { display: block; height: 100%; width: 0; background: var(--green); transition: width .9s var(--ease); }
 .gcell:hover .meter i { width: var(--m); }
@@ -827,6 +834,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   .index .head { gap: 22px; margin-bottom: 34px; align-items: flex-start; }
   .index .big { font-size: clamp(60px, 17vw, 100px); }
   .index .bigk { text-align: left; }
+  .gcell .xtra { opacity: 1; }
   .gcell .xl { opacity: 1; transform: none; }
 
   /* in practice — narrower cards so one shows at a time */
@@ -907,7 +915,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   <div class="meta-top">
     <span class="label guide" id="guide">
       <span class="g-tut">Hover the space to preview our work</span>
-      <span class="g-tag">A private technology operations practice</span>
+      <span class="g-tag">Your technology department</span>
     </span>
   </div>
   <h1 class="soft" id="h1">
@@ -971,102 +979,80 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       <div>
         <span class="label"><span class="n">II</span> · What we own</span>
         <h2 class="h2" data-stagger>
-          <span class="ln"><span>From missed calls</span></span>
-          <span class="ln"><span><em>to custom software.</em></span></span>
+          <span class="ln"><span>From revenue</span></span>
+          <span class="ln"><span><em>to custom systems.</em></span></span>
         </h2>
       </div>
       <div class="fd">
         <div class="big"><span data-count="118">0</span></div>
-        <div class="label bigk">Workflows · 8 disciplines</div>
+        <div class="label bigk">Workflows · 6 systems</div>
       </div>
     </div>
 
     <div class="grid8 fd">
-      <div class="gcell" style="--m:78%">
+      <div class="gcell" style="--m:86%">
         <span class="no">No. 01</span>
-        <h3>Sales &amp; Prospecting</h3>
-        <span class="ct">16 workflows</span>
+        <h3>Revenue</h3>
+        <span class="ct">22 workflows</span>
         <span class="xtra">
-          <span class="xl">Missed-call recovery <span class="im">4h &rarr; 3m</span></span>
-          <span class="xl">Lead reactivation <span class="im">47% return</span></span>
-          <span class="xl">Voice agents <span class="im">every call answered</span></span>
+          <span class="xl"><span class="wn">Missed-call recovery</span><span class="im">4h → 3m</span></span>
+          <span class="xl"><span class="wn">Lead capture &amp; routing</span><span class="im">every lead placed</span></span>
+          <span class="xl"><span class="wn">Follow-up automation</span><span class="im">47% reactivated</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:80%">
+        <span class="no">No. 02</span>
+        <h3>Customer</h3>
+        <span class="ct">18 workflows</span>
+        <span class="xtra">
+          <span class="xl"><span class="wn">AI chat &amp; FAQ</span><span class="im">~70% deflected</span></span>
+          <span class="xl"><span class="wn">Inbox unification</span><span class="im">5 inboxes → 1</span></span>
+          <span class="xl"><span class="wn">Ticket triage &amp; routing</span><span class="im">8h → 1h</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:88%">
+        <span class="no">No. 03</span>
+        <h3>Operations</h3>
+        <span class="ct">24 workflows</span>
+        <span class="xtra">
+          <span class="xl"><span class="wn">Cross-tool sync</span><span class="im">12 hops removed</span></span>
+          <span class="xl"><span class="wn">SOP automation</span><span class="im">knowledge, captured</span></span>
+          <span class="xl"><span class="wn">Document automation</span><span class="im">45m → 8m</span></span>
         </span>
         <span class="meter"><i></i></span>
       </div>
       <div class="gcell" style="--m:84%">
-        <span class="no">No. 02</span>
-        <h3>Customer Experience</h3>
-        <span class="ct">17 workflows</span>
+        <span class="no">No. 04</span>
+        <h3>Intelligence</h3>
+        <span class="ct">22 workflows</span>
         <span class="xtra">
-          <span class="xl">AI FAQ chatbot <span class="im">~70% deflection</span></span>
-          <span class="xl">Inbox unification <span class="im">5 inboxes &rarr; 1</span></span>
-          <span class="xl">Ticket triage <span class="im">8h SLA &rarr; 1h</span></span>
+          <span class="xl"><span class="wn">Live dashboards</span><span class="im">one ops board</span></span>
+          <span class="xl"><span class="wn">AI agents &amp; copilots</span><span class="im">decisions, automated</span></span>
+          <span class="xl"><span class="wn">Revenue attribution</span><span class="im">spend → revenue</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:78%">
+        <span class="no">No. 05</span>
+        <h3>Digital Presence</h3>
+        <span class="ct">16 workflows</span>
+        <span class="xtra">
+          <span class="xl"><span class="wn">Production website</span><span class="im">4-week ship</span></span>
+          <span class="xl"><span class="wn">Landing pages</span><span class="im">built to convert</span></span>
+          <span class="xl"><span class="wn">E-commerce</span><span class="im">selling in weeks</span></span>
         </span>
         <span class="meter"><i></i></span>
       </div>
       <div class="gcell" style="--m:76%">
-        <span class="no">No. 03</span>
-        <h3>Internal Operations</h3>
+        <span class="no">No. 06</span>
+        <h3>Custom</h3>
         <span class="ct">16 workflows</span>
         <span class="xtra">
-          <span class="xl">Cross-tool sync <span class="im">12 hops removed</span></span>
-          <span class="xl">Document automation <span class="im">45m &rarr; 8m</span></span>
-          <span class="xl">SaaS audit <span class="im">$1.4k/mo back</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:70%">
-        <span class="no">No. 04</span>
-        <h3>AI Implementation</h3>
-        <span class="ct">14 workflows</span>
-        <span class="xtra">
-          <span class="xl">Knowledge agents <span class="im">90s answers</span></span>
-          <span class="xl">Lead scoring <span class="im">2.3&times; accuracy</span></span>
-          <span class="xl">Multi-step agents <span class="im">decisions, automated</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:64%">
-        <span class="no">No. 05</span>
-        <h3>Data &amp; Analytics</h3>
-        <span class="ct">13 workflows</span>
-        <span class="xtra">
-          <span class="xl">Live dashboards <span class="im">one ops board</span></span>
-          <span class="xl">Revenue attribution <span class="im">spend &rarr; revenue</span></span>
-          <span class="xl">Churn modeling <span class="im">seen early</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:74%">
-        <span class="no">No. 06</span>
-        <h3>Web &amp; Storefront</h3>
-        <span class="ct">15 workflows</span>
-        <span class="xtra">
-          <span class="xl">Production website <span class="im">4-week ship</span></span>
-          <span class="xl">E-commerce setup <span class="im">selling in weeks</span></span>
-          <span class="xl">Multi-language <span class="im">two markets, one site</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:74%">
-        <span class="no">No. 07</span>
-        <h3>Custom Software</h3>
-        <span class="ct">15 workflows</span>
-        <span class="xtra">
-          <span class="xl">Internal tools <span class="im">3-week builds</span></span>
-          <span class="xl">Customer apps <span class="im">shipped to spec</span></span>
-          <span class="xl">API integrations <span class="im">systems that talk</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:60%">
-        <span class="no">No. 08</span>
-        <h3>Finance &amp; Back Office</h3>
-        <span class="ct">12 workflows</span>
-        <span class="xtra">
-          <span class="xl">Invoice chasing <span class="im">paid 12 days sooner</span></span>
-          <span class="xl">Reconciliation <span class="im">books close in a day</span></span>
-          <span class="xl">Quote-to-invoice <span class="im">zero re-typing</span></span>
+          <span class="xl"><span class="wn">Internal tools</span><span class="im">3-week builds</span></span>
+          <span class="xl"><span class="wn">API integrations</span><span class="im">systems that talk</span></span>
+          <span class="xl"><span class="wn">Customer apps</span><span class="im">shipped to spec</span></span>
         </span>
         <span class="meter"><i></i></span>
       </div>
@@ -1161,7 +1147,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
           <li>One living roadmap, owned end to end</li>
           <li>Biweekly operations call with the operator</li>
           <li>Monthly report + quarterly strategy</li>
-          <li>Priority bench across all eight disciplines</li>
+          <li>Priority bench across all six systems</li>
         </ul>
         <div class="actcol">
           <span class="badge2">Most engaged</span>
@@ -1193,7 +1179,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 
     <div class="assure2 fd">
       <div><div class="ak">The guarantee</div><p>It holds every month, not just the first: agreed work lands in its agreed window, <b>or the next month is on us.</b></p></div>
-      <div><div class="ak">The exit</div><p>Cancel with thirty days' notice. Every system leaves <b>documented and operational.</b></p></div>
+      <div><div class="ak">The exit</div><p>Cancel anytime, month to month. Everything stays in your accounts; give 30 days' notice for a <b>full documented handover.</b></p></div>
       <div><div class="ak">The ownership</div><p>Everything lives in <b>your accounts</b>: code, credentials, documentation. Nothing is held.</p></div>
     </div>
   </div>
@@ -1202,9 +1188,9 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <!-- dark marquee divider -->
 <div class="mq dark" aria-hidden="true">
   <div class="track" data-vel>
-    <span>No hourly billing <b>·</b> Month to month after 90 days <b>·</b> Your accounts, your code <b>·</b> Or the next month is on us <b>·</b></span>
-    <span>No hourly billing <b>·</b> Month to month after 90 days <b>·</b> Your accounts, your code <b>·</b> Or the next month is on us <b>·</b></span>
-    <span>No hourly billing <b>·</b> Month to month after 90 days <b>·</b> Your accounts, your code <b>·</b> Or the next month is on us <b>·</b></span>
+    <span>No hourly billing <b>·</b> Month to month <b>·</b> Your accounts, your code <b>·</b> On time, or next month's free <b>·</b></span>
+    <span>No hourly billing <b>·</b> Month to month <b>·</b> Your accounts, your code <b>·</b> On time, or next month's free <b>·</b></span>
+    <span>No hourly billing <b>·</b> Month to month <b>·</b> Your accounts, your code <b>·</b> On time, or next month's free <b>·</b></span>
   </div>
 </div>
 
@@ -1273,8 +1259,8 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 
       <div class="body">
         <p class="fd">“Most SMBs don't need a CTO. They need someone accountable for the systems that keep the business running.”</p>
-        <p class="dim fd fd-1">Axius is a private technology operations practice. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. One operator owns direction, outcomes, and every decision that touches your systems. AI systems carry the repetitive work and keep the documentation current. Vetted specialists step in when the work needs depth, managed entirely on my side. You never coordinate a vendor.</p>
-        <p class="dim fd fd-2">You get one line to message. One monthly figure. One person whose name is on the work. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
+        <p class="dim fd fd-1">Axius is a private technology operations practice built for absolute precision and velocity. No agency bloat, no account managers, and no contractor mentality where the care stops when the invoice is paid. Instead, one operator owns the direction, the outcomes, and every technical decision. AI systems eliminate repetitive drag to guarantee speed, while I deploy and manage vetted experts whenever deep-domain specialization is required. You never manage a vendor. You just get the results.</p>
+        <p class="dim fd fd-2">One direct line. One monthly figure. Flawless output. All for less than a single salary. If thirty minutes with me saves you a quarter of bad decisions and technical debt, that's the leverage we give you.</p>
         <div class="acts fd fd-3">
           <a class="pill" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Take the trade →</a>
         </div>
@@ -1547,6 +1533,39 @@ if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motio
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
 }
+
+/* ── catalog: on hover, each system's three rows cycle through its
+     full workflow list — every swap fades + de-blurs, echoing the
+     hero's reveal motion. Touch just shows the top three. ──────── */
+(function () {
+  const CAT = [
+    [['Missed-call recovery','4h → 3m'],['Lead capture & routing','every lead placed'],['Follow-up automation','47% reactivated'],['Pipeline visibility','one live board'],['CRM workflows','one source of truth'],['Speed-to-lead','reply in 60s'],['Quote-to-close','days → hours'],['Reactivation campaigns','dormant revived']],
+    [['AI chat & FAQ','~70% deflected'],['Inbox unification','5 inboxes → 1'],['Ticket triage & routing','8h → 1h'],['Support automation','answered 24/7'],['Customer comms','nothing slips'],['Onboarding flows','day-one ready'],['Review & feedback','signal captured']],
+    [['Cross-tool sync','12 hops removed'],['SOP automation','knowledge, captured'],['Document automation','45m → 8m'],['Approvals & routing','no more chasing'],['Invoice chasing','paid 12 days sooner'],['Reconciliation','books close in a day'],['Quote-to-invoice','zero re-typing'],['SaaS rationalization','$1.4k/mo back']],
+    [['Live dashboards','one ops board'],['AI agents & copilots','decisions, automated'],['Revenue attribution','spend → revenue'],['Knowledge agents','90s answers'],['Forecasting','churn seen early'],['Lead scoring','2.3× accuracy'],['Monthly reporting','in writing, on time']],
+    [['Production website','4-week ship'],['Landing pages','built to convert'],['E-commerce','selling in weeks'],['Conversion flows','every step tracked'],['Content systems','publish without dev'],['Multi-market','two markets, one site']],
+    [['Internal tools','3-week builds'],['API integrations','systems that talk'],['Customer apps','shipped to spec'],['Custom workflows','your process, automated'],['System extensions','no rebuild needed'],['Data migrations','clean & complete']],
+  ];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.index .gcell').forEach((cell, idx) => {
+    const list = CAT[idx]; if (!list) return;
+    const rows = [...cell.querySelectorAll('.xl')];
+    if (rows.length < 3) return;
+    let off = 0, timer = null;
+    const paint = (animate) => {
+      rows.forEach((row, i) => {
+        const it = list[(off + i) % list.length];
+        const put = () => { row.querySelector('.wn').textContent = it[0]; row.querySelector('.im').textContent = it[1]; };
+        if (!animate) return put();
+        setTimeout(() => { row.classList.add('chg'); setTimeout(() => { put(); row.classList.remove('chg'); }, 220); }, i * 70);
+      });
+    };
+    paint(false);
+    if (reduce) return;
+    cell.addEventListener('mouseenter', () => { if (timer) return; timer = setInterval(() => { off = (off + 1) % list.length; paint(true); }, 1700); });
+    cell.addEventListener('mouseleave', () => { clearInterval(timer); timer = null; off = 0; paint(false); });
+  });
+})();
 
 /* ── velocity-reactive marquees: drift always, surge on scroll,
      skew with direction. Seamless across any copy count. ─────── */
