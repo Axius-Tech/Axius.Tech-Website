@@ -260,6 +260,25 @@ a { color: inherit; }
 .guide.activated .g-tag { opacity: 1; }
 @keyframes guidePulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .guide .g-tut { animation: none; } }
+/* mobile swipe affordance — desktop hides it (the cursor trail covers
+   that case). On touch it restores the practice tag and nudges the
+   visitor to swipe the hero to summon the portfolio, then fades away. */
+#swipehint { display: none; }
+@media (pointer: coarse) {
+  #swipehint {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    padding-top: 86px; pointer-events: none; transition: opacity .55s var(--ease);
+  }
+  #swipehint.gone { opacity: 0; }
+  #swipehint .sh-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-40); }
+  #swipehint .sh-cue { display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--green); }
+  #swipehint .sh-ic { font-size: 15px; line-height: 1; animation: nudgeL 1.5s ease-in-out infinite; }
+  #swipehint .sh-ic.r { animation: nudgeR 1.5s ease-in-out infinite; }
+}
+@keyframes nudgeL { 0%,100% { transform: translateX(0); opacity: .5; } 50% { transform: translateX(-5px); opacity: 1; } }
+@keyframes nudgeR { 0%,100% { transform: translateX(0); opacity: .5; } 50% { transform: translateX(5px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { #swipehint .sh-ic { animation: none; } }
 /* portfolio mouse-trail layer — true full-bleed (spans the viewport
    width and may run over the nav) */
 #trail {
@@ -549,8 +568,22 @@ section { border-top: 1px solid var(--rule); }
 .assure2 p { margin: 11px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-70); }
 .assure2 p b { color: var(--green); }
 @media (max-width: 1024px) {
-  .scard { grid-template-columns: 1fr; position: static; }
+  /* keep the sticky stacked-card scroll effect on mobile too — single
+     column, tighter top offsets so each tier's name peeks as it pins */
+  .scard { grid-template-columns: 1fr; position: sticky; }
+  .scard:nth-child(1) { top: 70px; }
+  .scard:nth-child(2) { top: 86px; }
+  .scard:nth-child(3) { top: 102px; }
   .assure2 { grid-template-columns: 1fr; }
+}
+/* 13" / laptop range: the 3-column card wastes its right third and
+   crams the bullets — drop to info | bullets and run the CTA as a
+   full-width footer row so the card reads balanced at ~1280–1440px */
+@media (min-width: 1025px) and (max-width: 1480px) {
+  .scard { grid-template-columns: 1fr 1.04fr; gap: clamp(26px, 3.5vw, 48px) clamp(34px, 5vw, 64px); align-items: start; }
+  .scard .for { max-width: none; }
+  .scard .actcol { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; margin-top: 6px; padding-top: 22px; border-top: 1px solid var(--rule); }
+  .scard.feat .actcol { border-top-color: rgba(255,255,255,.16); }
 }
 
 /* ── V · in practice (green, contained auto-marquee) ──────── */
@@ -912,6 +945,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <!-- ════ OPENING ════ -->
 <section class="open wrap" id="top" style="border-top:none">
   <div id="trail" aria-hidden="true"></div>
+  <div id="swipehint" aria-hidden="true">
+    <span class="sh-tag">Your technology department</span>
+    <span class="sh-cue"><span class="sh-ic">‹</span> Swipe to see our work <span class="sh-ic r">›</span></span>
+  </div>
   <div class="meta-top">
     <span class="label guide" id="guide">
       <span class="g-tut">Hover the space to preview our work</span>
@@ -1397,13 +1434,13 @@ cue.addEventListener('click', () => {
   setTimeout(tick, 2000);
 })();
 
-/* ── hero portfolio trail — work shots follow the cursor, then
-     fade. Portrait cards are app/mobile builds, landscape cards
-     are dashboards/sites. Drop a .gif in for a live one. ─────── */
+/* ── hero portfolio reveal — desktop: work shots follow the cursor;
+     mobile: a horizontal swipe across the hero summons them. Portrait
+     cards are app/mobile builds, landscape are dashboards/sites. ─── */
 (function () {
   const hero = document.querySelector('.open');
   const layer = document.getElementById('trail');
-  if (!hero || !layer || !matchMedia('(pointer: fine)').matches) return;
+  if (!hero || !layer) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const T = '/assets/trail/';
   const TRAIL_MEDIA = [
@@ -1424,44 +1461,78 @@ cue.addEventListener('click', () => {
   ];
   const h1El = document.getElementById('h1');
   const guide = document.getElementById('guide');
+  const hint = document.getElementById('swipehint');
   const wm = document.querySelector('.bar .wm');
   const cta = document.querySelector('.navcta');
+  let idx = 0, live = 0, activated = false;
+  const activate = () => {
+    if (activated) return;
+    activated = true;
+    if (guide) guide.classList.add('activated');
+    if (hint) hint.classList.add('gone');
+  };
+  // spawn one card centred on a viewport point, scaled for the device
+  const spawn = (vx, yRelHero, scale) => {
+    if (live >= 12) return;
+    const m = TRAIL_MEDIA[idx % TRAIL_MEDIA.length]; idx++;
+    const w = Math.round(m.w * scale), h = Math.round(m.h * scale);
+    const el = document.createElement('img');
+    el.className = 'tr-card';
+    el.style.width = w + 'px';
+    el.style.height = h + 'px';
+    el.style.left = (vx - w / 2) + 'px';
+    el.style.top = (yRelHero - h / 2) + 'px';
+    el.style.rotate = (Math.random() * 8 - 4).toFixed(1) + 'deg';
+    el.src = m.src; el.alt = ''; el.style.objectFit = 'cover';
+    layer.appendChild(el);
+    live++;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+    setTimeout(() => el.classList.add('out'), 520);
+    setTimeout(() => { el.remove(); live--; }, 1750);
+  };
   // keep a buffer around an element, the way the title is buffered
   const near = (el, e, m) => {
     if (!el) return false;
     const r = el.getBoundingClientRect();
     return e.clientX > r.left - m && e.clientX < r.right + m && e.clientY > r.top - m && e.clientY < r.bottom + m;
   };
-  let lastX = -1, lastY = -1, acc = 0, idx = 0, live = 0, activated = false;
-  // listen on the window so the trail spans the full viewport width,
-  // not just the centred container; kept clear of the headline and nav.
-  addEventListener('mousemove', (e) => {
-    const hr = hero.getBoundingClientRect();
-    const tooLow = (h1El && e.clientY > h1El.getBoundingClientRect().top - 140) || e.clientY > hr.bottom || e.clientY < hr.top;
-    if (tooLow || near(wm, e, 150) || near(cta, e, 150)) { lastX = -1; return; }
-    const x = e.clientX, y = e.clientY - hr.top;   // layer is full-width (left = viewport 0), top = hero top
-    if (lastX < 0) { lastX = x; lastY = y; return; }
-    acc += Math.hypot(x - lastX, y - lastY);
-    lastX = x; lastY = y;
-    if (acc < 110 || live >= 12) return;
-    acc = 0;
-    if (!activated && guide) { activated = true; guide.classList.add('activated'); }
-    const m = TRAIL_MEDIA[idx % TRAIL_MEDIA.length]; idx++;
-    const el = document.createElement(m.src ? 'img' : 'div');
-    el.className = 'tr-card';
-    el.style.width = m.w + 'px';
-    el.style.height = m.h + 'px';
-    el.style.left = (x - m.w / 2) + 'px';
-    el.style.top = (y - m.h / 2) + 'px';
-    el.style.rotate = (Math.random() * 8 - 4).toFixed(1) + 'deg';
-    if (m.src) { el.src = m.src; el.alt = ''; el.style.objectFit = 'cover'; }
-    else el.style.background = m.color;
-    layer.appendChild(el);
-    live++;
-    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
-    setTimeout(() => el.classList.add('out'), 520);
-    setTimeout(() => { el.remove(); live--; }, 1750);
-  }, { passive: true });
+
+  if (matchMedia('(pointer: fine)').matches) {
+    // ── desktop: cards follow the cursor, clear of headline + nav ──
+    let lastX = -1, lastY = -1, acc = 0;
+    addEventListener('mousemove', (e) => {
+      const hr = hero.getBoundingClientRect();
+      const tooLow = (h1El && e.clientY > h1El.getBoundingClientRect().top - 140) || e.clientY > hr.bottom || e.clientY < hr.top;
+      if (tooLow || near(wm, e, 150) || near(cta, e, 150)) { lastX = -1; return; }
+      const x = e.clientX, y = e.clientY - hr.top;
+      if (lastX < 0) { lastX = x; lastY = y; return; }
+      acc += Math.hypot(x - lastX, y - lastY);
+      lastX = x; lastY = y;
+      if (acc < 110) return;
+      acc = 0; activate(); spawn(x, y, 1);
+    }, { passive: true });
+  } else {
+    // ── mobile: horizontal swipe across the hero. Vertical-dominant
+    //    moves are left alone so the page still scrolls normally. ──
+    let lx = 0, ly = 0, acc = 0, tracking = false, horiz = false;
+    hero.addEventListener('touchstart', (e) => {
+      const t = e.touches[0]; lx = t.clientX; ly = t.clientY;
+      acc = 0; tracking = true; horiz = false;
+    }, { passive: true });
+    hero.addEventListener('touchmove', (e) => {
+      if (!tracking) return;
+      const t = e.touches[0];
+      const dx = t.clientX - lx, dy = t.clientY - ly;
+      if (!horiz && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) horiz = true;
+      if (horiz) {
+        const hr = hero.getBoundingClientRect();
+        acc += Math.hypot(dx, dy);
+        if (acc >= 60) { acc = 0; activate(); spawn(t.clientX, t.clientY - hr.top, 0.62); }
+      }
+      lx = t.clientX; ly = t.clientY;
+    }, { passive: true });
+    hero.addEventListener('touchend', () => { tracking = false; }, { passive: true });
+  }
 })();
 
 /* ── cursor ────────────────────────────────────────────────── */
