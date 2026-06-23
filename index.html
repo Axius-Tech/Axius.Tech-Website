@@ -1876,6 +1876,39 @@ if (progress) {
   };
   addEventListener('scroll', notify, { passive: true });
 })();
+
+/* ── dispatch beacons → /api/notify (cookieless). One visit ping per
+     browser session; checkout / booking clicks fire as the visitor
+     leaves the page. Fire-and-forget, never blocks or errors the UI. ── */
+(function () {
+  const send = (payload, leaving) => {
+    try {
+      const body = JSON.stringify(payload);
+      if (leaving && navigator.sendBeacon) {
+        navigator.sendBeacon('/api/notify', new Blob([body], { type: 'application/json' }));
+      } else {
+        fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+      }
+    } catch (e) {}
+  };
+  // new visitor — once per session (sessionStorage, not a cookie)
+  try {
+    if (!sessionStorage.getItem('ax_seen')) {
+      sessionStorage.setItem('ax_seen', '1');
+      send({ type: 'visit', path: location.pathname + location.hash, ref: document.referrer || '', utm: location.search || '' }, false);
+    }
+  } catch (e) {}
+  // high-intent: clicking through to Stripe checkout or the booking page
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    const href = a.getAttribute('href') || '';
+    if (/buy\.stripe\.com|cal\.com/.test(href)) {
+      const label = (a.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+      send({ type: 'checkout_start', tier: label || href, path: location.pathname + location.hash }, true);
+    }
+  }, true);
+})();
 </script>
 </body>
 </html>
