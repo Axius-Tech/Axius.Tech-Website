@@ -260,25 +260,18 @@ a { color: inherit; }
 .guide.activated .g-tag { opacity: 1; }
 @keyframes guidePulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .guide .g-tut { animation: none; } }
-/* mobile swipe affordance — desktop hides it (the cursor trail covers
-   that case). On touch it restores the practice tag and nudges the
-   visitor to swipe the hero to summon the portfolio, then fades away. */
+/* mobile: desktop hides this (the cursor trail covers that case). On
+   touch it restores the practice tag at the top of the hero, above the
+   portfolio that now plays on its own. */
 #swipehint { display: none; }
 @media (pointer: coarse) {
   #swipehint {
     position: absolute; top: 0; left: 0; right: 0; z-index: 3;
-    display: flex; flex-direction: column; align-items: center; gap: 10px;
-    padding-top: 86px; pointer-events: none; transition: opacity .55s var(--ease);
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 86px; pointer-events: none;
   }
-  #swipehint.gone { opacity: 0; }
   #swipehint .sh-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-40); }
-  #swipehint .sh-cue { display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--green); }
-  #swipehint .sh-ic { font-size: 15px; line-height: 1; animation: nudgeL 1.5s ease-in-out infinite; }
-  #swipehint .sh-ic.r { animation: nudgeR 1.5s ease-in-out infinite; }
 }
-@keyframes nudgeL { 0%,100% { transform: translateX(0); opacity: .5; } 50% { transform: translateX(-5px); opacity: 1; } }
-@keyframes nudgeR { 0%,100% { transform: translateX(0); opacity: .5; } 50% { transform: translateX(5px); opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { #swipehint .sh-ic { animation: none; } }
 /* portfolio mouse-trail layer — true full-bleed (spans the viewport
    width and may run over the nav) */
 #trail {
@@ -886,6 +879,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 
 @media (max-width: 460px) {
   .open h1 { font-size: clamp(27px, 8.2vw, 36px); }
+  /* line 1 ("Run your business.") is short — scale it up to match the
+     section titles; line 2 ("Not your …") stays smaller so the long
+     rotating words still fit on one line */
+  .open h1 .l1 { font-size: clamp(29px, 9.4vw, 41px); line-height: 1; }
   .h2 { font-size: clamp(29px, 9.4vw, 40px); }
   .manifesto .mtext { font-size: clamp(23px, 7.2vw, 32px); }
   .index .big { font-size: clamp(52px, 19vw, 78px); }
@@ -947,7 +944,6 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   <div id="trail" aria-hidden="true"></div>
   <div id="swipehint" aria-hidden="true">
     <span class="sh-tag">Your technology department</span>
-    <span class="sh-cue"><span class="sh-ic">‹</span> Swipe to see our work <span class="sh-ic r">›</span></span>
   </div>
   <div class="meta-top">
     <span class="label guide" id="guide">
@@ -1076,8 +1072,8 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
         <h3>Digital Presence</h3>
         <span class="ct">16 workflows</span>
         <span class="xtra">
-          <span class="xl"><span class="wn">Production website</span><span class="im">4-week ship</span></span>
-          <span class="xl"><span class="wn">Landing pages</span><span class="im">built to convert</span></span>
+          <span class="xl"><span class="wn">Production website</span><span class="im">owned, kept live</span></span>
+          <span class="xl"><span class="wn">Landing pages</span><span class="im">tuned to convert</span></span>
           <span class="xl"><span class="wn">E-commerce</span><span class="im">selling in weeks</span></span>
         </span>
         <span class="meter"><i></i></span>
@@ -1087,7 +1083,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
         <h3>Custom</h3>
         <span class="ct">16 workflows</span>
         <span class="xtra">
-          <span class="xl"><span class="wn">Internal tools</span><span class="im">3-week builds</span></span>
+          <span class="xl"><span class="wn">Internal tools</span><span class="im">live in weeks</span></span>
           <span class="xl"><span class="wn">API integrations</span><span class="im">systems that talk</span></span>
           <span class="xl"><span class="wn">Customer apps</span><span class="im">shipped to spec</span></span>
         </span>
@@ -1106,7 +1102,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <section class="method" data-theme="green" id="method">
   <div class="wrap">
     <span class="label"><span class="n">III</span> · The method</span>
-    <h2 class="h2 fd" style="color:var(--on-green)">Named stages.<br>Written deliverables.</h2>
+    <h2 class="h2 fd" style="color:var(--on-green)">Named stages.<br>Written outcomes.</h2>
     <div class="grid fd">
       <div class="mcard" data-tilt>
         <div class="num serif">01</div>
@@ -1296,8 +1292,8 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 
       <div class="body">
         <p class="fd">“Most SMBs don't need a CTO. They need someone accountable for the systems that keep the business running.”</p>
-        <p class="dim fd fd-1">Axius is a private technology operations practice built for absolute precision and velocity. No agency bloat, no account managers, and no contractor mentality where the care stops when the invoice is paid. Instead, one operator owns the direction, the outcomes, and every technical decision. AI systems eliminate repetitive drag to guarantee speed, while I deploy and manage vetted experts whenever deep-domain specialization is required. You never manage a vendor. You just get the results.</p>
-        <p class="dim fd fd-2">One direct line. One monthly figure. Flawless output. All for less than a single salary. If thirty minutes with me saves you a quarter of bad decisions and technical debt, that's the leverage we give you.</p>
+        <p class="dim fd fd-1">Axius is a private technology operations practice built for precision and speed. One operator owns the direction, the outcomes, and every technical decision that touches your systems. AI handles the repetitive drag so the work stays fast, and I bring in and manage vetted specialists whenever deep-domain depth is needed. You never manage a vendor. You just get the results.</p>
+        <p class="dim fd fd-2">One direct line. One monthly figure. Flawless output, all for less than a single salary. Thirty minutes with me will save you a quarter of bad decisions and technical debt. That is the trade.</p>
         <div class="acts fd fd-3">
           <a class="pill" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Take the trade →</a>
         </div>
@@ -1461,7 +1457,6 @@ cue.addEventListener('click', () => {
   ];
   const h1El = document.getElementById('h1');
   const guide = document.getElementById('guide');
-  const hint = document.getElementById('swipehint');
   const wm = document.querySelector('.bar .wm');
   const cta = document.querySelector('.navcta');
   let idx = 0, live = 0, activated = false;
@@ -1469,7 +1464,6 @@ cue.addEventListener('click', () => {
     if (activated) return;
     activated = true;
     if (guide) guide.classList.add('activated');
-    if (hint) hint.classList.add('gone');
   };
   // spawn one card centred on a viewport point, scaled for the device
   const spawn = (vx, yRelHero, scale) => {
@@ -1512,8 +1506,21 @@ cue.addEventListener('click', () => {
       acc = 0; activate(); spawn(x, y, 1);
     }, { passive: true });
   } else {
-    // ── mobile: horizontal swipe across the hero. Vertical-dominant
-    //    moves are left alone so the page still scrolls normally. ──
+    // ── mobile: the portfolio plays on its own — a work shot drifts in
+    //    every ~1.3s into the open upper area while the hero is in view,
+    //    no interaction needed. A horizontal swipe still summons extra
+    //    cards for anyone who tries it; vertical swipes still scroll. ──
+    const inView = () => !document.hidden && scrollY < innerHeight * 0.85;
+    const autoSpawn = () => {
+      if (!inView() || live >= 5) return;
+      const margin = 96, vw = innerWidth;
+      const x = margin + Math.random() * Math.max(40, vw - margin * 2);
+      // keep cards in the clean band between the tag and the headline
+      const y = 150 + Math.random() * (hero.getBoundingClientRect().height * 0.30);
+      spawn(x, y, 0.58);
+    };
+    setTimeout(() => { autoSpawn(); setInterval(autoSpawn, 1300); }, 1100);
+    // swipe still works for anyone who tries it
     let lx = 0, ly = 0, acc = 0, tracking = false, horiz = false;
     hero.addEventListener('touchstart', (e) => {
       const t = e.touches[0]; lx = t.clientX; ly = t.clientY;
@@ -1527,7 +1534,7 @@ cue.addEventListener('click', () => {
       if (horiz) {
         const hr = hero.getBoundingClientRect();
         acc += Math.hypot(dx, dy);
-        if (acc >= 60) { acc = 0; activate(); spawn(t.clientX, t.clientY - hr.top, 0.62); }
+        if (acc >= 60) { acc = 0; spawn(t.clientX, t.clientY - hr.top, 0.62); }
       }
       lx = t.clientX; ly = t.clientY;
     }, { passive: true });
@@ -1614,8 +1621,8 @@ if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motio
     [['AI chat & FAQ','~70% deflected'],['Inbox unification','5 inboxes → 1'],['Ticket triage & routing','8h → 1h'],['Support automation','answered 24/7'],['Customer comms','nothing slips'],['Onboarding flows','day-one ready'],['Review & feedback','signal captured']],
     [['Cross-tool sync','12 hops removed'],['SOP automation','knowledge, captured'],['Document automation','45m → 8m'],['Approvals & routing','no more chasing'],['Invoice chasing','paid 12 days sooner'],['Reconciliation','books close in a day'],['Quote-to-invoice','zero re-typing'],['SaaS rationalization','$1.4k/mo back']],
     [['Live dashboards','one ops board'],['AI agents & copilots','decisions, automated'],['Revenue attribution','spend → revenue'],['Knowledge agents','90s answers'],['Forecasting','churn seen early'],['Lead scoring','2.3× accuracy'],['Monthly reporting','in writing, on time']],
-    [['Production website','4-week ship'],['Landing pages','built to convert'],['E-commerce','selling in weeks'],['Conversion flows','every step tracked'],['Content systems','publish without dev'],['Multi-market','two markets, one site']],
-    [['Internal tools','3-week builds'],['API integrations','systems that talk'],['Customer apps','shipped to spec'],['Custom workflows','your process, automated'],['System extensions','no rebuild needed'],['Data migrations','clean & complete']],
+    [['Production website','owned, kept live'],['Landing pages','tuned to convert'],['E-commerce','selling in weeks'],['Conversion flows','every step tracked'],['Content systems','publish without dev'],['Multi-market','two markets, one site']],
+    [['Internal tools','live in weeks'],['API integrations','systems that talk'],['Customer apps','shipped to spec'],['Custom workflows','your process, automated'],['System extensions','no rebuild needed'],['Data migrations','clean & complete']],
   ];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll('.index .gcell').forEach((cell, idx) => {
