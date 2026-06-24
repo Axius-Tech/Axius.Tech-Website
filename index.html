@@ -1507,20 +1507,23 @@ cue.addEventListener('click', () => {
     }, { passive: true });
   } else {
     // ── mobile: the portfolio plays on its own — a work shot drifts in
-    //    every ~1.3s into the open upper area while the hero is in view,
-    //    no interaction needed. A horizontal swipe still summons extra
-    //    cards for anyone who tries it; vertical swipes still scroll. ──
+    //    every ~1.3s into the band ABOVE the headline while the hero is
+    //    in view, so it never sits over the title (mirrors how the
+    //    desktop trail stays clear of it). Swipe summons extra cards. ──
     const inView = () => !document.hidden && scrollY < innerHeight * 0.85;
+    // lowest a card's CENTRE may sit so the whole card clears the title
+    const ceilFor = (cardH) => (h1El.getBoundingClientRect().top - hero.getBoundingClientRect().top) - 18 - cardH / 2;
     const autoSpawn = () => {
       if (!inView() || live >= 5) return;
+      const lo = 140, hi = ceilFor(Math.round(324 * 0.58)); // 324 = tallest (portrait) card
+      if (hi <= lo) return;                                 // no room above the title — skip this tick
       const margin = 96, vw = innerWidth;
       const x = margin + Math.random() * Math.max(40, vw - margin * 2);
-      // keep cards in the clean band between the tag and the headline
-      const y = 150 + Math.random() * (hero.getBoundingClientRect().height * 0.30);
+      const y = lo + Math.random() * (hi - lo);
       spawn(x, y, 0.58);
     };
     setTimeout(() => { autoSpawn(); setInterval(autoSpawn, 1300); }, 1100);
-    // swipe still works for anyone who tries it
+    // swipe still works — but, like desktop, only while clear of the title
     let lx = 0, ly = 0, acc = 0, tracking = false, horiz = false;
     hero.addEventListener('touchstart', (e) => {
       const t = e.touches[0]; lx = t.clientX; ly = t.clientY;
@@ -1532,9 +1535,9 @@ cue.addEventListener('click', () => {
       const dx = t.clientX - lx, dy = t.clientY - ly;
       if (!horiz && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) horiz = true;
       if (horiz) {
-        const hr = hero.getBoundingClientRect();
         acc += Math.hypot(dx, dy);
-        if (acc >= 60) { acc = 0; spawn(t.clientX, t.clientY - hr.top, 0.62); }
+        const clearOfTitle = t.clientY < h1El.getBoundingClientRect().top - 40;
+        if (acc >= 60 && clearOfTitle) { acc = 0; spawn(t.clientX, t.clientY - hero.getBoundingClientRect().top, 0.62); }
       }
       lx = t.clientX; ly = t.clientY;
     }, { passive: true });
