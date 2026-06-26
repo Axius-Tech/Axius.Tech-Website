@@ -124,6 +124,73 @@ const money = (cents, currency = 'usd') => {
   return v;
 };
 
+// ── CRM notify (Engagement Spine) ──────────────────────────────
+// On a completed checkout we tell the CRM, matched by ENGAGEMENT ID
+// (Stripe `client_reference_id`), so the lead advances toward Gate A.
+// "Company name" is only a human label and is never the join key.
+//
+// Inert until CRM_WEBHOOK_URL is set on Vercel (optional CRM_WEBHOOK_SECRET
+// is sent as an X-Axius-Secret header; put a ?token=… on the URL itself if
+// the CRM is an Apps Script reading e.parameter). POSTs are re-sent through
+// redirects so Apps Script /exec endpoints work.
+function postJSONFollow(url, bodyObj, secret, redirectsLeft) {
+  return new Promise((resolve) => {
+    let u;
+    try { u = new URL(url); } catch (e) { return resolve({ error: 'bad_url' }); }
+    const lib = u.protocol === 'http:' ? require('http') : https;
+    const payload = JSON.stringify(bodyObj);
+    const headers = { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) };
+    if (secret) headers['X-Axius-Secret'] = secret;
+    const req = lib.request({
+      method: 'POST', hostname: u.hostname, port: u.port || 443,
+      path: u.pathname + u.search, headers, timeout: 7000,
+    }, (res) => {
+      const loc = res.headers.location;
+      if ([301, 302, 303, 307, 308].includes(res.statusCode) && loc && redirectsLeft > 0) {
+        res.resume(); // drain
+        const next = /^https?:\/\//.test(loc) ? loc : (u.origin + loc);
+        return resolve(postJSONFollow(next, bodyObj, secret, redirectsLeft - 1));
+      }
+      let b = ''; res.on('data', (c) => b += c);
+      res.on('end', () => resolve({ status: res.statusCode, body: b.slice(0, 300) }));
+    });
+    req.on('error', (e) => resolve({ error: e.message }));
+    req.on('timeout', () => { req.destroy(); resolve({ error: 'timeout' }); });
+    req.write(payload); req.end();
+  });
+}
+
+function notifyCRM(payload) {
+  const url = process.env.CRM_WEBHOOK_URL;
+  if (!url) return Promise.resolve({ skipped: 'no CRM_WEBHOOK_URL' });
+  return postJSONFollow(url, payload, process.env.CRM_WEBHOOK_SECRET, 3);
+}
+
+// Engagement-keyed payload the CRM matches on (ID first; company/email
+// are human context only). eventId lets the CRM dedupe Stripe retries.
+function buildCrmPayload(s, event) {
+  const company = (s.custom_fields || [])
+    .find((f) => f.key === 'companyname' || f.key === 'company_name');
+  return {
+    source: 'axius-website',
+    event: 'checkout.completed',
+    eventId: event.id,
+    engagementId: s.client_reference_id || null,   // = CRM lead id (the join key)
+    occurredAt: new Date((event.created || 0) * 1000).toISOString(),
+    stripe: {
+      sessionId: s.id,
+      customerId: s.customer || null,
+      subscriptionId: s.subscription || null,
+      email: s.customer_email || (s.customer_details && s.customer_details.email) || null,
+      phone: (s.customer_details && s.customer_details.phone) || null,
+      companyName: (company && company.text && company.text.value) || null,
+      tierId: (s.metadata && s.metadata.tier_id) || null,
+      amountTotal: s.amount_total,
+      currency: s.currency,
+    },
+  };
+}
+
 // ── Event formatters ───────────────────────────────────────────
 
 function tierFromMetadata(meta) {
@@ -138,11 +205,13 @@ function tierFromMetadata(meta) {
 function fmtCheckoutCompleted(s) {
   const t = tierFromMetadata(s.metadata || {});
   const company = (s.custom_fields || [])
-    .find(f => f.key === 'company_name');
+    .find(f => f.key === 'companyname' || f.key === 'company_name');
   const companyText = company && company.text && company.text.value;
+  const engagementId = s.client_reference_id;
   const total = money(s.amount_total, s.currency);
   return (
     `${t.emoji} <b>New subscriber</b> — Axius <b>${esc(t.name)}</b>\n\n` +
+    (engagementId ? `<b>Engagement:</b> <code>${esc(engagementId)}</code>\n` : '') +
     (companyText ? `<b>Company:</b> ${esc(companyText)}\n` : '') +
     (s.customer_email ? `<b>Email:</b> ${esc(s.customer_email)}\n` : '') +
     (s.customer_details && s.customer_details.phone
@@ -207,14 +276,16 @@ module.exports = async function handler(req, res) {
   try { event = JSON.parse(raw); }
   catch (_) { return res.status(400).json({ error: 'bad_json' }); }
 
-  // Always respond 200 fast so Stripe doesn't retry — we'll fire the
-  // Telegram ping asynchronously after the response is queued.
   let message = null;
+  let crmPayload = null;
   try {
     switch (event.type) {
-      case 'checkout.session.completed':
-        message = fmtCheckoutCompleted(event.data.object);
+      case 'checkout.session.completed': {
+        const s = event.data.object;
+        message = fmtCheckoutCompleted(s);
+        crmPayload = buildCrmPayload(s, event);   // advance the Engagement toward Gate A
         break;
+      }
       case 'invoice.paid':
         message = fmtInvoicePaid(event.data.object);
         break;
@@ -232,10 +303,20 @@ module.exports = async function handler(req, res) {
     console.error('format error', err);
   }
 
-  // Fire-and-forget Telegram send
+  // Existing Telegram alert — unchanged (fire-and-forget)
   if (message) {
     sendTelegram(message).catch(err => console.error('telegram error', err));
   }
 
-  return res.status(200).json({ received: true, forwarded: !!message });
+  // CRM notify — awaited so it reliably completes before the function is
+  // frozen; matched by Engagement ID. Best-effort: a failure is logged but
+  // we still 200 (Stripe also reconciles via the Registry's customer map).
+  let crmOk;
+  if (crmPayload) {
+    const crm = await notifyCRM(crmPayload);
+    crmOk = !!(crm && !crm.error && crm.skipped !== 'no CRM_WEBHOOK_URL');
+    if (crm && crm.error) console.error('crm notify error', crm.error);
+  }
+
+  return res.status(200).json({ received: true, forwarded: !!message, crmNotified: crmOk });
 };
