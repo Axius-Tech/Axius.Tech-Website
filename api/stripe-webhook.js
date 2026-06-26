@@ -129,65 +129,81 @@ const money = (cents, currency = 'usd') => {
 // (Stripe `client_reference_id`), so the lead advances toward Gate A.
 // "Company name" is only a human label and is never the join key.
 //
-// Inert until CRM_WEBHOOK_URL is set on Vercel (optional CRM_WEBHOOK_SECRET
-// is sent as an X-Axius-Secret header; put a ?token=… on the URL itself if
-// the CRM is an Apps Script reading e.parameter). POSTs are re-sent through
-// redirects so Apps Script /exec endpoints work.
-function postJSONFollow(url, bodyObj, secret, redirectsLeft) {
+// The CRM (Apps Script) reads the ACTION from the query string and the
+// shared secret from the JSON body as `_secret`. A POST to /exec runs
+// doPost and 302-redirects to a result URL we read with a GET.
+//
+// Inert until CRM_WEBHOOK_URL + CRM_WEBHOOK_SECRET are set on Vercel.
+//   CRM_WEBHOOK_URL    = the bare /exec URL (no token)
+//   CRM_WEBHOOK_SECRET = the CRM_SECRET value (sent in the body as _secret)
+//   CRM_WEBHOOK_ACTION = action name (default 'stripePaid')
+function httpRequest(method, urlStr, body) {
   return new Promise((resolve) => {
     let u;
-    try { u = new URL(url); } catch (e) { return resolve({ error: 'bad_url' }); }
+    try { u = new URL(urlStr); } catch (e) { return resolve({ error: 'bad_url' }); }
     const lib = u.protocol === 'http:' ? require('http') : https;
-    const payload = JSON.stringify(bodyObj);
-    const headers = { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) };
-    if (secret) headers['X-Axius-Secret'] = secret;
+    const headers = {};
+    if (body) { headers['Content-Type'] = 'application/json'; headers['Content-Length'] = Buffer.byteLength(body); }
     const req = lib.request({
-      method: 'POST', hostname: u.hostname, port: u.port || 443,
+      method, hostname: u.hostname, port: u.port || (u.protocol === 'http:' ? 80 : 443),
       path: u.pathname + u.search, headers, timeout: 7000,
     }, (res) => {
-      const loc = res.headers.location;
-      if ([301, 302, 303, 307, 308].includes(res.statusCode) && loc && redirectsLeft > 0) {
-        res.resume(); // drain
-        const next = /^https?:\/\//.test(loc) ? loc : (u.origin + loc);
-        return resolve(postJSONFollow(next, bodyObj, secret, redirectsLeft - 1));
-      }
       let b = ''; res.on('data', (c) => b += c);
-      res.on('end', () => resolve({ status: res.statusCode, body: b.slice(0, 300) }));
+      res.on('end', () => resolve({ status: res.statusCode, loc: res.headers.location, body: b }));
     });
     req.on('error', (e) => resolve({ error: e.message }));
     req.on('timeout', () => { req.destroy(); resolve({ error: 'timeout' }); });
-    req.write(payload); req.end();
+    if (body) req.write(body);
+    req.end();
   });
+}
+
+// POST the JSON, then follow Apps Script's 302 with a GET to read the
+// doPost result (re-POSTing the redirect 405s; the side effect already ran).
+async function postToCRM(url, bodyObj) {
+  let origin = '';
+  try { origin = new URL(url).origin; } catch (e) { return { error: 'bad_url' }; }
+  let r = await httpRequest('POST', url, JSON.stringify(bodyObj));
+  let hops = 0;
+  while (r && [301, 302, 303, 307, 308].includes(r.status) && r.loc && hops < 3) {
+    r = await httpRequest('GET', /^https?:\/\//.test(r.loc) ? r.loc : origin + r.loc, null);
+    hops++;
+  }
+  if (r && r.body) r.body = String(r.body).slice(0, 300);
+  return r;
 }
 
 function notifyCRM(payload) {
   const url = process.env.CRM_WEBHOOK_URL;
   if (!url) return Promise.resolve({ skipped: 'no CRM_WEBHOOK_URL' });
-  return postJSONFollow(url, payload, process.env.CRM_WEBHOOK_SECRET, 3);
+  const action = process.env.CRM_WEBHOOK_ACTION || 'stripePaid';
+  const fullUrl = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'action=' + encodeURIComponent(action);
+  const body = Object.assign({ _secret: process.env.CRM_WEBHOOK_SECRET || '' }, payload);
+  return postToCRM(fullUrl, body);
 }
 
-// Engagement-keyed payload the CRM matches on (ID first; company/email
-// are human context only). eventId lets the CRM dedupe Stripe retries.
+// Engagement-keyed payload (ID first; company/email are human context).
+// Fields mirror the CRM Engagement record so upsertEngagement_ can set the
+// "paid" Gate-A signal. eventId lets the CRM dedupe Stripe retries.
+const CRM_TIER = { equipo: 'team', departamento: 'department', operador: 'operator' };
 function buildCrmPayload(s, event) {
   const company = (s.custom_fields || [])
     .find((f) => f.key === 'companyname' || f.key === 'company_name');
+  const rawTier = (s.metadata && s.metadata.tier_id) || '';
   return {
     source: 'axius-website',
     event: 'checkout.completed',
     eventId: event.id,
     engagementId: s.client_reference_id || null,   // = CRM lead id (the join key)
-    occurredAt: new Date((event.created || 0) * 1000).toISOString(),
-    stripe: {
-      sessionId: s.id,
-      customerId: s.customer || null,
-      subscriptionId: s.subscription || null,
-      email: s.customer_email || (s.customer_details && s.customer_details.email) || null,
-      phone: (s.customer_details && s.customer_details.phone) || null,
-      companyName: (company && company.text && company.text.value) || null,
-      tierId: (s.metadata && s.metadata.tier_id) || null,
-      amountTotal: s.amount_total,
-      currency: s.currency,
-    },
+    paid: 'yes',
+    paidAt: new Date((event.created || 0) * 1000).toISOString(),
+    tier: CRM_TIER[rawTier] || rawTier || null,
+    company: (company && company.text && company.text.value) || null,
+    stripeCustomerId: s.customer || null,
+    stripeSubscriptionId: s.subscription || null,
+    email: s.customer_email || (s.customer_details && s.customer_details.email) || null,
+    amountTotal: s.amount_total,
+    currency: s.currency,
   };
 }
 
