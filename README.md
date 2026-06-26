@@ -1,61 +1,56 @@
-# Axius Landing
+# Axius — axius.tech
 
-Production landing page for [axius.tech](https://axius.tech). Static React-via-Babel — no build step required. The live direction is **Quiet 0.5**.
+Production site for [axius.tech](https://axius.tech): a **self-contained static `index.html`** (inline CSS + JS, no build step) plus a few Vercel serverless functions in `api/`. **Push to `main` → Vercel auto-deploys.**
 
-## Running it locally
+> The live homepage is the single `index.html`. The `reference/` React-via-Babel directions (Quiet 0.5 / E05) are **archived** and are not loaded by the live site.
 
-The site is plain HTML + JSX + CDN React. Any static server works.
+## Run locally
 
 ```sh
 python3 -m http.server 4321
+# open http://127.0.0.1:4321/   (append ?skipEntry=1 to skip the intro)
 ```
 
-Then open <http://127.0.0.1:4321/>.
+The `api/` functions don't run under `python http.server` (POSTs return 501) — expected locally; they run on Vercel.
 
-## Project structure
+## Structure
 
 ```
 Axius.Tech-Website/
-├── README.md                          this file
-├── QUIET-05-COPY.md                   full Quiet 0.5 site copy (EN + ES)
-├── .gitignore                         keeps secrets, .DS_Store, node_modules out
-├── index.html                         entry — loads Quiet 0.5
-├── api/
-│   └── stripe-webhook.js              Vercel Function for Stripe events
+├── index.html              the live site (hero · catalog · method · pricing · operator · begin)
+├── privacy/ , terms/       legal pages
+├── 404.html · robots.txt · sitemap.xml · favicon*
 ├── assets/
-│   └── andres-toro.jpg                founder photo
-└── reference/
-    ├── axius-shared.jsx               design tokens · data · atoms · AxiusConfig
-    ├── axius-direction-E05.jsx        Quiet 0.5 — the live direction
-    ├── axius-secrets.local.jsx        ⚠️ gitignored — real Telegram / WhatsApp credentials
-    └── axius-secrets.example.jsx      template for the file above
+│   ├── og-share.jpg        link-preview card
+│   └── trail/              hero portfolio shots
+├── api/                    Vercel serverless functions (see api/README.md)
+│   ├── stripe-webhook.js   Stripe events → Telegram + CRM notify (Engagement Spine)
+│   ├── lead.js             on-page chat → Telegram
+│   └── notify.js           new-visitor + checkout-click pings → Telegram (Gemini-enriched)
+└── reference/              archived React directions + gitignored *.local.* secret files
 ```
 
-## Secrets / credentials
+## Secrets — Vercel env vars
 
-The Ring-Andrés flow posts to a Telegram bot. The bot token, chat ID, phone numbers, and Stripe payment-link URLs **never** go in the committed code.
+Live secrets are **Vercel Environment Variables (Production)**, never committed. One-off local API work uses gitignored `reference/*.local.txt` files (`*.local.*` is gitignored).
 
-To set them up locally:
+| Env var | Used by | What |
+|---|---|---|
+| `TELEGRAM_BOT_TOKEN` | all 3 fns | @AxiusDispatch_Bot token |
+| `TELEGRAM_CHAT_ID` | all 3 fns | Axius Dispatch supergroup (`-1003929214805`) |
+| `TELEGRAM_THREAD_ID` | optional | forum topic id (omit → posts to root) |
+| `STRIPE_WEBHOOK_SECRET` | stripe-webhook | Stripe signing secret (`whsec_…`) |
+| `GEMINI_API_KEY` | notify | Google AI Studio key (`AQ.…`); model `gemini-2.5-flash` |
+| `CRM_WEBHOOK_URL` | stripe-webhook | CRM Apps Script bare `/exec` URL (Engagement Spine) |
+| `CRM_WEBHOOK_SECRET` | stripe-webhook | CRM secret — sent in the POST **body** as `_secret` |
+| `CRM_WEBHOOK_ACTION` | optional | CRM action name (default `stripePaid`) |
 
-```sh
-cp reference/axius-secrets.example.jsx reference/axius-secrets.local.jsx
-# edit reference/axius-secrets.local.jsx and fill in your real values
-```
+Env-var changes require a **redeploy** to take effect on the live functions.
 
-`index.html` loads `axius-secrets.local.jsx` BEFORE `axius-shared.jsx`. The merge block at the bottom of `axius-shared.jsx` copies the values from `window.AxiusSecrets` into `window.AxiusConfig` at runtime.
+## Engagement Spine (website's role)
 
-If `axius-secrets.local.jsx` is missing the page still loads — the Telegram integration just stays inert (placeholder credentials in `AxiusConfig`).
+On `checkout.session.completed`, `stripe-webhook.js` reads the **Engagement ID** from Stripe's `client_reference_id` and POSTs it to the CRM (`?action=stripePaid`, secret in the body as `_secret`) so the matching lead advances toward Gate A — **matched by ID; company name is only a human label.** The CRM must (a) expose a non-admin, secret-authed `stripePaid` handler, and (b) append `?client_reference_id=<engagementId>` to the checkout link it sends a won lead. Stripe Payment Links / Prices / coupons are catalogued separately (Stripe infra notes).
 
-## Telegram setup (one-time)
+## Deploy
 
-The Ring flow assumes a forum-style supergroup with `@AxiusDispatch_Bot` promoted to admin and "Manage Topics" enabled. Each visitor's ring creates a fresh topic in the group.
-
-For full setup notes (group creation, bot promotion, topics enablement), see the conversation history with the design assistant.
-
-## Copy
-
-The full Quiet 0.5 site copy — every visible string in both English and Spanish — lives in `QUIET-05-COPY.md`, organized in the order a visitor reads the page.
-
-## Branch / commit conventions
-
-Direct commits to `main` are fine. Production is deployed automatically on push to `main` via Vercel's GitHub integration.
+Direct commits to `main` are fine; **push to `main` = production deploy** via Vercel's GitHub integration.
