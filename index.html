@@ -842,9 +842,11 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   /* hero */
   .open .meta-top { display: none; }
   .open h1 { font-size: clamp(34px, 8.6vw, 54px); line-height: 1.05; }
-  /* the rotating words ("integrations." etc.) are long — let line 2 wrap
-     instead of overflowing the viewport on small screens */
+  /* both hero lines share one size; only the rotating word is nudged down
+     a touch so the long ones ("integrations." etc.) keep clear of the
+     margins. Let line 2 wrap rather than overflow on very small screens. */
   .open h1 .it { white-space: normal; }
+  .open h1 .it .txt { font-size: .85em; }
   .open .floor { grid-template-columns: 1fr; gap: 22px; padding: 28px 0 32px; margin-top: 34px; }
   .open .floor .cell p { max-width: none; }
   .scrollcue { display: none; }
@@ -878,11 +880,9 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 }
 
 @media (max-width: 460px) {
-  .open h1 { font-size: clamp(27px, 8.2vw, 36px); }
-  /* line 1 ("Run your business.") is short — scale it up to match the
-     section titles; line 2 ("Not your …") stays smaller so the long
-     rotating words still fit on one line */
-  .open h1 .l1 { font-size: clamp(29px, 9.4vw, 41px); line-height: 1; }
+  /* both lines at the section-title size; the rotating word shrink above
+     (.it .txt) keeps the long words off the margins */
+  .open h1 { font-size: clamp(29px, 9.4vw, 41px); line-height: 1.04; }
   .h2 { font-size: clamp(29px, 9.4vw, 40px); }
   .manifesto .mtext { font-size: clamp(23px, 7.2vw, 32px); }
   .index .big { font-size: clamp(52px, 19vw, 78px); }
@@ -1080,7 +1080,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       </div>
       <div class="gcell" style="--m:76%">
         <span class="no">No. 06</span>
-        <h3>Custom</h3>
+        <h3>Executive</h3>
         <span class="ct">16 workflows</span>
         <span class="xtra">
           <span class="xl"><span class="wn">Internal tools</span><span class="im">live in weeks</span></span>
@@ -1506,23 +1506,33 @@ cue.addEventListener('click', () => {
       acc = 0; activate(); spawn(x, y, 1);
     }, { passive: true });
   } else {
-    // ── mobile: the portfolio plays on its own — a work shot drifts in
-    //    every ~1.3s into the band ABOVE the headline while the hero is
-    //    in view, so it never sits over the title (mirrors how the
-    //    desktop trail stays clear of it). Swipe summons extra cards. ──
+    // ── mobile: the portfolio plays on its own — every couple of seconds
+    //    a short "slide" drags a run of work shots across the band ABOVE
+    //    the headline (as if a finger swept it), then they fade. Always
+    //    clear of the title (mirrors the desktop trail). Swipe adds more. ──
     const inView = () => !document.hidden && scrollY < innerHeight * 0.85;
     // lowest a card's CENTRE may sit so the whole card clears the title
     const ceilFor = (cardH) => (h1El.getBoundingClientRect().top - hero.getBoundingClientRect().top) - 18 - cardH / 2;
-    const autoSpawn = () => {
-      if (!inView() || live >= 5) return;
-      const lo = 140, hi = ceilFor(Math.round(324 * 0.58)); // 324 = tallest (portrait) card
-      if (hi <= lo) return;                                 // no room above the title — skip this tick
-      const margin = 96, vw = innerWidth;
-      const x = margin + Math.random() * Math.max(40, vw - margin * 2);
-      const y = lo + Math.random() * (hi - lo);
-      spawn(x, y, 0.58);
+    const SWEEP_SCALE = 0.5;
+    const sweep = () => {
+      if (!inView()) return;
+      const lo = 130, hi = ceilFor(Math.round(324 * SWEEP_SCALE)); // 324 = tallest (portrait) card
+      if (hi <= lo) return;                                        // no room above the title — skip
+      const vw = innerWidth, margin = 84, span = Math.max(60, vw - margin * 2);
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      const x0 = dir > 0 ? margin : vw - margin;
+      const baseY = lo + Math.random() * (hi - lo);
+      const n = 4 + Math.floor(Math.random() * 2);               // 4–5 cards per slide
+      for (let i = 0; i < n; i++) {
+        setTimeout(() => {
+          if (!inView() || live >= 7) return;
+          const x = x0 + dir * (i / (n - 1)) * span;             // travels across the hero
+          const y = baseY + (Math.random() * 36 - 18);          // gentle wobble along the path
+          spawn(x, y, SWEEP_SCALE);
+        }, i * 95);                                              // quick succession → a slide, not one-at-a-time
+      }
     };
-    setTimeout(() => { autoSpawn(); setInterval(autoSpawn, 1300); }, 1100);
+    setTimeout(function loop() { sweep(); setTimeout(loop, 2200); }, 1000);
     // swipe still works — but, like desktop, only while clear of the title
     let lx = 0, ly = 0, acc = 0, tracking = false, horiz = false;
     hero.addEventListener('touchstart', (e) => {
