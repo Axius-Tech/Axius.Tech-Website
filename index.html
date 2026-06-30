@@ -280,8 +280,8 @@ a { color: inherit; }
 }
 .tr-card {
   position: absolute; pointer-events: none; will-change: transform, opacity;
-  opacity: 0; transform: scale(.85) translateY(6px);
-  transition: opacity .35s var(--ease), transform .45s var(--ease);
+  opacity: 0; transform: scale(.92) translateY(5px);
+  transition: opacity .5s var(--ease), transform .65s var(--ease);
   border-radius: 7px; overflow: hidden; object-fit: cover; object-position: top center;
   background: var(--ivory-2);
   box-shadow: 0 18px 50px -12px rgba(22,20,15,.34), 0 0 0 1px rgba(22,20,15,.07);
@@ -842,11 +842,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   /* hero */
   .open .meta-top { display: none; }
   .open h1 { font-size: clamp(34px, 8.6vw, 54px); line-height: 1.05; }
-  /* both hero lines share one size; only the rotating word is nudged down
-     a touch so the long ones ("integrations." etc.) keep clear of the
-     margins. Let line 2 wrap rather than overflow on very small screens. */
+  /* both hero lines share one size; the rotating word is sized per-word in
+     JS (fitFlip) — only the ones that would run past the margin shrink, the
+     rest (e.g. "systems.") stay congruent. Wrapping is a last-resort fallback. */
   .open h1 .it { white-space: normal; }
-  .open h1 .it .txt { font-size: .85em; }
   .open .floor { grid-template-columns: 1fr; gap: 22px; padding: 28px 0 32px; margin-top: 34px; }
   .open .floor .cell p { max-width: none; }
   .scrollcue { display: none; }
@@ -880,8 +879,8 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 }
 
 @media (max-width: 460px) {
-  /* both lines at the section-title size; the rotating word shrink above
-     (.it .txt) keeps the long words off the margins */
+  /* both lines at the section-title size; long rotating words are shrunk
+     to fit per-word in JS (fitFlip), short ones stay congruent */
   .open h1 { font-size: clamp(29px, 9.4vw, 41px); line-height: 1.04; }
   .h2 { font-size: clamp(29px, 9.4vw, 40px); }
   .manifesto .mtext { font-size: clamp(23px, 7.2vw, 32px); }
@@ -1412,13 +1411,40 @@ cue.addEventListener('click', () => {
   if (!el) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const WORDS = ['technology.', 'systems.', 'software.', 'automations.', 'integrations.'];
+
+  // Keep the rotating word congruent with "Not your"; only scale down the
+  // words that would run past the margin, and only just enough to fit one
+  // line. Measured per word against the live line width, so "systems." etc.
+  // stay full size while "integrations." shrinks to fit.
+  const it = el.parentNode;
+  const fitFlip = (word) => {
+    // mobile only — the desktop hero keeps its full display size (unchanged)
+    if (!matchMedia('(max-width: 760px)').matches) { el.style.fontSize = ''; return; }
+    const h1 = el.closest('h1');
+    if (!h1) return;
+    const savedText = el.textContent, savedWS = it.style.whiteSpace;
+    el.style.fontSize = '';                      // measure at full (inherited) size
+    it.style.whiteSpace = 'nowrap';
+    el.textContent = word;
+    const avail = h1.clientWidth;
+    const lineW = it.getBoundingClientRect().width;
+    let fs = '';
+    if (avail > 0 && lineW > avail) {
+      const wordW = el.getBoundingClientRect().width || 1;
+      fs = Math.max(0.55, (wordW - (lineW - avail) - 2) / wordW).toFixed(3) + 'em';
+    }
+    it.style.whiteSpace = savedWS;
+    el.textContent = savedText;
+    el.style.fontSize = fs;                       // '' = congruent full size · em = shrunk to fit
+  };
+
   let wi = 0, ci = WORDS[0].length, deleting = true;
   const tick = () => {
     const word = WORDS[wi];
     if (deleting) {
       ci--;
       el.textContent = word.slice(0, ci);
-      if (ci <= 0) { deleting = false; wi = (wi + 1) % WORDS.length; return setTimeout(tick, 260); }
+      if (ci <= 0) { deleting = false; wi = (wi + 1) % WORDS.length; fitFlip(WORDS[wi]); return setTimeout(tick, 260); }
       setTimeout(tick, 40);
     } else {
       ci++;
@@ -1427,6 +1453,8 @@ cue.addEventListener('click', () => {
       setTimeout(tick, 72);
     }
   };
+  fitFlip(WORDS[wi]);                              // size the initial word
+  addEventListener('resize', () => fitFlip(WORDS[wi]), { passive: true });
   setTimeout(tick, 2000);
 })();
 
@@ -1513,26 +1541,29 @@ cue.addEventListener('click', () => {
     const inView = () => !document.hidden && scrollY < innerHeight * 0.85;
     // lowest a card's CENTRE may sit so the whole card clears the title
     const ceilFor = (cardH) => (h1El.getBoundingClientRect().top - hero.getBoundingClientRect().top) - 18 - cardH / 2;
-    const SWEEP_SCALE = 0.5;
+    const SWEEP_SCALE = 0.48;
+    const ease = (p) => p * p * (3 - 2 * p);                      // smoothstep — natural accel/decel
     const sweep = () => {
       if (!inView()) return;
-      const lo = 130, hi = ceilFor(Math.round(324 * SWEEP_SCALE)); // 324 = tallest (portrait) card
+      const lo = 128, hi = ceilFor(Math.round(324 * SWEEP_SCALE)); // 324 = tallest (portrait) card
       if (hi <= lo) return;                                        // no room above the title — skip
-      const vw = innerWidth, margin = 84, span = Math.max(60, vw - margin * 2);
+      const vw = innerWidth, margin = 80, span = Math.max(60, vw - margin * 2);
       const dir = Math.random() < 0.5 ? 1 : -1;
       const x0 = dir > 0 ? margin : vw - margin;
       const baseY = lo + Math.random() * (hi - lo);
-      const n = 4 + Math.floor(Math.random() * 2);               // 4–5 cards per slide
+      const slope = Math.random() * 26 - 13;                     // gentle overall tilt to the slide
+      const n = 7;                                                // a fuller, continuous trail
       for (let i = 0; i < n; i++) {
         setTimeout(() => {
-          if (!inView() || live >= 7) return;
-          const x = x0 + dir * (i / (n - 1)) * span;             // travels across the hero
-          const y = baseY + (Math.random() * 36 - 18);          // gentle wobble along the path
+          if (!inView() || live >= 8) return;
+          const p = i / (n - 1);
+          const x = x0 + dir * ease(p) * span;                   // eased position → finger speeds up then slows
+          const y = baseY + slope * p + (Math.random() * 10 - 5);
           spawn(x, y, SWEEP_SCALE);
-        }, i * 95);                                              // quick succession → a slide, not one-at-a-time
+        }, i * 78);                                              // even cadence → a smooth glide, not a burst
       }
     };
-    setTimeout(function loop() { sweep(); setTimeout(loop, 2200); }, 1000);
+    setTimeout(function loop() { sweep(); setTimeout(loop, 1600); }, 900);
     // swipe still works — but, like desktop, only while clear of the title
     let lx = 0, ly = 0, acc = 0, tracking = false, horiz = false;
     hero.addEventListener('touchstart', (e) => {
