@@ -44,7 +44,7 @@ Receives Stripe webhook events, verifies the signature, posts a notification to 
 
 | Stripe event | Telegram message |
 |---|---|
-| `checkout.session.completed` | 🟢 **New subscriber** — Axius **Team**, company, email, phone, first-invoice amount, onboarding cue |
+| `checkout.session.completed` | 🟢 **New subscriber** — Axius **Team**, Engagement ID (if present), company, email, phone, first-invoice amount, onboarding cue |
 | `invoice.paid` (renewals only) | 💸 **Renewal paid** — tier, customer, amount |
 | `invoice.payment_failed` | ⚠️ **Payment failed** — tier, customer, amount due, reach-out reminder |
 | `customer.subscription.deleted` | 🔴 **Subscription canceled** — tier, customer id, last billing date |

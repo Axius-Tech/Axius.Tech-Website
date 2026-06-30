@@ -22,6 +22,7 @@ Axius.Tech-Website/
 ├── 404.html · robots.txt · sitemap.xml · favicon*
 ├── assets/
 │   ├── og-share.jpg        link-preview card
+│   ├── andres-toro*.jpg    operator photos (operator section; -square is for the email signature)
 │   └── trail/              hero portfolio shots
 ├── api/                    Vercel serverless functions (see api/README.md)
 │   ├── stripe-webhook.js   Stripe events → Telegram + CRM notify (Engagement Spine)
