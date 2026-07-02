@@ -2,20 +2,26 @@
 // Website signals → Telegram dispatch  (Vercel serverless function)
 // =============================================================
 //
-// Fires a real-time Telegram ping for high-signal moments on the site:
-//   • visit          — a new visitor lands (deduped client-side per session)
+// Fires a Telegram ping (and forwards to the CRM) for signal moments:
+//   • visit          — a visitor lands (real-time; shows new vs returning)
 //   • checkout_start — a visitor clicks through to Stripe / books a call
+//   • visit_summary  — on leave: time on site, visit #, sections viewed,
+//                      scroll depth, and behaviour (chat / pricing / intent)
 //
-// Each ping is optionally enriched by Gemini with a one-line "read" of
-// what the visitor likely wants and the best next move.
+// Each ping is optionally enriched by Gemini with a one-line "read" of what
+// the visitor likely wants and the best next move. This is real-time
+// operational insight for the team only — it goes to Telegram, NOT the CRM.
+// (The CRM only hears from the site on an actual purchase, via the Stripe
+// webhook, where real identity + payment exist.)
 //
-// Cookieless: no cookies are set or read. Geo comes from Vercel's edge
-// headers; the visitor only sends the path + referrer. Consistent with
-// the site's "deliberately minimal, no tracking cookies" privacy stance.
+// No cookies are set. Visit count / behaviour rides on the anonymous id the
+// client keeps in localStorage (first-party only, never shared). Geo comes
+// from Vercel's edge headers.
 //
 // Env vars (reuses the same Telegram bot as the chat + Stripe flows):
 //   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_THREAD_ID (optional)
-//   GEMINI_API_KEY  (optional — without it, pings still send, just no AI line)
+//   GEMINI_API_KEY       (optional — without it, pings still send, no AI line)
+//   NOTIFY_EXCLUDE_IPS   (optional — comma-separated IPs to mute, e.g. operator)
 //
 // Zero external dependencies — built-in `https` only.
 // =============================================================
@@ -111,6 +117,13 @@ module.exports = async function handler(req, res) {
   try { data = JSON.parse(raw || '{}'); } catch (e) { data = {}; }
   if (data.website) { res.statusCode = 200; return res.end(JSON.stringify({ ok: true })); } // honeypot
 
+  // Optional IP mute — drop signals from excluded IPs (e.g. the operator's own
+  // machine) so testing never skews the data. Set NOTIFY_EXCLUDE_IPS on Vercel
+  // to a comma-separated list; inert if unset.
+  const clientIp = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || String(req.headers['x-real-ip'] || '');
+  const excludedIps = (process.env.NOTIFY_EXCLUDE_IPS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (clientIp && excludedIps.includes(clientIp)) { res.statusCode = 200; return res.end(JSON.stringify({ ok: true, muted: true })); }
+
   const type = String(data.type || '').slice(0, 40);
   const dec = (v) => { try { return decodeURIComponent(v); } catch (e) { return v; } };
   const geo = [req.headers['x-vercel-ip-city'], req.headers['x-vercel-ip-country-region'], req.headers['x-vercel-ip-country']]
@@ -118,27 +131,60 @@ module.exports = async function handler(req, res) {
   const path = plain(data.path || '/').slice(0, 160);
   const ref = data.ref ? plain(data.ref) : 'direct';
   const utm = data.utm ? plain(data.utm).slice(0, 160) : '';
+  const visit = Math.max(1, parseInt(data.visit, 10) || 1);
+  const returning = visit > 1;
+  const firstSeen = data.firstSeen ? plain(data.firstSeen).slice(0, 12) : '';
+  const vidShort = data.visitorId ? plain(data.visitorId).slice(0, 24) : '';
 
-  let header, label, facts;
+  let header, label, facts, lines;
+
   if (type === 'checkout_start') {
     const tier = plain(data.tier || 'a plan').slice(0, 80);
     header = `🟢 <b>High-intent click — ${esc(tier)}</b>`;
-    label = `Visitor clicked through to buy / book: "${tier}"`;
-    facts = `Action: ${tier}\nLocation: ${geo}\nPage: ${path}\nReferrer: ${ref}${utm ? `\nUTM: ${utm}` : ''}`;
+    label = `Visitor (visit #${visit}${returning ? ', returning' : ''}) clicked through to buy / book: "${tier}"`;
+    facts = `Action: ${tier}\nVisit #: ${visit}${returning ? ' (returning)' : ''}\nLocation: ${geo}\nPage: ${path}\nReferrer: ${ref}`;
+    lines = [header, '', `🔢 Visit #${visit}${returning ? ' · returning' : ''}`, `📍 ${esc(geo)}`, `🔗 ${esc(ref)}`, `📄 ${esc(path)}`];
+    if (utm) lines.push(`🏷️ ${esc(utm)}`);
   } else if (type === 'visit') {
-    header = `👀 <b>New visitor</b>`;
-    label = 'A new visitor landed on the site';
-    facts = `Location: ${geo}\nLanded on: ${path}\nReferrer: ${ref}${utm ? `\nUTM: ${utm}` : ''}`;
+    header = returning ? `🔁 <b>Returning visitor · visit #${visit}</b>` : `👀 <b>New visitor</b>`;
+    label = returning
+      ? `A returning visitor (visit #${visit}, first seen ${firstSeen || 'unknown'}) just landed.`
+      : 'A brand-new visitor just landed on the site.';
+    facts = `Visit #: ${visit}${returning ? ` (first seen ${firstSeen})` : ' (first visit)'}\nLocation: ${geo}\nLanded on: ${path}\nReferrer: ${ref}${utm ? `\nUTM: ${utm}` : ''}`;
+    lines = [header, ''];
+    if (returning) lines.push(`🔢 Visit #${visit} · first seen ${esc(firstSeen || '?')}`);
+    lines.push(`📍 ${esc(geo)}`, `🔗 ${esc(ref)}`, `📄 ${esc(path)}`);
+    if (utm) lines.push(`🏷️ ${esc(utm)}`);
+  } else if (type === 'visit_summary') {
+    const seconds = Math.max(0, parseInt(data.seconds, 10) || 0);
+    const mmss = `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+    const depth = Math.max(0, Math.min(100, parseInt(data.scrollDepth, 10) || 0));
+    const sections = Array.isArray(data.sections) ? data.sections.map((s) => plain(s).slice(0, 20)).slice(0, 8) : [];
+    const beh = [];
+    if (data.viewedPricing) beh.push('viewed Pricing');
+    if (data.openedChat) beh.push('opened chat');
+    if (data.clickedIntent) beh.push('clicked to buy/book');
+    const behText = beh.length ? beh.join(', ') : 'passive browse';
+    header = `📋 <b>Visit summary${returning ? ` · visit #${visit}` : ''}</b>`;
+    label = `A visitor just left. On site ${mmss}; scrolled ${depth}%; sections seen: ${sections.join(', ') || 'none'}; behaviour: ${behText}; visit #${visit}${returning ? ' (returning)' : ''}.`;
+    facts = label;
+    lines = [header, '',
+      `⏱️ On site: ${mmss}`,
+      `📜 Scrolled: ${depth}%`,
+      `🧭 Sections: ${esc(sections.join(' · ') || '—')}`,
+      `⚡ ${esc(behText)}`,
+      `🔢 Visit #${visit}`,
+      `📍 ${esc(geo)}`,
+    ];
   } else {
     res.statusCode = 200; return res.end(JSON.stringify({ ok: true, dropped: 'unknown type' }));
   }
 
   const ai = await geminiRead(label, facts);
-
-  const lines = [header, '', `📍 ${esc(geo)}`, `🔗 ${esc(ref)}`, `📄 ${esc(path)}`];
-  if (utm) lines.push(`🏷️ ${esc(utm)}`);
+  if (vidShort) lines.push(`🆔 ${esc(vidShort)}`);
   if (ai) lines.push('', `🤖 <i>${esc(ai)}</i>`);
 
+  // send the heads-up to the team (Telegram only — no CRM)
   await sendTelegram(lines.join('\n'));
   res.statusCode = 200; return res.end(JSON.stringify({ ok: true }));
 };

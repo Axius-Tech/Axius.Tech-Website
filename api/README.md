@@ -8,9 +8,11 @@ Three functions, all cookieless, all dispatching to the same @AxiusDispatch_Bot 
 |---|---|---|
 | `stripe-webhook.js` | Stripe webhook events | Telegram alert + (on checkout) notifies the CRM by Engagement ID |
 | `lead.js` | on-page chat submit (`POST /api/lead`) | Forwards the message to Telegram (honeypot + size guards) |
-| `notify.js` | client beacons (`POST /api/notify`) | `visit` + `checkout_start` pings to Telegram, each enriched with a one-line **Gemini 2.5 Flash** read |
+| `notify.js` | client beacons (`POST /api/notify`) | `visit` (new/returning), `checkout_start`, and `visit_summary` (time on site · sections · scroll · behaviour) → Telegram, each with a one-line **Gemini 2.5 Flash** read. Team insight only — never the CRM. |
 
-Env vars across the three: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_THREAD_ID` (opt.), `STRIPE_WEBHOOK_SECRET`, `GEMINI_API_KEY`, `CRM_WEBHOOK_URL`, `CRM_WEBHOOK_SECRET`, `CRM_WEBHOOK_ACTION` (opt.). See the root `README.md` for the full table.
+Env vars across the three: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_THREAD_ID` (opt.), `STRIPE_WEBHOOK_SECRET`, `GEMINI_API_KEY`, `NOTIFY_EXCLUDE_IPS` (opt.), `CRM_WEBHOOK_URL`, `CRM_WEBHOOK_SECRET`, `CRM_WEBHOOK_ACTION` (opt.). See the root `README.md` for the full table.
+
+**Own-device opt-out:** open `axius.tech/?notrack` to mute a browser (stored in `localStorage`; `?dotrack` undoes it), or set `NOTIFY_EXCLUDE_IPS` to your **public** IP to mute a whole machine. Keeps operator testing out of the data.
 
 ## `stripe-webhook.js`
 
