@@ -2,10 +2,12 @@
 // Website signals → Telegram dispatch  (Vercel serverless function)
 // =============================================================
 //
-// Fires a Telegram ping (and forwards to the CRM) for signal moments:
-//   • visit          — a visitor lands (real-time; shows new vs returning)
+// Fires a Telegram ping for genuine, ENGAGED visits only — the client sends
+// nothing until the visitor actually scrolls / interacts, and this function
+// drops bots, monitors, crawlers, prefetches, and empty user-agents. Events:
+//   • visit          — an engaged visitor (real-time; new vs returning)
 //   • checkout_start — a visitor clicks through to Stripe / books a call
-//   • visit_summary  — on leave: time on site, visit #, sections viewed,
+//   • visit_summary  — on leave: ACTIVE time, visit #, sections viewed,
 //                      scroll depth, and behaviour (chat / pricing / intent)
 //
 // Each ping is optionally enriched by Gemini with a one-line "read" of what
@@ -123,6 +125,13 @@ module.exports = async function handler(req, res) {
   const clientIp = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || String(req.headers['x-real-ip'] || '');
   const excludedIps = (process.env.NOTIFY_EXCLUDE_IPS || '').split(',').map((s) => s.trim()).filter(Boolean);
   if (clientIp && excludedIps.includes(clientIp)) { res.statusCode = 200; return res.end(JSON.stringify({ ok: true, muted: true })); }
+
+  // Bot / monitor / crawler / prefetch backstop (on top of the client "must
+  // scroll" gate — catches headless agents that do scroll, and empty UAs).
+  const ua = String(req.headers['user-agent'] || '').toLowerCase();
+  const isBot = /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|quora|whatsapp|telegram|slackbot|discord|linkedin|headless|phantom|puppeteer|playwright|selenium|lighthouse|gtmetrix|pingdom|uptime|statuscake|monitor|vercel|prerender|scan|http-client|curl|wget|python|axios|okhttp|go-http|java\/|libwww|apache-httpclient/i.test(ua);
+  const isPrefetch = req.headers.purpose === 'prefetch' || req.headers['sec-purpose'] === 'prefetch' || !!req.headers['x-purpose'] || req.headers['x-moz'] === 'prefetch' || !!req.headers['x-middleware-prefetch'];
+  if (!ua || isBot || isPrefetch) { res.statusCode = 200; return res.end(JSON.stringify({ ok: true, filtered: 'bot/prefetch' })); }
 
   const type = String(data.type || '').slice(0, 40);
   const dec = (v) => { try { return decodeURIComponent(v); } catch (e) { return v; } };

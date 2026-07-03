@@ -1928,10 +1928,13 @@ if (progress) {
   addEventListener('scroll', notify, { passive: true });
 })();
 
-/* ── dispatch beacons → /api/notify. No cookies are set. An anonymous id
-     + visit count persist in localStorage so the team's heads-up can show
-     returning visitors and behaviour (time on site, sections viewed, scroll
-     depth, chat/checkout intent). First-party only; never shared, never ads.
+/* ── dispatch beacons → /api/notify. Only fires once a visitor GENUINELY
+     ENGAGES — actually scrolls into content (or clicks a CTA / opens chat) —
+     so bots, prefetches, uptime monitors, and idle "left it open" tabs (which
+     never scroll) are excluded by design. Reports ACTIVE time only (paused
+     when the tab is hidden or idle), never wall-clock. No cookies; an anonymous
+     id + engaged-visit count live in localStorage (first-party, never shared/
+     ads). Muted on non-production hosts and for opted-out browsers.
      Fire-and-forget — never blocks or errors the UI. ── */
 (function () {
   // ── operator opt-out: mute THIS browser from all tracking + alerts, so
@@ -1944,78 +1947,101 @@ if (progress) {
     if (localStorage.getItem('ax_optout') === '1') return; // muted — no id, no counting, no beacons
   } catch (e) {}
 
+  // only genuine production traffic counts — Vercel previews (*.vercel.app) are muted
+  const host = location.hostname;
+  const ALLOW = /(^|\.)axius\.tech$/i.test(host) || host === 'localhost' || host === '127.0.0.1';
   const send = (payload, leaving) => {
+    if (!ALLOW) return;
     try {
       const body = JSON.stringify(payload);
-      if (leaving && navigator.sendBeacon) {
-        navigator.sendBeacon('/api/notify', new Blob([body], { type: 'application/json' }));
-      } else {
-        fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
-      }
+      if (leaving && navigator.sendBeacon) navigator.sendBeacon('/api/notify', new Blob([body], { type: 'application/json' }));
+      else fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
     } catch (e) {}
   };
 
-  // anonymous visitor id + visit count (localStorage; safe if storage is blocked)
-  let vid = '', visit = 1, firstSeen = '';
-  try {
-    vid = localStorage.getItem('ax_vid') || '';
-    if (!vid) { vid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); localStorage.setItem('ax_vid', vid); }
-    visit = (parseInt(localStorage.getItem('ax_visits') || '0', 10) || 0) + 1;
-    localStorage.setItem('ax_visits', String(visit));
-    firstSeen = localStorage.getItem('ax_first') || '';
-    if (!firstSeen) { firstSeen = new Date().toISOString().slice(0, 10); localStorage.setItem('ax_first', firstSeen); }
-  } catch (e) {}
+  // anonymous id + first-seen (loaded now; the visit count only bumps once ENGAGED)
+  let vid = '', firstSeen = '', visit = 1;
+  try { vid = localStorage.getItem('ax_vid') || ''; firstSeen = localStorage.getItem('ax_first') || ''; } catch (e) {}
 
-  // behaviour gathered over the session
-  const t0 = Date.now();
   const SEC = { top: 'Hero', why: 'Why', run: 'What we own', method: 'Method', terms: 'Pricing', proof: 'Practice', operator: 'Operator', begin: 'Begin' };
   const seen = new Set();
   let maxScroll = 0;
   const flags = { chat: false, pricing: false, intent: false };
-  try {
-    const io = new IntersectionObserver((es) => es.forEach((en) => {
-      if (en.isIntersecting && en.target.id) { seen.add(en.target.id); if (en.target.id === 'terms') flags.pricing = true; }
-    }), { threshold: 0.4 });
-    document.querySelectorAll('section[id]').forEach((s) => io.observe(s));
-  } catch (e) {}
+  let engaged = false, arrived = false;
+
+  // ── active time: only accrues while the tab is visible AND the visitor has
+  //    been active in the last 30s, so a tab left open (or a bot holding the
+  //    page) never inflates the time-on-site figure ──
+  let activeMs = 0, lastTick = Date.now(), lastAct = Date.now();
+  const bump = () => { lastAct = Date.now(); };
+  setInterval(() => {
+    const now = Date.now();
+    if (document.visibilityState === 'visible' && (now - lastAct) < 30000) activeMs += now - lastTick;
+    lastTick = now;
+  }, 1000);
+  addEventListener('visibilitychange', () => { lastTick = Date.now(); if (document.visibilityState === 'visible') lastAct = Date.now(); });
+  ['pointerdown', 'keydown', 'touchstart', 'mousemove'].forEach((ev) => addEventListener(ev, bump, { passive: true }));
+
+  // ── ENGAGEMENT = the visitor actually scrolled into real content (or clicked
+  //    a CTA / opened chat). NOTHING is counted or sent until this fires — so
+  //    bots, prefetches, monitors, and idle "left it open" tabs are excluded.
+  //    Deduped per browser session so a reload doesn't re-count. ──
+  const markEngaged = () => {
+    if (engaged) return;
+    engaged = true;
+    let firstOfSession = true;
+    try { firstOfSession = !sessionStorage.getItem('ax_seen'); sessionStorage.setItem('ax_seen', '1'); } catch (e) {}
+    if (!firstOfSession) { try { visit = parseInt(localStorage.getItem('ax_visits') || '1', 10) || 1; } catch (e) {} return; }
+    try {
+      if (!vid) { vid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); localStorage.setItem('ax_vid', vid); }
+      visit = (parseInt(localStorage.getItem('ax_visits') || '0', 10) || 0) + 1;
+      localStorage.setItem('ax_visits', String(visit));
+      if (!firstSeen) { firstSeen = new Date().toISOString().slice(0, 10); localStorage.setItem('ax_first', firstSeen); }
+    } catch (e) {}
+    arrived = true;
+    send({ type: 'visit', visitorId: vid, visit, firstSeen,
+      path: location.pathname + location.hash, ref: document.referrer || '', utm: location.search || '' }, false);
+  };
+
   addEventListener('scroll', () => {
+    bump();
     const d = document.documentElement;
     const pct = Math.round(((scrollY + innerHeight) / (d.scrollHeight || 1)) * 100);
     if (pct > maxScroll) maxScroll = Math.min(100, pct);
+    if (scrollY > Math.min(400, innerHeight * 0.6)) markEngaged();   // scrolled past the hero → real scroll
   }, { passive: true });
 
-  // arrival — once per session (real-time heads-up)
   try {
-    if (!sessionStorage.getItem('ax_seen')) {
-      sessionStorage.setItem('ax_seen', '1');
-      send({ type: 'visit', visitorId: vid, visit, firstSeen,
-        path: location.pathname + location.hash, ref: document.referrer || '', utm: location.search || '' }, false);
-    }
+    const io = new IntersectionObserver((es) => es.forEach((en) => {
+      if (en.isIntersecting && en.target.id) {
+        seen.add(en.target.id);
+        if (en.target.id === 'terms') flags.pricing = true;
+        if (en.target.id !== 'top') markEngaged();   // reached a section below the hero
+      }
+    }), { threshold: 0.4 });
+    document.querySelectorAll('section[id]').forEach((s) => io.observe(s));
   } catch (e) {}
 
-  // high-intent (buy/book) + chat-open tracking
+  // high-intent (buy/book) + chat = engagement too
   document.addEventListener('click', (e) => {
     const a = e.target.closest && e.target.closest('a[href]');
     if (a) {
       const href = a.getAttribute('href') || '';
       if (/buy\.stripe\.com|cal\.com/.test(href)) {
-        flags.intent = true;
+        flags.intent = true; markEngaged();
         const label = (a.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60);
         send({ type: 'checkout_start', visitorId: vid, visit, tier: label || href, path: location.pathname + location.hash }, true);
       }
     }
-    if (e.target.closest && e.target.closest('#fab')) flags.chat = true;
+    if (e.target.closest && e.target.closest('#fab')) { flags.chat = true; markEngaged(); }
   }, true);
 
-  // departure summary — once, on leave; skipped for instant bounces already
-  // covered by the arrival ping
+  // departure summary — only for engaged, first-of-session visits; ACTIVE time
   let sent = false;
   const summary = () => {
-    if (sent) return;
-    const seconds = Math.round((Date.now() - t0) / 1000);
-    if (seconds < 8 && seen.size <= 1 && !flags.chat && !flags.intent) return;
+    if (sent || !arrived) return;
     sent = true;
-    send({ type: 'visit_summary', visitorId: vid, visit, seconds, scrollDepth: maxScroll,
+    send({ type: 'visit_summary', visitorId: vid, visit, seconds: Math.round(activeMs / 1000), scrollDepth: maxScroll,
       sections: [...seen].map((id) => SEC[id] || id),
       openedChat: flags.chat, viewedPricing: flags.pricing, clickedIntent: flags.intent,
       path: location.pathname }, true);
