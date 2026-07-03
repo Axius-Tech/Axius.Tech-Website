@@ -107,6 +107,48 @@ function readBody(req, cap) {
   });
 }
 
+// ── Source hygiene: a messy referrer / UTM → one clean bucket ──
+function classifySource(ref, utm) {
+  let params; try { params = new URLSearchParams(utm || ''); } catch (e) { params = new URLSearchParams(); }
+  const us = (params.get('utm_source') || '').toLowerCase();
+  const um = (params.get('utm_medium') || '').toLowerCase();
+  if (um === 'cpc' || um === 'ppc' || /paid|^ads?$/.test(um) || /ads|adwords/.test(us)) return { source: 'Paid', detail: us || um };
+  if (um === 'email' || /mail|newsletter/.test(us)) return { source: 'Email', detail: us || 'email' };
+  if (us) {
+    if (/linkedin|facebook|instagram|twitter|tiktok|youtube|reddit|threads|pinterest/.test(us)) return { source: 'Social', detail: us };
+    if (/google|bing|duckduck|yahoo|ecosia/.test(us)) return { source: 'Search', detail: us };
+    return { source: 'Referral', detail: us };
+  }
+  const raw = String(ref || '').toLowerCase();
+  if (!raw || raw === 'direct') return { source: 'Direct', detail: '' };
+  let host = raw; try { host = new URL(ref).hostname.replace(/^www\./, ''); } catch (e) {}
+  if (/axius\.tech$/.test(host)) return { source: 'Direct', detail: 'internal' };
+  if (/google\.|bing\.|duckduckgo|yahoo\.|ecosia|brave\./.test(host)) return { source: 'Search', detail: host };
+  if (/linkedin|facebook|fb\.|instagram|t\.co|twitter|x\.com|tiktok|youtu|reddit|pinterest|threads/.test(host)) return { source: 'Social', detail: host };
+  if (/mail\.|gmail|outlook|proton\.me/.test(host) || host.indexOf('com.google.android.gm') === 0) return { source: 'Email', detail: host };
+  return { source: 'Referral', detail: host };
+}
+
+// ── Visit grade: Hot (chat / buy-book intent) · Interested (pricing or 30s+) · Engaged ──
+function gradeFor(type, data) {
+  if (type === 'checkout_start' || data.openedChat || data.clickedIntent) return 'Hot';
+  if (data.viewedPricing || (Number(data.seconds) || 0) >= 30) return 'Interested';
+  return 'Engaged';
+}
+
+// ── Datacenter / hosting-network check (real buyers rarely browse from cloud
+//    IPs). Free ip-api.com lookup; graceful — any failure returns false. ──
+function isHostingIp(ip) {
+  return new Promise((resolve) => {
+    const http = require('http');
+    const r = http.request({ hostname: 'ip-api.com', path: '/json/' + encodeURIComponent(ip) + '?fields=status,hosting,proxy', method: 'GET', timeout: 1500 },
+      (res) => { let b = ''; res.on('data', (c) => b += c); res.on('end', () => { try { const d = JSON.parse(b); resolve(d.status === 'success' && (d.hosting === true || d.proxy === true)); } catch (e) { resolve(false); } }); });
+    r.on('error', () => resolve(false));
+    r.on('timeout', () => { r.destroy(); resolve(false); });
+    r.end();
+  });
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   if (req.method !== 'POST') { res.statusCode = 405; return res.end(JSON.stringify({ ok: false })); }
@@ -133,6 +175,9 @@ module.exports = async function handler(req, res) {
   const isPrefetch = req.headers.purpose === 'prefetch' || req.headers['sec-purpose'] === 'prefetch' || !!req.headers['x-purpose'] || req.headers['x-moz'] === 'prefetch' || !!req.headers['x-middleware-prefetch'];
   if (!ua || isBot || isPrefetch) { res.statusCode = 200; return res.end(JSON.stringify({ ok: true, filtered: 'bot/prefetch' })); }
 
+  // Datacenter / hosting-IP backstop — catches cloud-based bots with real UAs.
+  if (clientIp && await isHostingIp(clientIp)) { res.statusCode = 200; return res.end(JSON.stringify({ ok: true, filtered: 'datacenter' })); }
+
   const type = String(data.type || '').slice(0, 40);
   const dec = (v) => { try { return decodeURIComponent(v); } catch (e) { return v; } };
   const geo = [req.headers['x-vercel-ip-city'], req.headers['x-vercel-ip-country-region'], req.headers['x-vercel-ip-country']]
@@ -145,25 +190,29 @@ module.exports = async function handler(req, res) {
   const firstSeen = data.firstSeen ? plain(data.firstSeen).slice(0, 12) : '';
   const vidShort = data.visitorId ? plain(data.visitorId).slice(0, 24) : '';
 
+  // source hygiene + visit grade
+  const src = classifySource(data.ref, data.utm);
+  const grade = gradeFor(type, data);
+  const gIcon = grade === 'Hot' ? '🔥' : grade === 'Interested' ? '🟠' : '🟢';
+  const srcLine = `🧭 ${esc(src.source)}${src.detail ? ` · ${esc(src.detail)}` : ''}`;
+
   let header, label, facts, lines;
 
   if (type === 'checkout_start') {
     const tier = plain(data.tier || 'a plan').slice(0, 80);
-    header = `🟢 <b>High-intent click — ${esc(tier)}</b>`;
-    label = `Visitor (visit #${visit}${returning ? ', returning' : ''}) clicked through to buy / book: "${tier}"`;
-    facts = `Action: ${tier}\nVisit #: ${visit}${returning ? ' (returning)' : ''}\nLocation: ${geo}\nPage: ${path}\nReferrer: ${ref}`;
-    lines = [header, '', `🔢 Visit #${visit}${returning ? ' · returning' : ''}`, `📍 ${esc(geo)}`, `🔗 ${esc(ref)}`, `📄 ${esc(path)}`];
-    if (utm) lines.push(`🏷️ ${esc(utm)}`);
+    header = `🔥 <b>Hot · clicked ${esc(tier)}</b>`;
+    label = `A visitor (visit #${visit}${returning ? ', returning' : ''}, source: ${src.source}) clicked through to buy / book: "${tier}".`;
+    facts = `Action: ${tier}\nVisit #: ${visit}${returning ? ' (returning)' : ''}\nSource: ${src.source}${src.detail ? ' (' + src.detail + ')' : ''}\nLocation: ${geo}\nPage: ${path}`;
+    lines = [header, '', `🔢 Visit #${visit}${returning ? ' · returning' : ''}`, srcLine, `📍 ${esc(geo)}`, `📄 ${esc(path)}`];
   } else if (type === 'visit') {
     header = returning ? `🔁 <b>Returning visitor · visit #${visit}</b>` : `👀 <b>New visitor</b>`;
     label = returning
-      ? `A returning visitor (visit #${visit}, first seen ${firstSeen || 'unknown'}) just landed.`
-      : 'A brand-new visitor just landed on the site.';
-    facts = `Visit #: ${visit}${returning ? ` (first seen ${firstSeen})` : ' (first visit)'}\nLocation: ${geo}\nLanded on: ${path}\nReferrer: ${ref}${utm ? `\nUTM: ${utm}` : ''}`;
+      ? `A returning visitor (visit #${visit}, first seen ${firstSeen || 'unknown'}, source: ${src.source}) just engaged.`
+      : `A new visitor (source: ${src.source}) just engaged with the site.`;
+    facts = `Visit #: ${visit}${returning ? ` (first seen ${firstSeen})` : ' (first visit)'}\nSource: ${src.source}${src.detail ? ' (' + src.detail + ')' : ''}\nLocation: ${geo}\nLanded on: ${path}`;
     lines = [header, ''];
     if (returning) lines.push(`🔢 Visit #${visit} · first seen ${esc(firstSeen || '?')}`);
-    lines.push(`📍 ${esc(geo)}`, `🔗 ${esc(ref)}`, `📄 ${esc(path)}`);
-    if (utm) lines.push(`🏷️ ${esc(utm)}`);
+    lines.push(srcLine, `📍 ${esc(geo)}`, `📄 ${esc(path)}`);
   } else if (type === 'visit_summary') {
     const seconds = Math.max(0, parseInt(data.seconds, 10) || 0);
     const mmss = `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
@@ -174,14 +223,16 @@ module.exports = async function handler(req, res) {
     if (data.openedChat) beh.push('opened chat');
     if (data.clickedIntent) beh.push('clicked to buy/book');
     const behText = beh.length ? beh.join(', ') : 'passive browse';
-    header = `📋 <b>Visit summary${returning ? ` · visit #${visit}` : ''}</b>`;
-    label = `A visitor just left. On site ${mmss}; scrolled ${depth}%; sections seen: ${sections.join(', ') || 'none'}; behaviour: ${behText}; visit #${visit}${returning ? ' (returning)' : ''}.`;
+    header = `📋 <b>Visit summary · ${gIcon} ${grade}${returning ? ` · #${visit}` : ''}</b>`;
+    label = `A visitor just left. Grade ${grade}; source ${src.source}; ${mmss} active; scrolled ${depth}%; sections: ${sections.join(', ') || 'none'}; behaviour: ${behText}; visit #${visit}${returning ? ' (returning)' : ''}.`;
     facts = label;
     lines = [header, '',
-      `⏱️ On site: ${mmss}`,
+      `${gIcon} ${grade}`,
+      `⏱️ Active: ${mmss}`,
       `📜 Scrolled: ${depth}%`,
       `🧭 Sections: ${esc(sections.join(' · ') || '—')}`,
       `⚡ ${esc(behText)}`,
+      srcLine,
       `🔢 Visit #${visit}`,
       `📍 ${esc(geo)}`,
     ];
