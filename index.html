@@ -251,6 +251,20 @@ a { color: inherit; }
   opacity: 0; transform: scale(.97) translateY(-18px);
   transition: opacity 1.15s ease, transform 1.15s ease;
 }
+/* mobile tap-to-play: one centered work shot, sized up to fill the phone */
+#trail.playing { z-index: 3; }
+.tr-card.solo {
+  left: 50%; top: 46%;
+  transform: translate(-50%, -50%) scale(.86);
+  object-fit: cover; object-position: top center; border-radius: 10px;
+}
+.tr-card.solo.ls { width: min(86vw, 380px); height: min(54vw, 238px); }
+.tr-card.solo.pt { width: min(58vw, 240px); height: min(82vw, 430px); }
+.tr-card.solo.in { transform: translate(-50%, -50%) scale(1); }
+.tr-card.solo.out {
+  transform: translate(-50%, -54%) scale(.98);
+  transition: opacity .9s ease, transform .9s ease;
+}
 .open > h1, .open .floor { position: relative; z-index: 2; }
 /* smooth post-veil reveal: soft rise + de-blur, no mask snap */
 .js .soft {
@@ -916,10 +930,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <!-- velocity marquee -->
 <div class="mq" aria-hidden="true">
   <div class="track" data-vel>
-    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Cut the busywork <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Sell more online <b>·</b> Get software that fits <b>·</b> Get paid faster <b>·</b> Manage fewer vendors <b>·</b> Stay secure <b>·</b> Rest easy <b>·</b></span>
-    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Cut the busywork <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Sell more online <b>·</b> Get software that fits <b>·</b> Get paid faster <b>·</b> Manage fewer vendors <b>·</b> Stay secure <b>·</b> Rest easy <b>·</b></span>
-    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Cut the busywork <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Sell more online <b>·</b> Get software that fits <b>·</b> Get paid faster <b>·</b> Manage fewer vendors <b>·</b> Stay secure <b>·</b> Rest easy <b>·</b></span>
-    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Cut the busywork <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Sell more online <b>·</b> Get software that fits <b>·</b> Get paid faster <b>·</b> Manage fewer vendors <b>·</b> Stay secure <b>·</b> Rest easy <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
   </div>
 </div>
 
@@ -1065,7 +1079,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <section class="method" data-theme="green" id="method">
   <div class="wrap">
     <span class="label"><span class="n">III</span> · The method</span>
-    <h2 class="h2 fd" style="color:var(--on-green)">Named stages.<br>Written deliverables.</h2>
+    <h2 class="h2 fd" style="color:var(--on-green)">Know the plan.<br>Track the progress.</h2>
     <div class="grid fd">
       <div class="mcard" data-tilt>
         <div class="num serif">01</div>
@@ -1184,9 +1198,9 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <!-- dark marquee divider -->
 <div class="mq dark" aria-hidden="true">
   <div class="track" data-vel>
-    <span>No hourly billing <b>·</b> Month to month after 90 days <b>·</b> Your accounts, your code <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> One monthly figure <b>·</b> A whole team behind you <b>·</b> Nothing held hostage <b>·</b> Direct line to your operator <b>·</b> No vendors to coordinate <b>·</b></span>
-    <span>No hourly billing <b>·</b> Month to month after 90 days <b>·</b> Your accounts, your code <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> One monthly figure <b>·</b> A whole team behind you <b>·</b> Nothing held hostage <b>·</b> Direct line to your operator <b>·</b> No vendors to coordinate <b>·</b></span>
-    <span>No hourly billing <b>·</b> Month to month after 90 days <b>·</b> Your accounts, your code <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> One monthly figure <b>·</b> A whole team behind you <b>·</b> Nothing held hostage <b>·</b> Direct line to your operator <b>·</b> No vendors to coordinate <b>·</b></span>
+    <span>No hourly billing <b>·</b> One monthly figure <b>·</b> Month to month after 90 days <b>·</b> Nothing held hostage <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> A whole team behind you <b>·</b> Immediate replies <b>·</b> Handled before it reaches you <b>·</b> Direct line to your operator <b>·</b> We manage the vendors <b>·</b> A reliable partner <b>·</b></span>
+    <span>No hourly billing <b>·</b> One monthly figure <b>·</b> Month to month after 90 days <b>·</b> Nothing held hostage <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> A whole team behind you <b>·</b> Immediate replies <b>·</b> Handled before it reaches you <b>·</b> Direct line to your operator <b>·</b> We manage the vendors <b>·</b> A reliable partner <b>·</b></span>
+    <span>No hourly billing <b>·</b> One monthly figure <b>·</b> Month to month after 90 days <b>·</b> Nothing held hostage <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> A whole team behind you <b>·</b> Immediate replies <b>·</b> Handled before it reaches you <b>·</b> Direct line to your operator <b>·</b> We manage the vendors <b>·</b> A reliable partner <b>·</b></span>
   </div>
 </div>
 
@@ -1348,12 +1362,8 @@ setTimeout(() => {
   setTimeout(() => document.querySelector('.open .floor').classList.add('on'), 380);
 }, 1450);
 
-/* on touch there's no hover/trail, so settle the meta line straight
-   to the tagline instead of the (desktop-only) "hover" hint */
-if (!matchMedia('(pointer: fine)').matches) {
-  const g = document.getElementById('guide');
-  if (g) g.classList.add('activated');
-}
+/* on touch, the guide becomes a "Tap to view our work" prompt and the
+   work-preview auto-plays on tap — handled in the hero-trail block below. */
 
 /* ── scroll cue → welcome once scrolling starts; click to advance ── */
 const cue = document.getElementById('cue');
@@ -1401,8 +1411,9 @@ cue.addEventListener('click', () => {
 (function () {
   const hero = document.querySelector('.open');
   const layer = document.getElementById('trail');
-  if (!hero || !layer || !matchMedia('(pointer: fine)').matches) return;
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!hero || !layer) return;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(pointer: fine)').matches;
   const T = '/assets/trail/';
   const TRAIL_MEDIA = [
     { src: T + 'flowheroes.jpg',  w: 304, h: 200 },
@@ -1420,6 +1431,54 @@ cue.addEventListener('click', () => {
     { src: T + 'framecraft.jpg',  w: 304, h: 200 },
     { src: T + 'pinecreek.jpg',   w: 304, h: 200 },
   ];
+
+  /* ── mobile / touch: tap once to auto-play the work, one shot at a
+       time. Reuses the shots above; no cursor needed. ─────────────── */
+  if (!finePointer) {
+    const g = document.getElementById('guide');
+    const tut = g && g.querySelector('.g-tut');
+    if (tut) tut.textContent = 'Tap to view our work';
+    let started = false, mIdx = 0, mTimer = null, mCurrent = null;
+    const showShot = (m) => {
+      if (mCurrent) {
+        const prev = mCurrent;
+        prev.classList.remove('in'); prev.classList.add('out');
+        setTimeout(() => prev.remove(), 1000);
+      }
+      const el = document.createElement('img');
+      el.className = 'tr-card solo ' + (m.w >= m.h ? 'ls' : 'pt');
+      el.src = m.src; el.alt = '';
+      layer.appendChild(el);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+      mCurrent = el;
+    };
+    const nextShot = () => { showShot(TRAIL_MEDIA[mIdx % TRAIL_MEDIA.length]); mIdx++; };
+    const startShow = () => {
+      if (started) return;
+      started = true;
+      layer.classList.add('playing');
+      if (g) g.classList.add('activated');
+      nextShot();
+      if (!reduceMotion) mTimer = setInterval(nextShot, 1600);
+    };
+    hero.addEventListener('click', (e) => {
+      if (e.target.closest('a, #cue, .navcta')) return;
+      if (!started) { startShow(); return; }
+      if (reduceMotion) nextShot();   // reduced-motion: tap advances instead of auto-playing
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((ents) => {
+        if (!started || reduceMotion) return;
+        ents.forEach((en) => {
+          if (en.isIntersecting) { if (!mTimer) mTimer = setInterval(nextShot, 1600); }
+          else { clearInterval(mTimer); mTimer = null; }
+        });
+      }, { threshold: 0.12 }).observe(hero);
+    }
+    return;
+  }
+
+  if (reduceMotion) return;   // desktop cursor-trail runs only when motion is allowed
   const h1El = document.getElementById('h1');
   const guide = document.getElementById('guide');
   const wm = document.querySelector('.bar .wm');
