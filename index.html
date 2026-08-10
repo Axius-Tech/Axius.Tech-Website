@@ -794,7 +794,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 #chat .cbody { padding: 16px 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; }
 #chat .m { font-size: 14px; line-height: 1.55; color: var(--ink); white-space: pre-wrap; max-width: 92%; }
 #chat .m.you { align-self: flex-end; background: var(--green); color: var(--pill-ink); padding: 9px 13px; }
-#chat .chips { padding: 0 18px 12px; display: flex; flex-wrap: nowrap; gap: 7px; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; }
+#chat .chips { padding: 0 18px 12px; display: flex; flex-wrap: wrap; gap: 7px; flex-shrink: 0; max-height: 178px; overflow-y: auto; scrollbar-width: none; }
 #chat .chips::-webkit-scrollbar { display: none; }
 #chat .chips button {
   all: unset; cursor: pointer; flex: 0 0 auto; white-space: nowrap;
