@@ -794,9 +794,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 #chat .cbody { padding: 16px 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; }
 #chat .m { font-size: 14px; line-height: 1.55; color: var(--ink); white-space: pre-wrap; max-width: 92%; }
 #chat .m.you { align-self: flex-end; background: var(--green); color: var(--pill-ink); padding: 9px 13px; }
-#chat .chips { padding: 0 18px 12px; display: flex; flex-wrap: wrap; gap: 7px; flex-shrink: 0; }
+#chat .chips { padding: 0 18px 12px; display: flex; flex-wrap: nowrap; gap: 7px; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; }
+#chat .chips::-webkit-scrollbar { display: none; }
 #chat .chips button {
-  all: unset; cursor: pointer;
+  all: unset; cursor: pointer; flex: 0 0 auto; white-space: nowrap;
   border: 1px solid var(--ink-24); padding: 7px 12px;
   font-size: 12px; color: var(--ink-70);
   transition: all .25s var(--ease);
@@ -1032,7 +1033,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       </div>
       <div class="gcell" style="--m:76%">
         <span class="no">No. 03</span>
-        <h3>Run leaner</h3>
+        <h3>Automate manual work</h3>
         <span class="ct">16 workflows</span>
         <span class="xtra">
           <span class="xl">Cross-tool sync <span class="im">12 hops removed</span></span>
@@ -1065,7 +1066,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       </div>
       <div class="gcell" style="--m:74%">
         <span class="no">No. 06</span>
-        <h3>Sell online</h3>
+        <h3>Sell more online</h3>
         <span class="ct">15 workflows</span>
         <span class="xtra">
           <span class="xl">Production website <span class="im">4-week ship</span></span>
@@ -1076,7 +1077,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       </div>
       <div class="gcell" style="--m:74%">
         <span class="no">No. 07</span>
-        <h3>Get the tools you need</h3>
+        <h3>Software built for you</h3>
         <span class="ct">15 workflows</span>
         <span class="xtra">
           <span class="xl">Internal tools <span class="im">3-week builds</span></span>
@@ -1807,35 +1808,53 @@ if (progress) {
   const form = document.getElementById('cform');
   const input = document.getElementById('cinput');
 
-  const GREETING = "Hi, I'm Andrés. Tell me what's slowing the business down and I'll show you exactly how I'd run it.";
+  const GREETING = "Hi, I'm Andrés, founder of Axius. Tell me what's slowing the business down or what you're trying to reach, and I'll show you exactly how I'd handle it.";
   const CHIPS = [
     'Everything depends on me',
-    "We're drowning in tools",
-    'Leads slip through the cracks',
+    'Eliminate manual work',
+    'We need more customers',
+    "We're losing leads",
+    'Keep customers coming back',
+    'Our website needs work',
+    'We want to put AI to work',
+    'We need to move faster',
+    'We want to grow, not hire',
     'What does $2,500 cover?',
-    'How fast can we start?',
-    'How do you work?',
-    "Show me what you'd improve",
+    "Show me what you'd fix",
   ];
   const REPLIES = {
-    depends: "That's the most common pattern I see. The fix isn't more hires, it's documented systems with one owner. I map what lives in your head, then run it for you. Founder time comes back within the first month.",
-    tools: "Tool sprawl is an ownership problem, not a software problem. Most stacks shrink 30 to 40% in the first 90 days once someone actually runs them. The audit shows exactly where.",
-    leads: "Lead leakage is usually three gaps: missed calls, no routing, no follow-up. Plugging the missed-call gap alone recovers 20 to 30% of inbound. I instrument the whole funnel.",
-    price: "The Team engagement gives you a dedicated technology operator who takes ownership of your most important systems. That includes ongoing improvements, automations, integrations, troubleshooting, vendor coordination, reporting, and roadmap management. Instead of hiring multiple specialists or managing technology yourself, you get one accountable owner responsible for outcomes.",
-    start: "Days 1 to 7: audit. Days 8 to 14: a workflow map you approve in writing. Day 14: I'm operating. And you'll have a one-page audit in hand after our first thirty minutes.",
-    model: "Three roles, one accountable layer. I own direction and outcomes, and I'm your single point of contact. AI systems carry the repetitive work, watch the stack in the background, and keep documentation current. When something needs depth, vetted specialists step in, managed entirely on my side. You never coordinate a vendor.",
-    improve: "Easier shown than told: book the thirty-minute audit. I inventory your stack live, point at the leaks (missed leads, re-typed data, tools nobody owns) and you leave with a one-page read of what I'd run first. The page is yours either way.",
-    default: "Tell me a little about what's breaking, what's manual, or what depends on you. Or book the thirty-minute audit below and you'll leave with a one-page read either way.",
+    depends: "That's the one I hear most, and it shows up a few ways: no real time off, no room to grow, and a quiet worry it'd all wobble if you stepped away. The fix isn't more hires, it's getting the systems out of your head and under one owner. We map how the business actually runs, a dedicated operator takes it off your plate, and most owners feel it inside the first month. Book the free audit and you'll see exactly what comes off first, and you keep the one-page plan either way.",
+    automate: "Almost every business is sitting on hours a machine should be doing: the re-typing, the copy-paste between tools, the reminders, the reports. Whatever's eating your team's day, we find it, automate it, and keep it running, so the time comes back without anyone babysitting it. The free audit usually turns up more of it than owners expect, and you'll leave knowing what we'd automate first.",
+    customers: "More customers is usually a systems problem before it's a marketing one. Whether not enough are coming in or you're not converting the ones you get, the fix is the same: capture every lead, follow up fast, and let nothing get dropped. We build and run that engine for you. The free audit shows exactly where you're leaving business on the table.",
+    leads: "Leads usually slip through three gaps: missed calls, no routing, and no follow-up. Any one of them quietly costs you deals, and closing the missed-call gap alone tends to bring back a real chunk of inbound. We instrument the whole funnel so nothing falls through. Book the free audit and I'll show you where yours is leaking first.",
+    retain: "Keeping a customer costs less than winning a new one, and it usually comes down to follow-through: timely check-ins, reminders, offers, and support that never drops the ball. We put that on autopilot so people feel looked after without you chasing it. The free audit points to the easiest wins for repeat business.",
+    web: "Whether your site is dated, slow, hard to update, or just not bringing in business, it should be working for you, not sitting there. We rebuild it to convert, make it easy to run, and wire it into your other systems so leads actually go somewhere. Book the free audit and I'll tell you exactly what I'd change first.",
+    ai: "AI earns its keep on the boring, high-volume stuff: answering repeat questions, drafting from your notes, triaging inbox and tickets, and watching your data for what needs attention. We put it to work where it actually pays off, with a human owner over it, so it helps instead of adding noise. The free audit shows the highest-return place to start.",
+    speed: "Slow usually isn't a people problem, it's a handoff problem: work waiting in inboxes, manual steps, and no clear owner. We strip out the delays with systems and automation and put one operator on top so things actually move. The free audit pinpoints where you're getting stuck first.",
+    grow: "Growing without piling on headcount means the systems carry more, not you. We take the technology and operations off your plate and build them to scale, so more volume doesn't turn into more chaos or more salaries. The free audit shows what to shore up before you grow into it.",
+    price: "The Team plan gives you a dedicated operator who owns your most important systems, backed by the whole team: improvements, automations, integrations, fixes, vendor coordination, reporting, and the roadmap. Instead of hiring a few specialists or running it yourself, you get one person accountable for the outcome, for one monthly figure. The free audit is the best way to see what it would cover for you specifically.",
+    improve: "Honestly, easier to show than tell. Book the free thirty-minute audit and we'll go through your setup live, point out where things leak (missed leads, re-typed data, tools nobody owns), and you'll leave with a one-page read of what we'd fix first. It's yours either way, whether we work together or not.",
+    tools: "Tool sprawl is usually an ownership problem, not a software one. Once someone actually owns the stack, most shrink by about a third in the first few months, and you stop coordinating vendors yourself. The free audit shows you exactly where the overlap is.",
+    model: "Three roles, one accountable layer. You get a dedicated operator who owns direction and outcomes and is your single point of contact. AI systems handle the repetitive work and keep everything documented, and when something needs real depth, vetted specialists step in, managed on our side. The free audit is the easiest way to see it on your own systems.",
+    start: "Fast. Days 1 to 7 is the audit, days 8 to 14 is a plan you approve in writing, and by day 14 your operator is running things. You'll have a one-page audit in hand after our first thirty minutes, so book that and you're already moving.",
+    default: "Tell me a bit about what's breaking, what's eating your time, or what you're trying to reach, and I'll show you how I'd handle it. Or just book the free thirty-minute audit below, and you'll leave with a one-page read either way.",
   };
   const match = (q) => {
     const s = q.toLowerCase();
-    if (/improve|show me|audit my/.test(s)) return REPLIES.improve;
-    if (/how do you work|model|specialist|roles|who does the work/.test(s)) return REPLIES.model;
-    if (/depend|bottleneck|myself|on me/.test(s)) return REPLIES.depends;
-    if (/tool|drown|sprawl|software|apps/.test(s)) return REPLIES.tools;
-    if (/lead|missed|call|funnel|sales/.test(s)) return REPLIES.leads;
-    if (/price|cost|2,?500|cover|fee|month/.test(s)) return REPLIES.price;
-    if (/start|fast|soon|when|how long/.test(s)) return REPLIES.start;
+    if (/show me|what you.?d fix|take a look|assess|audit my|what would you/.test(s)) return REPLIES.improve;
+    if (/website|web ?site|our site|landing page|online presence/.test(s)) return REPLIES.web;
+    if (/\bai\b|artificial intelligence|chatbot|copilot|automate with ai/.test(s)) return REPLIES.ai;
+    if (/keep customer|coming back|retention|retain|churn|repeat|loyal/.test(s)) return REPLIES.retain;
+    if (/more customer|new customer|need customer|get more|more client|more business|more sales|more lead|need lead/.test(s)) return REPLIES.customers;
+    if (/los(e|ing) (a )?lead|missed call|slip|not converting|no follow|follow.?up|leak/.test(s)) return REPLIES.leads;
+    if (/manual|by hand|automat|repetitive|busywork|eliminate|data entry|copy.?paste/.test(s)) return REPLIES.automate;
+    if (/faster|move fast|too long|too slow|\bslow\b|speed|keep up|behind|backlog/.test(s)) return REPLIES.speed;
+    if (/grow|scale|not hire|without hiring|headcount|expand|bigger/.test(s)) return REPLIES.grow;
+    if (/depend|on me|bottleneck|myself|runs through me|all on me/.test(s)) return REPLIES.depends;
+    if (/tool|drown|sprawl|too many|vendor|apps/.test(s)) return REPLIES.tools;
+    if (/price|cost|2,?500|cover|fee|per month|how much|budget|expensive/.test(s)) return REPLIES.price;
+    if (/how do you work|how does (this|it) work|your model|specialist|roles|process/.test(s)) return REPLIES.model;
+    if (/how fast can|how soon|when can|get started|how long|onboard/.test(s)) return REPLIES.start;
     return REPLIES.default;
   };
 
