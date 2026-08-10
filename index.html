@@ -101,7 +101,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 body {
   margin: 0; background: var(--ivory); color: var(--ink);
   font-family: var(--sans); font-size: 16px; line-height: 1.6;
@@ -260,18 +260,6 @@ a { color: inherit; }
 .guide.activated .g-tag { opacity: 1; }
 @keyframes guidePulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .guide .g-tut { animation: none; } }
-/* mobile: desktop hides this (the cursor trail covers that case). On
-   touch it restores the practice tag at the top of the hero, above the
-   portfolio that now plays on its own. */
-#swipehint { display: none; }
-@media (pointer: coarse) {
-  #swipehint {
-    position: absolute; top: 0; left: 0; right: 0; z-index: 3;
-    display: flex; flex-direction: column; align-items: center;
-    padding-top: 86px; pointer-events: none;
-  }
-  #swipehint .sh-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-40); }
-}
 /* portfolio mouse-trail layer — true full-bleed (spans the viewport
    width and may run over the nav) */
 #trail {
@@ -280,8 +268,8 @@ a { color: inherit; }
 }
 .tr-card {
   position: absolute; pointer-events: none; will-change: transform, opacity;
-  opacity: 0; transform: scale(.92) translateY(5px);
-  transition: opacity .5s var(--ease), transform .65s var(--ease);
+  opacity: 0; transform: scale(.85) translateY(6px);
+  transition: opacity .35s var(--ease), transform .45s var(--ease);
   border-radius: 7px; overflow: hidden; object-fit: cover; object-position: top center;
   background: var(--ivory-2);
   box-shadow: 0 18px 50px -12px rgba(22,20,15,.34), 0 0 0 1px rgba(22,20,15,.07);
@@ -290,6 +278,20 @@ a { color: inherit; }
 .tr-card.out {
   opacity: 0; transform: scale(.97) translateY(-18px);
   transition: opacity 1.15s ease, transform 1.15s ease;
+}
+/* mobile tap-to-play: one centered work shot, sized up to fill the phone */
+#trail.playing { z-index: 3; }
+.tr-card.solo {
+  left: 50%; top: 46%;
+  transform: translate(-50%, -50%) scale(.86);
+  object-fit: cover; object-position: top center; border-radius: 10px;
+}
+.tr-card.solo.ls { width: min(86vw, 380px); height: min(54vw, 238px); }
+.tr-card.solo.pt { width: min(58vw, 240px); height: min(82vw, 430px); }
+.tr-card.solo.in { transform: translate(-50%, -50%) scale(1); }
+.tr-card.solo.out {
+  transform: translate(-50%, -54%) scale(.98);
+  transition: opacity .9s ease, transform .9s ease;
 }
 .open > h1, .open .floor { position: relative; z-index: 2; }
 /* smooth post-veil reveal: soft rise + de-blur, no mask snap */
@@ -407,19 +409,12 @@ section { border-top: 1px solid var(--rule); }
 /* capability grid — sharp tiling at rest, each cell lifts into a
    soft, gently-tilted card on hover (subtle Kinetic flavour) */
 .grid8 {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  display: grid; grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid var(--rule); border-left: 1px solid var(--rule);
-  border-radius: 16px; overflow: visible; perspective: 1100px;
+  border-radius: 16px; overflow: hidden; perspective: 1100px;
 }
-/* round only the four outer corners so the tiled block keeps its
-   silhouette at rest — overflow stays visible so a hovered card in
-   the bottom row can lift and cast its shadow without being clipped */
-.grid8 .gcell:nth-child(1) { border-top-left-radius: 16px; }
-.grid8 .gcell:nth-child(3) { border-top-right-radius: 16px; }
-.grid8 .gcell:nth-child(4) { border-bottom-left-radius: 16px; }
-.grid8 .gcell:nth-child(6) { border-bottom-right-radius: 16px; }
 .gcell {
-  position: relative; padding: 24px 22px 24px; min-height: 236px; overflow: hidden;
+  position: relative; padding: 24px 22px 24px; min-height: 236px;
   border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
   display: flex; flex-direction: column; cursor: default;
   transform-style: preserve-3d; will-change: transform;
@@ -446,21 +441,35 @@ section { border-top: 1px solid var(--rule); }
   transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
 }
 .gcell:hover .ct { background: var(--green); color: var(--on-green); border-color: var(--green); }
-/* on hover the block reveals, then the rows cycle through the system's
-   full workflow list — each swap fades + de-blurs (echoes the hero reveal) */
-.gcell .xtra { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; opacity: 0; transition: opacity .4s var(--ease); }
-.gcell:hover .xtra { opacity: 1; }
+.gcell .xtra { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 4px; }
 .gcell .xl {
   display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
   font-size: 12px; line-height: 1.5; color: var(--ink-55);
-  transition: opacity .24s var(--ease), filter .24s var(--ease), transform .24s var(--ease);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .35s var(--ease), transform .35s var(--ease), filter .35s var(--ease);
 }
-.gcell .xl.chg { opacity: 0; filter: blur(5px); transform: translateY(-5px); }
-.gcell .xl .wn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.gcell .xl .im { font-family: var(--mono); font-size: 9.5px; letter-spacing: .03em; color: var(--green); white-space: nowrap; flex-shrink: 0; }
+.gcell .xl .wn { flex: 1; min-width: 0; }
+.gcell .xl .im { font-family: var(--mono); font-size: 9.5px; letter-spacing: .03em; color: var(--green); white-space: nowrap; }
+.gcell:hover .xl { opacity: 1; transform: none; }
+.gcell:hover .xl:nth-child(1) { transition-delay: .04s; }
+.gcell:hover .xl:nth-child(2) { transition-delay: .1s; }
+.gcell:hover .xl:nth-child(3) { transition-delay: .16s; }
 .gcell .meter { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; }
 .gcell .meter i { display: block; height: 100%; width: 0; background: var(--green); transition: width .9s var(--ease); }
 .gcell:hover .meter i { width: var(--m); }
+/* .open mirrors :hover for touch (revealed on tap) */
+.gcell.open { background: var(--surface); border-radius: 13px; z-index: 3; box-shadow: 0 22px 50px rgba(22,20,15,.12); }
+.gcell.open .no { color: var(--green); }
+.gcell.open h3 { font-variation-settings: "wght" 640; color: var(--green); }
+.gcell.open .ct { background: var(--green); color: var(--on-green); border-color: var(--green); }
+.gcell.open .xl { opacity: 1; transform: none; }
+.gcell.open .meter i { width: var(--m); }
+/* the fade between workflows while cycling */
+.gcell .xl.chg { opacity: 0 !important; filter: blur(3px); transform: translateY(3px); }
+/* "hover / tap to explore" hint, adapts to pointer */
+.ghint { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-40); }
+.ghint .gm { display: none; }
+@media (pointer: coarse) { .ghint .gd { display: none; } .ghint .gm { display: inline; } .gcell { cursor: pointer; } }
 @media (max-width: 1024px) { .grid8 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .grid8 { grid-template-columns: 1fr; } }
 .index .foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 40px; flex-wrap: wrap; }
@@ -561,22 +570,8 @@ section { border-top: 1px solid var(--rule); }
 .assure2 p { margin: 11px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-70); }
 .assure2 p b { color: var(--green); }
 @media (max-width: 1024px) {
-  /* keep the sticky stacked-card scroll effect on mobile too — single
-     column, tighter top offsets so each tier's name peeks as it pins */
-  .scard { grid-template-columns: 1fr; position: sticky; }
-  .scard:nth-child(1) { top: 70px; }
-  .scard:nth-child(2) { top: 86px; }
-  .scard:nth-child(3) { top: 102px; }
+  .scard { grid-template-columns: 1fr; position: static; }
   .assure2 { grid-template-columns: 1fr; }
-}
-/* 13" / laptop range: the 3-column card wastes its right third and
-   crams the bullets — drop to info | bullets and run the CTA as a
-   full-width footer row so the card reads balanced at ~1280–1440px */
-@media (min-width: 1025px) and (max-width: 1480px) {
-  .scard { grid-template-columns: 1fr 1.04fr; gap: clamp(26px, 3.5vw, 48px) clamp(34px, 5vw, 64px); align-items: start; }
-  .scard .for { max-width: none; }
-  .scard .actcol { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; margin-top: 6px; padding-top: 22px; border-top: 1px solid var(--rule); }
-  .scard.feat .actcol { border-top-color: rgba(255,255,255,.16); }
 }
 
 /* ── V · in practice (green, contained auto-marquee) ──────── */
@@ -841,11 +836,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 
   /* hero */
   .open .meta-top { display: none; }
-  .open h1 { font-size: clamp(34px, 8.6vw, 54px); line-height: 1.05; }
-  /* both hero lines share one size; the rotating word is sized per-word in
-     JS (fitFlip) — only the ones that would run past the margin shrink, the
-     rest (e.g. "systems.") stay congruent. Wrapping is a last-resort fallback. */
-  .open h1 .it { white-space: normal; }
+  .open h1 { font-size: clamp(38px, 12.5vw, 66px); line-height: 1.03; }
   .open .floor { grid-template-columns: 1fr; gap: 22px; padding: 28px 0 32px; margin-top: 34px; }
   .open .floor .cell p { max-width: none; }
   .scrollcue { display: none; }
@@ -861,8 +852,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   .index .head { gap: 22px; margin-bottom: 34px; align-items: flex-start; }
   .index .big { font-size: clamp(60px, 17vw, 100px); }
   .index .bigk { text-align: left; }
-  .gcell .xtra { opacity: 1; }
-  .gcell .xl { opacity: 1; transform: none; }
+  /* workflows now reveal on tap (see .gcell.open) */
 
   /* in practice — narrower cards so one shows at a time */
   .pq { width: min(80vw, 360px); }
@@ -879,9 +869,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 }
 
 @media (max-width: 460px) {
-  /* both lines at the section-title size; long rotating words are shrunk
-     to fit per-word in JS (fitFlip), short ones stay congruent */
-  .open h1 { font-size: clamp(29px, 9.4vw, 41px); line-height: 1.04; }
+  .open h1 { font-size: clamp(33px, 13vw, 50px); }
   .h2 { font-size: clamp(29px, 9.4vw, 40px); }
   .manifesto .mtext { font-size: clamp(23px, 7.2vw, 32px); }
   .index .big { font-size: clamp(52px, 19vw, 78px); }
@@ -925,7 +913,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <header class="bar">
   <a class="wm" href="#top">AXIUS</a>
 </header>
-<a class="navcta" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit</a>
+<a class="navcta" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book a free audit</a>
 <div id="progress" aria-hidden="true"></div>
 
 <div id="rail" role="navigation" aria-label="Sections">
@@ -941,13 +929,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <!-- ════ OPENING ════ -->
 <section class="open wrap" id="top" style="border-top:none">
   <div id="trail" aria-hidden="true"></div>
-  <div id="swipehint" aria-hidden="true">
-    <span class="sh-tag">Your technology department</span>
-  </div>
   <div class="meta-top">
     <span class="label guide" id="guide">
       <span class="g-tut">Hover the space to preview our work</span>
-      <span class="g-tag">Your technology department</span>
+      <span class="g-tag">A private technology operations practice</span>
     </span>
   </div>
   <h1 class="soft" id="h1">
@@ -975,10 +960,10 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <!-- velocity marquee -->
 <div class="mq" aria-hidden="true">
   <div class="track" data-vel>
-    <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Finance ops <b>·</b></span>
-    <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Finance ops <b>·</b></span>
-    <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Finance ops <b>·</b></span>
-    <span>Websites <b>·</b> Automations <b>·</b> AI systems <b>·</b> Data <b>·</b> Support <b>·</b> Software <b>·</b> Integrations <b>·</b> Finance ops <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
+    <span>Win more customers <b>·</b> Keep customers happy <b>·</b> Get paid faster <b>·</b> Sell more online <b>·</b> End the repetitive work <b>·</b> Less overhead <b>·</b> Reclaim your time <b>·</b> See the whole business <b>·</b> Put AI to work <b>·</b> Custom-built software <b>·</b> Scale without breaking <b>·</b> Protect your business <b>·</b> Peace of mind <b>·</b></span>
   </div>
 </div>
 
@@ -990,7 +975,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
     <div class="roles fd">
       <div class="role">
         <div class="rk">01 · The operator</div>
-        <p>Owns direction, outcomes, and every decision that touches your systems. Your single point of contact.</p>
+        <p>Owns direction, outcomes, and every decision that touches your systems. Your single point of contact, with the team below answering to them.</p>
       </div>
       <div class="role">
         <div class="rk">02 · AI systems</div>
@@ -1011,80 +996,103 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       <div>
         <span class="label"><span class="n">II</span> · What we own</span>
         <h2 class="h2" data-stagger>
-          <span class="ln"><span>From revenue</span></span>
-          <span class="ln"><span><em>to custom systems.</em></span></span>
+          <span class="ln"><span>We own outcomes,</span></span>
+          <span class="ln"><span><em>not tasks.</em></span></span>
         </h2>
       </div>
       <div class="fd">
         <div class="big"><span data-count="118">0</span></div>
-        <div class="label bigk">Workflows · 6 systems</div>
+        <div class="label bigk">Workflows shipped · and counting</div>
+        <div class="ghint fd"><span class="gd">Hover a card to explore</span><span class="gm">Tap a card to explore</span></div>
       </div>
     </div>
 
     <div class="grid8 fd">
-      <div class="gcell" style="--m:86%">
+      <div class="gcell" style="--m:78%">
         <span class="no">No. 01</span>
-        <h3>Revenue</h3>
-        <span class="ct">22 workflows</span>
+        <h3>Win more customers</h3>
+        <span class="ct">16 workflows</span>
         <span class="xtra">
-          <span class="xl"><span class="wn">Missed-call recovery</span><span class="im">4h → 3m</span></span>
-          <span class="xl"><span class="wn">Lead capture &amp; routing</span><span class="im">every lead placed</span></span>
-          <span class="xl"><span class="wn">Follow-up automation</span><span class="im">47% reactivated</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:80%">
-        <span class="no">No. 02</span>
-        <h3>Customer</h3>
-        <span class="ct">18 workflows</span>
-        <span class="xtra">
-          <span class="xl"><span class="wn">AI chat &amp; FAQ</span><span class="im">~70% deflected</span></span>
-          <span class="xl"><span class="wn">Inbox unification</span><span class="im">5 inboxes → 1</span></span>
-          <span class="xl"><span class="wn">Ticket triage &amp; routing</span><span class="im">8h → 1h</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:88%">
-        <span class="no">No. 03</span>
-        <h3>Operations</h3>
-        <span class="ct">24 workflows</span>
-        <span class="xtra">
-          <span class="xl"><span class="wn">Cross-tool sync</span><span class="im">12 hops removed</span></span>
-          <span class="xl"><span class="wn">SOP automation</span><span class="im">knowledge, captured</span></span>
-          <span class="xl"><span class="wn">Document automation</span><span class="im">45m → 8m</span></span>
+          <span class="xl">Missed-call recovery <span class="im">4h &rarr; 3m</span></span>
+          <span class="xl">Lead reactivation <span class="im">47% return</span></span>
+          <span class="xl">Voice agents <span class="im">every call answered</span></span>
         </span>
         <span class="meter"><i></i></span>
       </div>
       <div class="gcell" style="--m:84%">
-        <span class="no">No. 04</span>
-        <h3>Intelligence</h3>
-        <span class="ct">22 workflows</span>
+        <span class="no">No. 02</span>
+        <h3>Keep customers happy</h3>
+        <span class="ct">17 workflows</span>
         <span class="xtra">
-          <span class="xl"><span class="wn">Live dashboards</span><span class="im">one ops board</span></span>
-          <span class="xl"><span class="wn">AI agents &amp; copilots</span><span class="im">decisions, automated</span></span>
-          <span class="xl"><span class="wn">Revenue attribution</span><span class="im">spend → revenue</span></span>
-        </span>
-        <span class="meter"><i></i></span>
-      </div>
-      <div class="gcell" style="--m:78%">
-        <span class="no">No. 05</span>
-        <h3>Digital Presence</h3>
-        <span class="ct">16 workflows</span>
-        <span class="xtra">
-          <span class="xl"><span class="wn">Production website</span><span class="im">owned, kept live</span></span>
-          <span class="xl"><span class="wn">Landing pages</span><span class="im">tuned to convert</span></span>
-          <span class="xl"><span class="wn">E-commerce</span><span class="im">selling in weeks</span></span>
+          <span class="xl">AI FAQ chatbot <span class="im">~70% deflection</span></span>
+          <span class="xl">Inbox unification <span class="im">5 inboxes &rarr; 1</span></span>
+          <span class="xl">Ticket triage <span class="im">8h SLA &rarr; 1h</span></span>
         </span>
         <span class="meter"><i></i></span>
       </div>
       <div class="gcell" style="--m:76%">
-        <span class="no">No. 06</span>
-        <h3>Custom</h3>
+        <span class="no">No. 03</span>
+        <h3>Run leaner</h3>
         <span class="ct">16 workflows</span>
         <span class="xtra">
-          <span class="xl"><span class="wn">Internal tools</span><span class="im">live in weeks</span></span>
-          <span class="xl"><span class="wn">API integrations</span><span class="im">systems that talk</span></span>
-          <span class="xl"><span class="wn">Customer apps</span><span class="im">shipped to spec</span></span>
+          <span class="xl">Cross-tool sync <span class="im">12 hops removed</span></span>
+          <span class="xl">Document automation <span class="im">45m &rarr; 8m</span></span>
+          <span class="xl">SaaS audit <span class="im">$1.4k/mo back</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:70%">
+        <span class="no">No. 04</span>
+        <h3>Work smarter with AI</h3>
+        <span class="ct">14 workflows</span>
+        <span class="xtra">
+          <span class="xl">Knowledge agents <span class="im">90s answers</span></span>
+          <span class="xl">Lead scoring <span class="im">2.3&times; accuracy</span></span>
+          <span class="xl">Multi-step agents <span class="im">decisions, automated</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:64%">
+        <span class="no">No. 05</span>
+        <h3>See the whole business</h3>
+        <span class="ct">13 workflows</span>
+        <span class="xtra">
+          <span class="xl">Live dashboards <span class="im">one ops board</span></span>
+          <span class="xl">Revenue attribution <span class="im">spend &rarr; revenue</span></span>
+          <span class="xl">Churn modeling <span class="im">seen early</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:74%">
+        <span class="no">No. 06</span>
+        <h3>Sell online</h3>
+        <span class="ct">15 workflows</span>
+        <span class="xtra">
+          <span class="xl">Production website <span class="im">4-week ship</span></span>
+          <span class="xl">E-commerce setup <span class="im">selling in weeks</span></span>
+          <span class="xl">Multi-language <span class="im">two markets, one site</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:74%">
+        <span class="no">No. 07</span>
+        <h3>Get the tools you need</h3>
+        <span class="ct">15 workflows</span>
+        <span class="xtra">
+          <span class="xl">Internal tools <span class="im">3-week builds</span></span>
+          <span class="xl">Customer apps <span class="im">shipped to spec</span></span>
+          <span class="xl">API integrations <span class="im">systems that talk</span></span>
+        </span>
+        <span class="meter"><i></i></span>
+      </div>
+      <div class="gcell" style="--m:60%">
+        <span class="no">No. 08</span>
+        <h3>Get paid faster</h3>
+        <span class="ct">12 workflows</span>
+        <span class="xtra">
+          <span class="xl">Invoice chasing <span class="im">paid 12 days sooner</span></span>
+          <span class="xl">Reconciliation <span class="im">books close in a day</span></span>
+          <span class="xl">Quote-to-invoice <span class="im">zero re-typing</span></span>
         </span>
         <span class="meter"><i></i></span>
       </div>
@@ -1101,7 +1109,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <section class="method" data-theme="green" id="method">
   <div class="wrap">
     <span class="label"><span class="n">III</span> · The method</span>
-    <h2 class="h2 fd" style="color:var(--on-green)">Named stages.<br>Written outcomes.</h2>
+    <h2 class="h2 fd" style="color:var(--on-green)">Know the plan.<br>Track the progress.</h2>
     <div class="grid fd">
       <div class="mcard" data-tilt>
         <div class="num serif">01</div>
@@ -1149,15 +1157,15 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
         <div>
           <span class="tn">Tier 01</span>
           <h3>Team</h3>
-          <p class="for">A technology operator embedded into your business. Your most critical systems, owned, improved, and managed every month.</p>
+          <p class="for">A dedicated technology lead, backed by a full team of specialists. Your most critical systems, owned, improved, and managed every month.</p>
           <div class="price"><span class="p serif">$2,500</span><span class="pu">/ month</span></div>
           <div class="setup">+ $500 one-time setup</div>
         </div>
         <ul>
-          <li><b>One active priority at a time</b></li>
+          <li><b>Unlimited requests, delivered one at a time</b></li>
           <li>Your most critical systems, owned end to end</li>
-          <li>Ongoing improvements shipped every month</li>
-          <li>Direct line to the operator, no queue</li>
+          <li>Improvements shipped every month</li>
+          <li>Biweekly strategy call, plus a direct line to your lead</li>
           <li>Monthly operations report, in writing</li>
         </ul>
         <div class="actcol">
@@ -1170,16 +1178,16 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
         <div>
           <span class="tn">Tier 02</span>
           <h3>Department</h3>
-          <p class="for">A coordinated technology function, owned and advancing. Multiple initiatives moving simultaneously, every month.</p>
+          <p class="for">Your outsourced technology department: a lead, plus the full specialist bench. Several initiatives, advancing at once.</p>
           <div class="price"><span class="p serif">$5,000</span><span class="pu">/ month</span></div>
           <div class="setup">+ $1,000 one-time setup</div>
         </div>
         <ul>
-          <li><b>Multiple active priorities, simultaneously</b></li>
+          <li><b>Unlimited requests, delivered in parallel</b></li>
+          <li>Multiple priorities moving at once</li>
           <li>One living roadmap, owned end to end</li>
-          <li>Biweekly operations call with the operator</li>
-          <li>Monthly report + quarterly strategy</li>
-          <li>Priority bench across all six systems</li>
+          <li>Weekly strategy call with your lead</li>
+          <li>Monthly report, plus quarterly planning</li>
         </ul>
         <div class="actcol">
           <span class="badge2">Most engaged</span>
@@ -1191,15 +1199,15 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
         <div>
           <span class="tn">Tier 03</span>
           <h3>Executive</h3>
-          <p class="for">Your technology department, fully managed. Dedicated capacity, by arrangement.</p>
+          <p class="for">A technology executive accountable end to end, plus the full department. Dedicated capacity, as close to full-time as you want.</p>
           <div class="price"><span class="p serif">Custom</span></div>
           <div class="setup">Scoped together</div>
         </div>
         <ul>
-          <li><b>Dedicated capacity and executive ownership</b></li>
-          <li>Technology leadership, operational ownership</li>
-          <li>Named operator, accountable end to end</li>
-          <li>Quarterly executive review + risk register</li>
+          <li><b>Dedicated capacity, with daily involvement if desired</b></li>
+          <li>Executive leadership and operational ownership</li>
+          <li>A named executive, accountable end to end</li>
+          <li>Executive reviews and a live risk register</li>
           <li>Full documentation, always current</li>
         </ul>
         <div class="actcol">
@@ -1210,7 +1218,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
     </div>
 
     <div class="assure2 fd">
-      <div><div class="ak">The guarantee</div><p>It holds every month, not just the first: agreed work lands in its agreed window, <b>or the next month is on us.</b></p></div>
+      <div><div class="ak">The guarantee</div><p>Work lands in its agreed window, <b>or the next month is on us.</b></p></div>
       <div><div class="ak">The exit</div><p>Cancel anytime, month to month. Everything stays in your accounts; give 30 days' notice for a <b>full documented handover.</b></p></div>
       <div><div class="ak">The ownership</div><p>Everything lives in <b>your accounts</b>: code, credentials, documentation. Nothing is held.</p></div>
     </div>
@@ -1220,9 +1228,9 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <!-- dark marquee divider -->
 <div class="mq dark" aria-hidden="true">
   <div class="track" data-vel>
-    <span>No hourly billing <b>·</b> Month to month <b>·</b> Your accounts, your code <b>·</b> On time, or next month's free <b>·</b></span>
-    <span>No hourly billing <b>·</b> Month to month <b>·</b> Your accounts, your code <b>·</b> On time, or next month's free <b>·</b></span>
-    <span>No hourly billing <b>·</b> Month to month <b>·</b> Your accounts, your code <b>·</b> On time, or next month's free <b>·</b></span>
+    <span>No hourly billing <b>·</b> One monthly figure <b>·</b> Month to month after 90 days <b>·</b> Nothing held hostage <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> A whole team behind you <b>·</b> Immediate replies <b>·</b> Handled before it reaches you <b>·</b> Direct line to your operator <b>·</b> We manage the vendors <b>·</b> A reliable partner <b>·</b></span>
+    <span>No hourly billing <b>·</b> One monthly figure <b>·</b> Month to month after 90 days <b>·</b> Nothing held hostage <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> A whole team behind you <b>·</b> Immediate replies <b>·</b> Handled before it reaches you <b>·</b> Direct line to your operator <b>·</b> We manage the vendors <b>·</b> A reliable partner <b>·</b></span>
+    <span>No hourly billing <b>·</b> One monthly figure <b>·</b> Month to month after 90 days <b>·</b> Nothing held hostage <b>·</b> On time, or the next month is on us <b>·</b> Unlimited requests <b>·</b> A whole team behind you <b>·</b> Immediate replies <b>·</b> Handled before it reaches you <b>·</b> Direct line to your operator <b>·</b> We manage the vendors <b>·</b> A reliable partner <b>·</b></span>
   </div>
 </div>
 
@@ -1267,8 +1275,8 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   <div class="wrap">
     <span class="label"><span class="n">VI</span> · The operator</span>
     <h2 class="h2" data-stagger>
-      <span class="ln"><span>One operator.</span></span>
-      <span class="ln"><span><em>Every system.</em></span></span>
+      <span class="ln"><span>One point of contact.</span></span>
+      <span class="ln"><span><em>Total ownership.</em></span></span>
     </h2>
 
     <div class="duo">
@@ -1290,11 +1298,13 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       </div>
 
       <div class="body">
-        <p class="fd">“Most SMBs don't need a CTO. They need someone accountable for the systems that keep the business running.”</p>
-        <p class="dim fd fd-1">Axius is a private technology operations practice built for precision and speed. One operator owns the direction, the outcomes, and every technical decision that touches your systems. AI handles the repetitive drag so the work stays fast, and I bring in and manage vetted specialists whenever deep-domain depth is needed. You never manage a vendor. You just get the results.</p>
-        <p class="dim fd fd-2">One direct line. One monthly figure. Flawless output, all for less than a single salary. Thirty minutes with me will save you a quarter of bad decisions and technical debt. That is the trade.</p>
+        <p class="dim fd">Hi there,</p>
+        <p class="dim fd fd-1">Every business runs on technology now, and for most, no one really owns it. It gets spread across tools and vendors, or lands on whoever has a spare minute: the follow-ups, the reporting, the website, the systems behind the day. Axius becomes the one owner of all of it, your outsourced technology department, so the business can just run.</p>
+        <p class="dim fd fd-1">You get one person accountable for everything, your single point of contact, backed by a full team of specialists across software, AI, data, and security, with AI handling the repetitive work in the background. We do all the coordinating: the vendors, the tools, the moving parts. You just see the results.</p>
+        <p class="dim fd fd-2">It comes down to one line to message and one monthly figure, for less than the cost of a single hire. Your accounts and your code stay yours. My name goes on the work, and a whole team stands behind it.</p>
+        <p class="dim fd fd-2">If any of this sounds useful, I'd be happy to show you what I'd look at first. Thirty minutes, and you'll leave with a one-page audit either way.</p>
         <div class="acts fd fd-3">
-          <a class="pill" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Take the trade →</a>
+          <a class="pill" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book a free audit →</a>
         </div>
       </div>
     </div>
@@ -1311,7 +1321,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
     </h2>
     <p class="fd">No pitch and no pressure. A clear picture of where your systems leak, and what the practice would run first.</p>
     <div class="acts fd fd-1">
-      <a class="pill" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit call <span>→</span></a>
+      <a class="pill" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book a free audit <span>→</span></a>
     </div>
     <div class="slots fd fd-2">Only <b>three new engagements</b> accepted per month</div>
   </div>
@@ -1329,7 +1339,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
     <div class="fc">
       <div class="fk">Contact</div>
       <a href="mailto:andres@axius.tech">andres@axius.tech</a>
-      <a href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit</a>
+      <a href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book a free audit</a>
       <a href="https://www.linkedin.com/in/followrace/" target="_blank" rel="noopener">LinkedIn</a>
     </div>
     <div class="fc">
@@ -1365,7 +1375,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
     <input id="cinput" placeholder="What's slowing you down?" aria-label="Message Andrés">
     <button type="submit">Send</button>
   </form>
-  <a class="cbook" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the 30-minute audit →</a>
+  <a class="cbook" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book a free audit →</a>
 </div>
 
 <script>
@@ -1382,12 +1392,8 @@ setTimeout(() => {
   setTimeout(() => document.querySelector('.open .floor').classList.add('on'), 380);
 }, 1450);
 
-/* on touch there's no hover/trail, so settle the meta line straight
-   to the tagline instead of the (desktop-only) "hover" hint */
-if (!matchMedia('(pointer: fine)').matches) {
-  const g = document.getElementById('guide');
-  if (g) g.classList.add('activated');
-}
+/* on touch, the guide becomes a "Tap to view our work" prompt and the
+   work-preview auto-plays on tap — handled in the hero-trail block below. */
 
 /* ── scroll cue → welcome once scrolling starts; click to advance ── */
 const cue = document.getElementById('cue');
@@ -1411,40 +1417,13 @@ cue.addEventListener('click', () => {
   if (!el) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const WORDS = ['technology.', 'systems.', 'software.', 'automations.', 'integrations.'];
-
-  // Keep the rotating word congruent with "Not your"; only scale down the
-  // words that would run past the margin, and only just enough to fit one
-  // line. Measured per word against the live line width, so "systems." etc.
-  // stay full size while "integrations." shrinks to fit.
-  const it = el.parentNode;
-  const fitFlip = (word) => {
-    // mobile only — the desktop hero keeps its full display size (unchanged)
-    if (!matchMedia('(max-width: 760px)').matches) { el.style.fontSize = ''; return; }
-    const h1 = el.closest('h1');
-    if (!h1) return;
-    const savedText = el.textContent, savedWS = it.style.whiteSpace;
-    el.style.fontSize = '';                      // measure at full (inherited) size
-    it.style.whiteSpace = 'nowrap';
-    el.textContent = word;
-    const avail = h1.clientWidth;
-    const lineW = it.getBoundingClientRect().width;
-    let fs = '';
-    if (avail > 0 && lineW > avail) {
-      const wordW = el.getBoundingClientRect().width || 1;
-      fs = Math.max(0.55, (wordW - (lineW - avail) - 2) / wordW).toFixed(3) + 'em';
-    }
-    it.style.whiteSpace = savedWS;
-    el.textContent = savedText;
-    el.style.fontSize = fs;                       // '' = congruent full size · em = shrunk to fit
-  };
-
   let wi = 0, ci = WORDS[0].length, deleting = true;
   const tick = () => {
     const word = WORDS[wi];
     if (deleting) {
       ci--;
       el.textContent = word.slice(0, ci);
-      if (ci <= 0) { deleting = false; wi = (wi + 1) % WORDS.length; fitFlip(WORDS[wi]); return setTimeout(tick, 260); }
+      if (ci <= 0) { deleting = false; wi = (wi + 1) % WORDS.length; return setTimeout(tick, 260); }
       setTimeout(tick, 40);
     } else {
       ci++;
@@ -1453,19 +1432,18 @@ cue.addEventListener('click', () => {
       setTimeout(tick, 72);
     }
   };
-  fitFlip(WORDS[wi]);                              // size the initial word
-  addEventListener('resize', () => fitFlip(WORDS[wi]), { passive: true });
   setTimeout(tick, 2000);
 })();
 
-/* ── hero portfolio reveal — desktop: work shots follow the cursor;
-     mobile: a horizontal swipe across the hero summons them. Portrait
-     cards are app/mobile builds, landscape are dashboards/sites. ─── */
+/* ── hero portfolio trail — work shots follow the cursor, then
+     fade. Portrait cards are app/mobile builds, landscape cards
+     are dashboards/sites. Drop a .gif in for a live one. ─────── */
 (function () {
   const hero = document.querySelector('.open');
   const layer = document.getElementById('trail');
   if (!hero || !layer) return;
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(pointer: fine)').matches;
   const T = '/assets/trail/';
   const TRAIL_MEDIA = [
     { src: T + 'flowheroes.jpg',  w: 304, h: 200 },
@@ -1483,107 +1461,94 @@ cue.addEventListener('click', () => {
     { src: T + 'framecraft.jpg',  w: 304, h: 200 },
     { src: T + 'pinecreek.jpg',   w: 304, h: 200 },
   ];
+
+  /* ── mobile / touch: tap once to auto-play the work, one shot at a
+       time. Reuses the shots above; no cursor needed. ─────────────── */
+  if (!finePointer) {
+    const g = document.getElementById('guide');
+    const tut = g && g.querySelector('.g-tut');
+    if (tut) tut.textContent = 'Tap to view our work';
+    let started = false, mIdx = 0, mTimer = null, mCurrent = null;
+    const showShot = (m) => {
+      if (mCurrent) {
+        const prev = mCurrent;
+        prev.classList.remove('in'); prev.classList.add('out');
+        setTimeout(() => prev.remove(), 1000);
+      }
+      const el = document.createElement('img');
+      el.className = 'tr-card solo ' + (m.w >= m.h ? 'ls' : 'pt');
+      el.src = m.src; el.alt = '';
+      layer.appendChild(el);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+      mCurrent = el;
+    };
+    const nextShot = () => { showShot(TRAIL_MEDIA[mIdx % TRAIL_MEDIA.length]); mIdx++; };
+    const startShow = () => {
+      if (started) return;
+      started = true;
+      layer.classList.add('playing');
+      if (g) g.classList.add('activated');
+      nextShot();
+      if (!reduceMotion) mTimer = setInterval(nextShot, 1600);
+    };
+    hero.addEventListener('click', (e) => {
+      if (e.target.closest('a, #cue, .navcta')) return;
+      if (!started) { startShow(); return; }
+      if (reduceMotion) nextShot();   // reduced-motion: tap advances instead of auto-playing
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((ents) => {
+        if (!started || reduceMotion) return;
+        ents.forEach((en) => {
+          if (en.isIntersecting) { if (!mTimer) mTimer = setInterval(nextShot, 1600); }
+          else { clearInterval(mTimer); mTimer = null; }
+        });
+      }, { threshold: 0.12 }).observe(hero);
+    }
+    return;
+  }
+
+  if (reduceMotion) return;   // desktop cursor-trail runs only when motion is allowed
   const h1El = document.getElementById('h1');
   const guide = document.getElementById('guide');
   const wm = document.querySelector('.bar .wm');
   const cta = document.querySelector('.navcta');
-  let idx = 0, live = 0, activated = false;
-  const activate = () => {
-    if (activated) return;
-    activated = true;
-    if (guide) guide.classList.add('activated');
-  };
-  // spawn one card centred on a viewport point, scaled for the device
-  const spawn = (vx, yRelHero, scale) => {
-    if (live >= 12) return;
-    const m = TRAIL_MEDIA[idx % TRAIL_MEDIA.length]; idx++;
-    const w = Math.round(m.w * scale), h = Math.round(m.h * scale);
-    const el = document.createElement('img');
-    el.className = 'tr-card';
-    el.style.width = w + 'px';
-    el.style.height = h + 'px';
-    el.style.left = (vx - w / 2) + 'px';
-    el.style.top = (yRelHero - h / 2) + 'px';
-    el.style.rotate = (Math.random() * 8 - 4).toFixed(1) + 'deg';
-    el.src = m.src; el.alt = ''; el.style.objectFit = 'cover';
-    layer.appendChild(el);
-    live++;
-    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
-    setTimeout(() => el.classList.add('out'), 520);
-    setTimeout(() => { el.remove(); live--; }, 1750);
-  };
   // keep a buffer around an element, the way the title is buffered
   const near = (el, e, m) => {
     if (!el) return false;
     const r = el.getBoundingClientRect();
     return e.clientX > r.left - m && e.clientX < r.right + m && e.clientY > r.top - m && e.clientY < r.bottom + m;
   };
-
-  if (matchMedia('(pointer: fine)').matches) {
-    // ── desktop: cards follow the cursor, clear of headline + nav ──
-    let lastX = -1, lastY = -1, acc = 0;
-    addEventListener('mousemove', (e) => {
-      const hr = hero.getBoundingClientRect();
-      const tooLow = (h1El && e.clientY > h1El.getBoundingClientRect().top - 140) || e.clientY > hr.bottom || e.clientY < hr.top;
-      if (tooLow || near(wm, e, 150) || near(cta, e, 150)) { lastX = -1; return; }
-      const x = e.clientX, y = e.clientY - hr.top;
-      if (lastX < 0) { lastX = x; lastY = y; return; }
-      acc += Math.hypot(x - lastX, y - lastY);
-      lastX = x; lastY = y;
-      if (acc < 110) return;
-      acc = 0; activate(); spawn(x, y, 1);
-    }, { passive: true });
-  } else {
-    // ── mobile: the portfolio plays on its own — every couple of seconds
-    //    a short "slide" drags a run of work shots across the band ABOVE
-    //    the headline (as if a finger swept it), then they fade. Always
-    //    clear of the title (mirrors the desktop trail). Swipe adds more. ──
-    const inView = () => !document.hidden && scrollY < innerHeight * 0.85;
-    // lowest a card's CENTRE may sit so the whole card clears the title
-    const ceilFor = (cardH) => (h1El.getBoundingClientRect().top - hero.getBoundingClientRect().top) - 18 - cardH / 2;
-    const SWEEP_SCALE = 0.48;
-    const ease = (p) => p * p * (3 - 2 * p);                      // smoothstep — natural accel/decel
-    const sweep = () => {
-      if (!inView()) return;
-      const lo = 128, hi = ceilFor(Math.round(324 * SWEEP_SCALE)); // 324 = tallest (portrait) card
-      if (hi <= lo) return;                                        // no room above the title — skip
-      const vw = innerWidth, margin = 80, span = Math.max(60, vw - margin * 2);
-      const dir = Math.random() < 0.5 ? 1 : -1;
-      const x0 = dir > 0 ? margin : vw - margin;
-      const baseY = lo + Math.random() * (hi - lo);
-      const slope = Math.random() * 26 - 13;                     // gentle overall tilt to the slide
-      const n = 7;                                                // a fuller, continuous trail
-      for (let i = 0; i < n; i++) {
-        setTimeout(() => {
-          if (!inView() || live >= 8) return;
-          const p = i / (n - 1);
-          const x = x0 + dir * ease(p) * span;                   // eased position → finger speeds up then slows
-          const y = baseY + slope * p + (Math.random() * 10 - 5);
-          spawn(x, y, SWEEP_SCALE);
-        }, i * 78);                                              // even cadence → a smooth glide, not a burst
-      }
-    };
-    setTimeout(function loop() { sweep(); setTimeout(loop, 1600); }, 900);
-    // swipe still works — but, like desktop, only while clear of the title
-    let lx = 0, ly = 0, acc = 0, tracking = false, horiz = false;
-    hero.addEventListener('touchstart', (e) => {
-      const t = e.touches[0]; lx = t.clientX; ly = t.clientY;
-      acc = 0; tracking = true; horiz = false;
-    }, { passive: true });
-    hero.addEventListener('touchmove', (e) => {
-      if (!tracking) return;
-      const t = e.touches[0];
-      const dx = t.clientX - lx, dy = t.clientY - ly;
-      if (!horiz && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) horiz = true;
-      if (horiz) {
-        acc += Math.hypot(dx, dy);
-        const clearOfTitle = t.clientY < h1El.getBoundingClientRect().top - 40;
-        if (acc >= 60 && clearOfTitle) { acc = 0; spawn(t.clientX, t.clientY - hero.getBoundingClientRect().top, 0.62); }
-      }
-      lx = t.clientX; ly = t.clientY;
-    }, { passive: true });
-    hero.addEventListener('touchend', () => { tracking = false; }, { passive: true });
-  }
+  let lastX = -1, lastY = -1, acc = 0, idx = 0, live = 0, activated = false;
+  // listen on the window so the trail spans the full viewport width,
+  // not just the centred container; kept clear of the headline and nav.
+  addEventListener('mousemove', (e) => {
+    const hr = hero.getBoundingClientRect();
+    const tooLow = (h1El && e.clientY > h1El.getBoundingClientRect().top - 140) || e.clientY > hr.bottom || e.clientY < hr.top;
+    if (tooLow || near(wm, e, 150) || near(cta, e, 150)) { lastX = -1; return; }
+    const x = e.clientX, y = e.clientY - hr.top;   // layer is full-width (left = viewport 0), top = hero top
+    if (lastX < 0) { lastX = x; lastY = y; return; }
+    acc += Math.hypot(x - lastX, y - lastY);
+    lastX = x; lastY = y;
+    if (acc < 110 || live >= 12) return;
+    acc = 0;
+    if (!activated && guide) { activated = true; guide.classList.add('activated'); }
+    const m = TRAIL_MEDIA[idx % TRAIL_MEDIA.length]; idx++;
+    const el = document.createElement(m.src ? 'img' : 'div');
+    el.className = 'tr-card';
+    el.style.width = m.w + 'px';
+    el.style.height = m.h + 'px';
+    el.style.left = (x - m.w / 2) + 'px';
+    el.style.top = (y - m.h / 2) + 'px';
+    el.style.rotate = (Math.random() * 8 - 4).toFixed(1) + 'deg';
+    if (m.src) { el.src = m.src; el.alt = ''; el.style.objectFit = 'cover'; }
+    else el.style.background = m.color;
+    layer.appendChild(el);
+    live++;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+    setTimeout(() => el.classList.add('out'), 520);
+    setTimeout(() => { el.remove(); live--; }, 1750);
+  }, { passive: true });
 })();
 
 /* ── cursor ────────────────────────────────────────────────── */
@@ -1634,6 +1599,53 @@ if (mtext) {
   onScroll();
 }
 
+/* ── catalog: reveal + cycle the workflow rows through each card's full
+     list. Desktop reveals on hover; touch reveals on tap (one at a time).
+     Three rows show at once, fading between as it circles. ──────────── */
+(function () {
+  const CAT = [
+    [['Missed-call recovery','4h → 3m'],['Lead capture & routing','every lead placed'],['Follow-up automation','47% reactivated'],['Speed-to-lead','reply in 60s'],['Reactivation campaigns','dormant revived'],['Voice agents','every call answered'],['Quote-to-close','days → hours'],['Pipeline visibility','one live board']],
+    [['AI chat & FAQ','~70% deflected'],['Inbox unification','5 inboxes → 1'],['Ticket triage & routing','8h → 1h'],['Support automation','answered 24/7'],['Onboarding flows','day-one ready'],['Review & feedback','signal captured'],['Customer comms','nothing slips']],
+    [['Cross-tool sync','12 hops removed'],['Document automation','45m → 8m'],['SOP automation','knowledge, captured'],['Approvals & routing','no more chasing'],['SaaS rationalization','$1.4k/mo back'],['Data migrations','clean & complete']],
+    [['Knowledge agents','90s answers'],['AI copilots','decisions, automated'],['Lead scoring','2.3× accuracy'],['Multi-step agents','work, handled'],['Forecasting','churn seen early']],
+    [['Live dashboards','one ops board'],['Revenue attribution','spend → revenue'],['Churn modeling','seen early'],['Forecasting','ahead of time'],['Monthly reporting','in writing']],
+    [['Production website','owned, kept live'],['Landing pages','tuned to convert'],['E-commerce','selling in weeks'],['Conversion flows','every step tracked'],['Content systems','publish without dev'],['Multi-market','two markets, one site']],
+    [['Internal tools','live in weeks'],['API integrations','systems that talk'],['Customer apps','shipped to spec'],['Custom workflows','your process, automated'],['System extensions','no rebuild needed'],['Data migrations','clean & complete']],
+    [['Invoice chasing','paid 12 days sooner'],['Reconciliation','books close in a day'],['Quote-to-invoice','zero re-typing'],['Expense tracking','nothing missed'],['SaaS audit','$1.4k/mo back']],
+  ];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(pointer: fine)').matches;
+  const cells = [...document.querySelectorAll('.index .gcell')];
+  const setRow = (row, it) => { row.innerHTML = '<span class="wn">' + it[0] + '</span><span class="im">' + it[1] + '</span>'; };
+  const state = cells.map((cell, idx) => {
+    const list = CAT[idx];
+    const rows = [...cell.querySelectorAll('.xl')];
+    let off = 0, timer = null;
+    const paint = (animate) => {
+      if (!list) return;
+      rows.forEach((row, i) => {
+        const it = list[(off + i) % list.length];
+        if (!animate) return setRow(row, it);
+        setTimeout(() => { row.classList.add('chg'); setTimeout(() => { setRow(row, it); row.classList.remove('chg'); }, 200); }, i * 70);
+      });
+    };
+    const start = () => { if (timer || reduce || !list) return; timer = setInterval(() => { off = (off + 1) % list.length; paint(true); }, 1800); };
+    const stop = () => { clearInterval(timer); timer = null; off = 0; if (list) paint(false); };
+    if (list && rows.length >= 3) paint(false);
+    return { cell, list, start, stop };
+  });
+  if (reduce) return;
+  if (fine) {
+    state.forEach(s => { if (!s.list) return; s.cell.addEventListener('mouseenter', s.start); s.cell.addEventListener('mouseleave', s.stop); });
+  } else {
+    state.forEach(s => { if (!s.list) return; s.cell.addEventListener('click', () => {
+      const wasOpen = s.cell.classList.contains('open');
+      state.forEach(o => { o.cell.classList.remove('open'); o.stop(); });
+      if (!wasOpen) { s.cell.classList.add('open'); s.start(); }
+    }); });
+  }
+})();
+
 /* ── 3D tilt: catalog cells (subtle) + method cards (Kinetic) ── */
 if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.querySelectorAll('.gcell').forEach(cell => {
@@ -1655,39 +1667,6 @@ if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motio
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
 }
-
-/* ── catalog: on hover, each system's three rows cycle through its
-     full workflow list — every swap fades + de-blurs, echoing the
-     hero's reveal motion. Touch just shows the top three. ──────── */
-(function () {
-  const CAT = [
-    [['Missed-call recovery','4h → 3m'],['Lead capture & routing','every lead placed'],['Follow-up automation','47% reactivated'],['Pipeline visibility','one live board'],['CRM workflows','one source of truth'],['Speed-to-lead','reply in 60s'],['Quote-to-close','days → hours'],['Reactivation campaigns','dormant revived']],
-    [['AI chat & FAQ','~70% deflected'],['Inbox unification','5 inboxes → 1'],['Ticket triage & routing','8h → 1h'],['Support automation','answered 24/7'],['Customer comms','nothing slips'],['Onboarding flows','day-one ready'],['Review & feedback','signal captured']],
-    [['Cross-tool sync','12 hops removed'],['SOP automation','knowledge, captured'],['Document automation','45m → 8m'],['Approvals & routing','no more chasing'],['Invoice chasing','paid 12 days sooner'],['Reconciliation','books close in a day'],['Quote-to-invoice','zero re-typing'],['SaaS rationalization','$1.4k/mo back']],
-    [['Live dashboards','one ops board'],['AI agents & copilots','decisions, automated'],['Revenue attribution','spend → revenue'],['Knowledge agents','90s answers'],['Forecasting','churn seen early'],['Lead scoring','2.3× accuracy'],['Monthly reporting','in writing, on time']],
-    [['Production website','owned, kept live'],['Landing pages','tuned to convert'],['E-commerce','selling in weeks'],['Conversion flows','every step tracked'],['Content systems','publish without dev'],['Multi-market','two markets, one site']],
-    [['Internal tools','live in weeks'],['API integrations','systems that talk'],['Customer apps','shipped to spec'],['Custom workflows','your process, automated'],['System extensions','no rebuild needed'],['Data migrations','clean & complete']],
-  ];
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('.index .gcell').forEach((cell, idx) => {
-    const list = CAT[idx]; if (!list) return;
-    const rows = [...cell.querySelectorAll('.xl')];
-    if (rows.length < 3) return;
-    let off = 0, timer = null;
-    const paint = (animate) => {
-      rows.forEach((row, i) => {
-        const it = list[(off + i) % list.length];
-        const put = () => { row.querySelector('.wn').textContent = it[0]; row.querySelector('.im').textContent = it[1]; };
-        if (!animate) return put();
-        setTimeout(() => { row.classList.add('chg'); setTimeout(() => { put(); row.classList.remove('chg'); }, 220); }, i * 70);
-      });
-    };
-    paint(false);
-    if (reduce) return;
-    cell.addEventListener('mouseenter', () => { if (timer) return; timer = setInterval(() => { off = (off + 1) % list.length; paint(true); }, 1700); });
-    cell.addEventListener('mouseleave', () => { clearInterval(timer); timer = null; off = 0; paint(false); });
-  });
-})();
 
 /* ── velocity-reactive marquees: drift always, surge on scroll,
      skew with direction. Seamless across any copy count. ─────── */
