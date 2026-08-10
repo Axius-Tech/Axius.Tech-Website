@@ -404,8 +404,9 @@ section { border-top: 1px solid var(--rule); }
   display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
   font-size: 12px; line-height: 1.5; color: var(--ink-55);
   opacity: 0; transform: translateY(6px);
-  transition: opacity .4s var(--ease), transform .4s var(--ease);
+  transition: opacity .35s var(--ease), transform .35s var(--ease), filter .35s var(--ease);
 }
+.gcell .xl .wn { flex: 1; min-width: 0; }
 .gcell .xl .im { font-family: var(--mono); font-size: 9.5px; letter-spacing: .03em; color: var(--green); white-space: nowrap; }
 .gcell:hover .xl { opacity: 1; transform: none; }
 .gcell:hover .xl:nth-child(1) { transition-delay: .04s; }
@@ -414,6 +415,19 @@ section { border-top: 1px solid var(--rule); }
 .gcell .meter { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; }
 .gcell .meter i { display: block; height: 100%; width: 0; background: var(--green); transition: width .9s var(--ease); }
 .gcell:hover .meter i { width: var(--m); }
+/* .open mirrors :hover for touch (revealed on tap) */
+.gcell.open { background: var(--surface); border-radius: 13px; z-index: 3; box-shadow: 0 22px 50px rgba(22,20,15,.12); }
+.gcell.open .no { color: var(--green); }
+.gcell.open h3 { font-variation-settings: "wght" 640; color: var(--green); }
+.gcell.open .ct { background: var(--green); color: var(--on-green); border-color: var(--green); }
+.gcell.open .xl { opacity: 1; transform: none; }
+.gcell.open .meter i { width: var(--m); }
+/* the fade between workflows while cycling */
+.gcell .xl.chg { opacity: 0 !important; filter: blur(3px); transform: translateY(3px); }
+/* "hover / tap to explore" hint, adapts to pointer */
+.ghint { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-40); }
+.ghint .gm { display: none; }
+@media (pointer: coarse) { .ghint .gd { display: none; } .ghint .gm { display: inline; } .gcell { cursor: pointer; } }
 @media (max-width: 1024px) { .grid8 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .grid8 { grid-template-columns: 1fr; } }
 .index .foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 40px; flex-wrap: wrap; }
@@ -794,7 +808,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
   .index .head { gap: 22px; margin-bottom: 34px; align-items: flex-start; }
   .index .big { font-size: clamp(60px, 17vw, 100px); }
   .index .bigk { text-align: left; }
-  .gcell .xl { opacity: 1; transform: none; }
+  /* workflows now reveal on tap (see .gcell.open) */
 
   /* in practice — narrower cards so one shows at a time */
   .pq { width: min(80vw, 360px); }
@@ -855,7 +869,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 <header class="bar">
   <a class="wm" href="#top">AXIUS</a>
 </header>
-<a class="navcta" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book the audit</a>
+<a class="navcta" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Book a free audit</a>
 <div id="progress" aria-hidden="true"></div>
 
 <div id="rail" role="navigation" aria-label="Sections">
@@ -945,6 +959,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
       <div class="fd">
         <div class="big"><span data-count="118">0</span></div>
         <div class="label bigk">Workflows shipped · and counting</div>
+        <div class="ghint fd"><span class="gd">Hover a card to explore</span><span class="gm">Tap a card to explore</span></div>
       </div>
     </div>
 
@@ -1240,7 +1255,7 @@ footer { background: var(--scene-2); color: var(--on-green); overflow: hidden; b
 
       <div class="body">
         <p class="fd">“Most SMBs don't need a CTO. They need someone accountable for the systems that keep the business running.”</p>
-        <p class="dim fd fd-1">Axius is a private technology operations practice, run by a team of operators. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. Each client gets one operator who owns direction, outcomes, and every decision that touches your systems. AI systems carry the repetitive work and keep the documentation current. Vetted specialists step in when the work needs depth, coordinated entirely on our side. You never coordinate a vendor.</p>
+        <p class="dim fd fd-1">Axius is a private technology operations practice. You get one operator, your single point of contact, and behind them the whole practice: a bench of vetted specialists across software, AI, data, and security, and AI systems that carry the repetitive work and keep everything documented. Not an agency, so there are no account managers. Not a contractor, so nothing ends when a task ends. Your operator owns direction, outcomes, and every decision that touches your systems, and pulls in whatever depth the work needs. You never coordinate a vendor.</p>
         <p class="dim fd fd-2">You get one line to message, and one monthly figure for less than the cost of building a technology department in-house. One name on the work, a full team behind it. If thirty minutes with me saves you a quarter of bad decisions, that's the trade.</p>
         <div class="acts fd fd-3">
           <a class="pill" href="https://cal.com/andrestoro/discovery-call" target="_blank" rel="noopener">Take the trade →</a>
@@ -1492,6 +1507,53 @@ if (mtext) {
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 }
+
+/* ── catalog: reveal + cycle the workflow rows through each card's full
+     list. Desktop reveals on hover; touch reveals on tap (one at a time).
+     Three rows show at once, fading between as it circles. ──────────── */
+(function () {
+  const CAT = [
+    [['Missed-call recovery','4h → 3m'],['Lead capture & routing','every lead placed'],['Follow-up automation','47% reactivated'],['Speed-to-lead','reply in 60s'],['Reactivation campaigns','dormant revived'],['Voice agents','every call answered'],['Quote-to-close','days → hours'],['Pipeline visibility','one live board']],
+    [['AI chat & FAQ','~70% deflected'],['Inbox unification','5 inboxes → 1'],['Ticket triage & routing','8h → 1h'],['Support automation','answered 24/7'],['Onboarding flows','day-one ready'],['Review & feedback','signal captured'],['Customer comms','nothing slips']],
+    [['Cross-tool sync','12 hops removed'],['Document automation','45m → 8m'],['SOP automation','knowledge, captured'],['Approvals & routing','no more chasing'],['SaaS rationalization','$1.4k/mo back'],['Data migrations','clean & complete']],
+    [['Knowledge agents','90s answers'],['AI copilots','decisions, automated'],['Lead scoring','2.3× accuracy'],['Multi-step agents','work, handled'],['Forecasting','churn seen early']],
+    [['Live dashboards','one ops board'],['Revenue attribution','spend → revenue'],['Churn modeling','seen early'],['Forecasting','ahead of time'],['Monthly reporting','in writing']],
+    [['Production website','owned, kept live'],['Landing pages','tuned to convert'],['E-commerce','selling in weeks'],['Conversion flows','every step tracked'],['Content systems','publish without dev'],['Multi-market','two markets, one site']],
+    [['Internal tools','live in weeks'],['API integrations','systems that talk'],['Customer apps','shipped to spec'],['Custom workflows','your process, automated'],['System extensions','no rebuild needed'],['Data migrations','clean & complete']],
+    [['Invoice chasing','paid 12 days sooner'],['Reconciliation','books close in a day'],['Quote-to-invoice','zero re-typing'],['Expense tracking','nothing missed'],['SaaS audit','$1.4k/mo back']],
+  ];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(pointer: fine)').matches;
+  const cells = [...document.querySelectorAll('.index .gcell')];
+  const setRow = (row, it) => { row.innerHTML = '<span class="wn">' + it[0] + '</span><span class="im">' + it[1] + '</span>'; };
+  const state = cells.map((cell, idx) => {
+    const list = CAT[idx];
+    const rows = [...cell.querySelectorAll('.xl')];
+    let off = 0, timer = null;
+    const paint = (animate) => {
+      if (!list) return;
+      rows.forEach((row, i) => {
+        const it = list[(off + i) % list.length];
+        if (!animate) return setRow(row, it);
+        setTimeout(() => { row.classList.add('chg'); setTimeout(() => { setRow(row, it); row.classList.remove('chg'); }, 200); }, i * 70);
+      });
+    };
+    const start = () => { if (timer || reduce || !list) return; timer = setInterval(() => { off = (off + 1) % list.length; paint(true); }, 1800); };
+    const stop = () => { clearInterval(timer); timer = null; off = 0; if (list) paint(false); };
+    if (list && rows.length >= 3) paint(false);
+    return { cell, list, start, stop };
+  });
+  if (reduce) return;
+  if (fine) {
+    state.forEach(s => { if (!s.list) return; s.cell.addEventListener('mouseenter', s.start); s.cell.addEventListener('mouseleave', s.stop); });
+  } else {
+    state.forEach(s => { if (!s.list) return; s.cell.addEventListener('click', () => {
+      const wasOpen = s.cell.classList.contains('open');
+      state.forEach(o => { o.cell.classList.remove('open'); o.stop(); });
+      if (!wasOpen) { s.cell.classList.add('open'); s.start(); }
+    }); });
+  }
+})();
 
 /* ── 3D tilt: catalog cells (subtle) + method cards (Kinetic) ── */
 if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
